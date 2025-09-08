@@ -25,20 +25,10 @@
 - He exploits a timing bug to misdirect the beast and escape to temporary shelter.
 - He documents observations and drafts his first rules for safe testing of System behavior.
 
-#### Characters
+#### Character Actions & Developments
 
-##### Key Actions
-
-- **Jaemin:** Assesses threats, debugs System prompts under stress, sets up safe-test heuristics, escapes using an AI timing exploit.
-- **Local Villager (cameo):** Provides terse directions to an abandoned shed, hinting at nearby sect politics.
-
-##### Character Development / Changes
-
-- **Jaemin:** Shifts from panic to disciplined analysis; reframes the world as a system to be understood and improved.
-
-##### Primary Dialogue (Excerpt)
-
-> "If you're going to pretend to be code, I'll treat you like code—breakpoints and all." - Jaemin
+- **Jaemin:** Assesses threats, debugs System prompts under stress, sets up safe-test heuristics, escapes using an AI timing exploit; shifts from panic to disciplined analysis and reframes the world as a system to be understood and improved.
+- **Local Villager (cameo):** Provides terse directions to an abandoned shed; hints at nearby sect politics.
 
 #### Main Gain / Plot Progression
 
@@ -70,20 +60,10 @@ As Jaemin rests, a glitched notification flickers: "Unhandled exception: RuleChe
 - An old hunter witnesses something odd and grows suspicious.
 - Jaemin purchases basic supplies, planning a controlled lab environment.
 
-#### Characters
+#### Character Actions & Developments
 
-##### Key Actions
-
-- **Jaemin:** Designs field-test protocol, executes exploit with measured cadence, purchases rope, ink, and rations to formalize testing.
-- **Old Hunter:** Observes Jaemin’s unusual movements, spreads a rumor of a “lucky” outsider.
-
-##### Character Development / Changes
-
-- **Jaemin:** Moves from improvisation to disciplined experimentation; confidence grows, arrogance checked.
-
-##### Primary Dialogue (Excerpt)
-
-> "Luck is a story you tell when logs are missing." - Jaemin
+- **Jaemin:** Designs field-test protocol, executes exploit with measured cadence, purchases rope, ink, and rations to formalize testing; moves from improvisation to disciplined experimentation with growing confidence and checked arrogance.
+- **Old Hunter:** Observes Jaemin’s unusual movements and spreads a rumor of a “lucky” outsider.
 
 #### Main Gain / Plot Progression
 
@@ -115,20 +95,10 @@ Rumors reach a minor clan’s ears; a pair of scouts begin asking about the outs
 - He maps resource yield against risk, defining a safe operating envelope.
 - A villager he helped earlier drops a hint about sect libraries nearby.
 
-#### Characters
+#### Character Actions & Developments
 
-##### Key Actions
-
-- **Jaemin:** Builds risk matrix, tunes cadence, documents anomalies; aids a villager to maintain cover.
+- **Jaemin:** Builds a risk matrix, tunes cadence, documents anomalies, and aids a villager to maintain cover; learns to balance velocity with stealth and adopts a “quiet build” mentality.
 - **Villager:** Shares gossip about a small sect taking applicants soon.
-
-##### Character Development / Changes
-
-- **Jaemin:** Learns to balance velocity with stealth; adopts a “quiet build” mentality.
-
-##### Primary Dialogue (Excerpt)
-
-> "Throughput is vanity. Survival is metrics that still exist tomorrow." - Jaemin
 
 #### Main Gain / Plot Progression
 
@@ -160,20 +130,10 @@ A System tooltip flickers: "Observer assigned." Someone—or something—is watc
 - They set an ambush for nightfall; Jaemin prepares countermeasures.
 - The ambush is flipped using terrain, timing, and a resource surge at the critical moment.
 
-#### Characters
+#### Character Actions & Developments
 
-##### Key Actions
-
-- **Jaemin:** Negotiates, plants false assumptions, establishes traps, and routes attackers into their own crossfire.
-- **Clan Enforcer (Lead):** Underestimates Jaemin, escalates to violence, survives to report upward.
-
-##### Character Development / Changes
-
-- **Jaemin:** Commits to proactive defense; accepts that subtlety must be paired with decisive action.
-
-##### Primary Dialogue (Excerpt)
-
-> "If you audit me, audit your assumptions first." - Jaemin
+- **Jaemin:** Negotiates, plants false assumptions, establishes traps, and routes attackers into their own crossfire; commits to proactive defense and accepts that subtlety must be paired with decisive action.
+- **Clan Enforcer (Lead):** Underestimates Jaemin, escalates to violence, and survives to report upward.
 
 #### Main Gain / Plot Progression
 
@@ -205,20 +165,10 @@ The surviving enforcer flees toward a nearby town rumored to host a sect—that 
 - A final field test confirms stability of his exploit with reduced variance.
 - He looks to the mountain path, committing to change the rules, not just play them.
 
-#### Characters
+#### Character Actions & Developments
 
-##### Key Actions
-
-- **Jaemin:** Curates findings, sets objectives, forges a practical alias, and departs.
-- **Passing Merchant:** Trades him a worn map; hints at sect politics.
-
-##### Character Development / Changes
-
-- **Jaemin:** Transitions from survivalist to reformer-in-planning; vision crystallizes.
-
-##### Primary Dialogue (Excerpt)
-
-> "I won't wait for a patch. I'll write one." - Jaemin
+- **Jaemin:** Curates findings, sets objectives, forges a practical alias, and departs; transitions from survivalist to reformer-in-planning as his vision crystallizes.
+- **Passing Merchant:** Trades him a worn map and hints at sect politics.
 
 #### Main Gain / Plot Progression
 
@@ -245,5 +195,6 @@ Distant bells ring from the sect valley—admissions begin at dawn.
 |------------|---------|-------------------|-----------|
 | 2025-09-08 | 0.1     | Initial draft     | johnsong  |
 | 2025-09-08 | 0.2     | Added Chapters 2–5 | johnsong  |
+| 2025-09-08 | 0.3     | Simplified character sections per template | johnsong  |
 
 
