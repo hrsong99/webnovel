@@ -1,0 +1,114 @@
+template:
+  id: webseries-arc-template-v1
+  name: Webseries Arc Document
+  version: 1.0
+  output:
+    format: markdown
+    filename: arcs/arc-{{arc_num}}.md
+    title: "Arc {{arc_num}}: {{arc_title}}"
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+agent_config:
+  editable_sections:
+    - arc-summary
+    - chapters
+    - change-log
+sections:
+  - id: arc-summary
+    title: Arc Summary
+    type: bullet-list
+    instruction: "Provide a detailed (~10 bullet points) summary of the key events that happen in this arc."
+    template: |
+      - [Key event 1]
+      - [Key event 2]
+      - [Key event 3]
+      - [Key event 4]
+      - [Key event 5]
+      - [Key event 6]
+      - [Key event 7]
+      - [Key event 8]
+      - [Key event 9]
+      - [Key event 10]
+    elicit: true
+    owner: author
+
+  - id: chapters
+    title: Chapters
+    instruction: "Detail each chapter within this arc. Add new chapter sections as needed by copying the structure."
+    owner: author
+    sections:
+      - id: chapter-1 # This entire section can be duplicated for chapter-2, chapter-3, etc.
+        title: "Chapter 1: [Enter Chapter Title Here]"
+        instruction: "Fill out the planning details for this chapter."
+        elicit: true
+        sections:
+          - id: chapter-1-summary
+            title: Chapter Summary
+            type: bullet-list
+            instruction: "Provide a concise (~5 bullet points) summary of this chapter's events."
+            template: |
+              - [Plot point 1.1]
+              - [Plot point 1.2]
+              - [Plot point 1.3]
+              - [Plot point 1.4]
+              - [Plot point 1.5]
+          - id: chapter-1-characters
+            title: Characters
+            instruction: "Detail the key character moments and dialogue for this chapter."
+            sections:
+              - id: chapter-1-char-actions
+                title: Key Actions
+                type: template-text
+                template: |
+                  - **Character A:** [Description of their significant actions.]
+                  - **Character B:** [Description of their significant actions.]
+              - id: chapter-1-char-changes
+                title: Character Development / Changes
+                type: template-text
+                template: |
+                  - **Character A:** [How do they change, what do they learn, or how is their perspective altered?]
+              - id: chapter-1-char-dialogue
+                title: Primary Dialogue (Excerpt)
+                type: template-text
+                instruction: "Quote a key piece of dialogue that defines a character or a moment in the chapter."
+                template: |
+                  > "[Insert impactful line of dialogue here.]" - Character Name
+          - id: chapter-1-plot-progression
+            title: Main Gain / Plot Progression
+            type: template-text
+            instruction: "What is the key gain (new skill, item, information) or significant plot advancement in this chapter?"
+            template: |
+              [Describe the main gain or progression.]
+          - id: chapter-1-goal
+            title: Main Goal of the Chapter
+            type: template-text
+            instruction: "What is the narrative purpose of this chapter? How does it connect to the Main Gain?"
+            template: |
+              [Describe the chapter's primary goal.]
+          - id: chapter-1-cliffhanger
+            title: Cliffhanger / Forward Hook
+            type: template-text
+            instruction: "What is the cliffhanger or question that makes the reader want to continue?"
+            template: |
+              [Describe the hook for the next chapter.]
+          - id: chapter-1-excerpts
+            title: Excerpts (Post-Writing)
+            instruction: "After writing, paste key excerpts from the chapter here for reference."
+            sections:
+              - id: chapter-1-excerpt-beginning
+                title: Beginning
+                type: template-text
+              - id: chapter-1-excerpt-main-scene
+                title: Main Scene
+                type: template-text
+              - id: chapter-1-excerpt-end
+                title: End
+                type: template-text
+
+  - id: change-log
+    title: Document Change Log
+    type: table
+    columns: [Date, Version, Description, Author]
+    instruction: Track changes made to this arc document.
+    owner: editor

@@ -1,10 +1,10 @@
-# template:
+template:
   id: webseries-readme-template-v1
   name: Webseries README Generator
   version: 1.0
   output:
     format: markdown
-    filename: series/{{series_title_slug}}/README.md
+    filename: README.md
     title: "Series Overview: {{series_title}}"
 workflow:
   mode: interactive
