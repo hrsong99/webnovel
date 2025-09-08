@@ -60,10 +60,190 @@ As Jaemin rests, a glitched notification flickers: "Unhandled exception: RuleChe
 
 ##### End
 
+### Chapter 2: First Exploit, First Control
+
+#### Chapter Summary
+
+- Jaemin bait-tests a low-level monster to reproduce the timing bug under safer conditions.
+- He introduces guardrails: timeboxing, retreat paths, and manual logging.
+- The exploit yields a modest, consistent resource gain without triggering alarms.
+- An old hunter witnesses something odd and grows suspicious.
+- Jaemin purchases basic supplies, planning a controlled lab environment.
+
+#### Characters
+
+##### Key Actions
+
+- **Jaemin:** Designs field-test protocol, executes exploit with measured cadence, purchases rope, ink, and rations to formalize testing.
+- **Old Hunter:** Observes Jaemin’s unusual movements, spreads a rumor of a “lucky” outsider.
+
+##### Character Development / Changes
+
+- **Jaemin:** Moves from improvisation to disciplined experimentation; confidence grows, arrogance checked.
+
+##### Primary Dialogue (Excerpt)
+
+> "Luck is a story you tell when logs are missing." - Jaemin
+
+#### Main Gain / Plot Progression
+
+Repeatable method for resource gain; first draft of field-test SOP.
+
+#### Main Goal of the Chapter
+
+Transform a one-off exploit into a low-risk, reproducible technique.
+
+#### Cliffhanger / Forward Hook
+
+Rumors reach a minor clan’s ears; a pair of scouts begin asking about the outsider.
+
+#### Excerpts (Post-Writing)
+
+##### Beginning
+
+##### Main Scene
+
+##### End
+
+### Chapter 3: Adversarial Testing
+
+#### Chapter Summary
+
+- Jaemin stress-tests edge cases to understand failure modes and detection thresholds.
+- He simulates noise to mask patterns from potential auditors.
+- A System warning spikes then clears—his masking appears to work.
+- He maps resource yield against risk, defining a safe operating envelope.
+- A villager he helped earlier drops a hint about sect libraries nearby.
+
+#### Characters
+
+##### Key Actions
+
+- **Jaemin:** Builds risk matrix, tunes cadence, documents anomalies; aids a villager to maintain cover.
+- **Villager:** Shares gossip about a small sect taking applicants soon.
+
+##### Character Development / Changes
+
+- **Jaemin:** Learns to balance velocity with stealth; adopts a “quiet build” mentality.
+
+##### Primary Dialogue (Excerpt)
+
+> "Throughput is vanity. Survival is metrics that still exist tomorrow." - Jaemin
+
+#### Main Gain / Plot Progression
+
+Defined safe operating envelope; lead on institutional knowledge (sect).
+
+#### Main Goal of the Chapter
+
+Characterize exploit limits and reduce observability.
+
+#### Cliffhanger / Forward Hook
+
+A System tooltip flickers: "Observer assigned." Someone—or something—is watching.
+
+#### Excerpts (Post-Writing)
+
+##### Beginning
+
+##### Main Scene
+
+##### End
+
+### Chapter 4: Minor Clan Interference
+
+#### Chapter Summary
+
+- Two clan enforcers confront Jaemin, demanding tribute and information.
+- He stalls with social engineering and selective truth.
+- A staged demonstration misleads them about his method and capabilities.
+- They set an ambush for nightfall; Jaemin prepares countermeasures.
+- The ambush is flipped using terrain, timing, and a resource surge at the critical moment.
+
+#### Characters
+
+##### Key Actions
+
+- **Jaemin:** Negotiates, plants false assumptions, establishes traps, and routes attackers into their own crossfire.
+- **Clan Enforcer (Lead):** Underestimates Jaemin, escalates to violence, survives to report upward.
+
+##### Character Development / Changes
+
+- **Jaemin:** Commits to proactive defense; accepts that subtlety must be paired with decisive action.
+
+##### Primary Dialogue (Excerpt)
+
+> "If you audit me, audit your assumptions first." - Jaemin
+
+#### Main Gain / Plot Progression
+
+Proof that his methods work under pressure; secures temporary safety and anonymity.
+
+#### Main Goal of the Chapter
+
+Neutralize immediate threats without revealing true methodology.
+
+#### Cliffhanger / Forward Hook
+
+The surviving enforcer flees toward a nearby town rumored to host a sect—that will be Jaemin’s next destination too.
+
+#### Excerpts (Post-Writing)
+
+##### Beginning
+
+##### Main Scene
+
+##### End
+
+### Chapter 5: Decision to Refactor the World
+
+#### Chapter Summary
+
+- Jaemin consolidates gains and organizes notes into a research backlog.
+- He identifies priorities: safety, knowledge acquisition, sustainable growth.
+- He crafts a cover identity suitable for sect entry.
+- A final field test confirms stability of his exploit with reduced variance.
+- He looks to the mountain path, committing to change the rules, not just play them.
+
+#### Characters
+
+##### Key Actions
+
+- **Jaemin:** Curates findings, sets objectives, forges a practical alias, and departs.
+- **Passing Merchant:** Trades him a worn map; hints at sect politics.
+
+##### Character Development / Changes
+
+- **Jaemin:** Transitions from survivalist to reformer-in-planning; vision crystallizes.
+
+##### Primary Dialogue (Excerpt)
+
+> "I won't wait for a patch. I'll write one." - Jaemin
+
+#### Main Gain / Plot Progression
+
+Clear trajectory toward sect membership; stabilized methodology; refined opsec.
+
+#### Main Goal of the Chapter
+
+Close the opening arc with a resolved direction and prepared entry into the next stage.
+
+#### Cliffhanger / Forward Hook
+
+Distant bells ring from the sect valley—admissions begin at dawn.
+
+#### Excerpts (Post-Writing)
+
+##### Beginning
+
+##### Main Scene
+
+##### End
 ## Document Change Log
 
 | Date       | Version | Description       | Author    |
 |------------|---------|-------------------|-----------|
 | 2025-09-08 | 0.1     | Initial draft     | johnsong  |
+| 2025-09-08 | 0.2     | Added Chapters 2–5 | johnsong  |
 
 

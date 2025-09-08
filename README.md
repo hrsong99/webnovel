@@ -18,6 +18,38 @@ Jaemin, a brilliant but overworked programmer, finds himself unexpectedly summon
 
 The world is a harsh, ancient Chinese-inspired land where martial strength dictates all aspects of life, from social status to survival. Life's primary purpose for warriors (Murim-in) is cultivation to achieve greater strength and longevity. The world is governed by rigid hierarchies among martial sects, powerful clans, and a mysterious imperial family. A divine "System" grants individuals status windows and skills, but its origins are unknown, and its rules are often contradictory and exploitative, leading to societal stagnation and hidden suffering that Jaemin aims to expose and fix.
 
+## Writing Style
+
+Witty, short and punchy lines with precise action beats; modern developer humor and technical metaphors threaded through Murim stakes. Dialogue leans sharp and efficient; exposition is delivered via problem-solving and tests. Combat reads like code execution: inputs, side effects, and logs.
+
+Example Scene (150–300 words):
+
+Jaemin ducked. Not elegantly—more like a thrown exception.
+
+The bandit's saber shaved air where his neck had been. A red notification blinked in the corner of his vision: "Dodge: success. Grace period: 0.3s."
+
+"Generous," he muttered, already moving. Left foot, pivot. Right hand snaps a feint. If-else. Branch predict.
+
+The bandit bit. Steel chased the feint; Jaemin slid to the unguarded side and tapped the man's wrist with two knuckles. Not strength—timing. The saber clattered.
+
+"You fight weird," the man hissed, clutching his hand.
+
+"I debug," Jaemin said. "You crash."
+
+Another window flickered: "Unauthorized Technique Detected: Timing Injection." He ignored it. Warnings without tests are just noise.
+
+The second bandit charged. Jaemin exhaled, counting frames. One, two—on three he stepped inside the arc, nudged the elbow, and let the man's momentum commit the PR no one had reviewed.
+
+They tumbled. Jaemin rolled clear and stood, heartbeat clean and simple. Input. Output. Minimal side effects.
+
+Somewhere, a System rule checked him and timed out.
+
+"If you're going to pretend to be code," he told the blinking window, "I'll write better code."
+
+The notification faded. The road was quiet again, except for two men rediscovering humility.
+
+He tightened his glove. "Next test," he said, and walked toward the mountain path—the console of this world still open, cursor waiting.
+
 ## Arc Summaries
 
 ### Arc 1: System Shock and Initial Exploit

@@ -15,6 +15,7 @@ agent_config:
     - usp
     - tags
     - world-setting
+    - writing-style
     - arc-summaries
     - change-log
 sections:
@@ -56,6 +57,26 @@ sections:
       [Insert detailed world description, including key rules, major factions, and overall atmosphere.]
     elicit: true
     owner: author
+
+  - id: writing-style
+    title: Writing Style
+    instruction: "Describe the series' writing style and provide a short example scene that demonstrates it."
+    owner: author
+    sections:
+      - id: style-description
+        title: Style Description
+        type: template-text
+        instruction: "Describe tone, pacing, voice, sentence rhythm, and typical devices (e.g., witty, short and punchy, technical metaphors, sharp banter)."
+        template: |
+          [Briefly describe the writing style. Example: Witty, short and punchy lines with precise action beats; modern developer humor and metaphors threaded through Murim-inspired stakes.]
+        elicit: true
+      - id: style-example
+        title: Example Scene (Style Demonstration)
+        type: template-text
+        instruction: "Write a short scene (150–300 words) that exemplifies the style above."
+        template: |
+          [Write a short scene here that uses the style you described.]
+        elicit: true
 
   - id: arc-summaries
     title: Arc Summaries
