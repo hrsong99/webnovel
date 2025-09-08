@@ -35,3 +35,67 @@ The world is a harsh, ancient Chinese-inspired land where martial strength dicta
 * He encounters political intrigue from the rival sect, forcing him to use social engineering and system manipulation to defend his new home.
 * Jaemin develops a core personal skill: "Code Injection," allowing him to temporarily alter the properties of objects or low-level techniques, setting the stage for more significant abilities.
 * The arc climaxes with a tournament where Jaemin reveals his optimized techniques, defeating the rival sect's prodigy and securing his sect's independence for the time being.
+
+### Arc 3: The Refactor's Ripple
+
+* As the sect's optimized manuals spread internally, neighboring factions notice abnormal growth.
+* A covert "System Auditor" flags Jaemin's manipulations as violations, marking him for observation.
+* Jaemin stress-tests the sect's techniques with adversarial training to reveal hidden breakpoints.
+* He mentors a small squad to reproduce his methods safely, building redundancy in case he's targeted.
+* The arc ends with the sect surviving a surprise audit duel, but Jaemin realizes surveillance has begun.
+
+### Arc 4: Bug Hunt in the Capital
+
+* Jaemin travels to the provincial capital to trace the "System" telemetry and data relays.
+* He uncovers a black-market plugin economy selling exploit packs to reckless cultivators.
+* Political elites try to recruit or silence him, forcing careful threat modeling in social arenas.
+* He reverse-engineers a throttling mechanism that handicaps commoners while boosting nobles.
+* The arc closes as he publishes a countermeasure, igniting citywide unrest and reform talks.
+
+### Arc 5: The Patch that Broke Production
+
+* A hotfix to remove the throttle causes cascading failures in low-tier dungeons.
+* Monsters exhibit emergent behavior after legacy patches conflict, endangering civilians.
+* Jaemin coordinates a rolling rollback and canary deployment of updated techniques.
+* He accepts responsibility publicly, gaining trust from the masses and ire from elites.
+* The arc climaxes with a multi-dungeon failover operation that stabilizes the ecosystem.
+
+### Arc 6: Open Source Rebellion
+
+* Inspired sects form an alliance to share "open techniques" under a license Jaemin drafts.
+* Traditional masters accuse them of heresy and theft, rallying conservative coalitions.
+* Jaemin designs a federated review process to vet contributions and prevent malicious code.
+* The alliance executes its first joint operation, liberating a region from predatory guilds.
+* The arc ends with the alliance gaining legitimacy—and painting a target on its founders.
+
+### Arc 7: Kernel-Level Secrets
+
+* Clues point to a "Kernel Temple" where the System's root processes manifest.
+* Jaemin confronts custodians who warn that admin access exacts irreversible costs.
+* He learns why prior reformers vanished: they were sandboxed as background daemons.
+* In a trial, he resists a superuser exploit that would rewrite souls for speed.
+* The arc closes with a limited, audited capability grant—and a countdown on its usage.
+
+### Arc 8: Garbage Collector of Souls
+
+* Jaemin discovers memory leaks in the reincarnation queue causing "orphaned" spirits.
+* He builds a garbage collector ritual to safely release or rebind lingering souls.
+* Antagonists weaponize ghosts to crash his process, forcing concurrency-safe rites.
+* A grieving ally finds closure, strengthening bonds and community trust.
+* The arc culminates with a citywide soul cleanup, lowering ambient corruption.
+
+### Arc 9: Distributed Systems War
+
+* War erupts as factions attempt to seize the alliance's knowledge network.
+* Jaemin implements distributed coordination—quorum calls, gossip, and eventual consistency.
+* He trains field leaders in graceful degradation and circuit breakers under siege.
+* A betrayal tests consensus; they expel a Byzantine actor without collapsing.
+* The arc ends with a hard-won armistice and a resilient inter-sect mesh.
+
+### Arc 10: Rewriting the Law
+
+* With war paused, Jaemin drafts a constitutional spec for lawful cultivation protocols.
+* He convenes stakeholders to negotiate invariants, limits, and rights across classes.
+* Opponents unleash a final exploit: a rollback to pre-reform System snapshots.
+* Jaemin orchestrates a zero-downtime migration that preserves gains without data loss.
+* The series arc closes with the world adopting the new spec, while true root remains beyond reach.
