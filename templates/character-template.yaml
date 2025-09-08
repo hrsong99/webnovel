@@ -1,0 +1,86 @@
+template:
+  id: webseries-character-template-v1
+  name: Webseries Character Profile
+  version: 1.0
+  output:
+    format: markdown
+    filename: characters/{{character_name_slug}}.md
+    title: "Character Profile: {{character_name}}"
+workflow:
+  mode: interactive
+  elicitation: advanced-elicitation
+agent_config:
+  editable_sections:
+    - name
+    - background
+    - personality
+    - speaking-style
+    - related-characters
+    - updates-log
+    - change-log
+sections:
+  - id: name
+    title: Name
+    type: template-text
+    instruction: "Enter the character's full name."
+    template: "[Character Name]"
+    elicit: true
+    owner: author
+
+  - id: background
+    title: Background
+    type: template-text
+    instruction: "Detail the character's background, including age, history, goals, and motivation."
+    template: |
+      - **Age:**
+      - **History:**
+      - **Goals:**
+      - **Motivation:**
+    elicit: true
+    owner: author
+
+  - id: personality
+    title: Personality
+    type: template-text
+    instruction: "Describe the character's key personality traits."
+    template: "[e.g., Cold and harsh on the surface, but fiercely loyal to those they trust.]"
+    elicit: true
+    owner: author
+
+  - id: speaking-style
+    title: Speaking Style (Excerpt)
+    type: template-text
+    instruction: "Provide a representative quote that captures how the character speaks."
+    template: |
+      > [e.g., "For I am but a humble servant of the Lord."]
+    elicit: true
+    owner: author
+
+  - id: related-characters
+    title: Related Characters
+    type: bullet-list
+    instruction: "List important relationships and their status. This section should be continuously updated as the story progresses."
+    template: |
+      - **[Character Name]:** [Relationship type - e.g., Father, Rival, Mentor] - [Initial status of the relationship.]
+        - **Update (Chapter X):** [Note on how the relationship evolves.]
+      - **[Character Name]:** [Relationship type] - [Initial status.]
+        - **Update (Chapter Y):** [Note on how the relationship evolves.]
+    elicit: true
+    owner: author
+
+  - id: updates-log
+    title: Character Development Log
+    type: bullet-list
+    instruction: "Log the character's growth, new skills, or key experiences on a per-chapter basis."
+    template: |
+      - **[Chapter 1]:** [Meets a key character, learns a new skill, faces a significant challenge, makes a decision, etc.]
+      - **[Chapter 5]:** [Meets a key character, learns a new skill, faces a significant challenge, makes a decision, etc.]
+    elicit: true
+    owner: author
+
+  - id: change-log
+    title: Document Change Log
+    type: table
+    columns: [Date, Version, Description, Author]
+    instruction: Track changes made to this character profile document.
+    owner: editor
