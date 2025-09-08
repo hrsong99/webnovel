@@ -65,33 +65,38 @@ sections:
             type: template-text
             instruction: "What is the key gain (new skill, item, information) or significant plot advancement in this chapter?"
             template: |
-              [Describe the main gain or progression.]
+              - [Describe the main gain or progression.]
           - id: chapter-1-goal
             title: Main Goal of the Chapter
             type: template-text
             instruction: "What is the narrative purpose of this chapter? How does it connect to the Main Gain?"
             template: |
-              [Describe the chapter's primary goal.]
+              - [Describe the chapter's primary goal.]
           - id: chapter-1-cliffhanger
             title: Cliffhanger / Forward Hook
             type: template-text
             instruction: "What is the cliffhanger or question that makes the reader want to continue?"
             template: |
-              [Describe the hook for the next chapter.]
+              - [Describe the hook for the next chapter.]
           - id: chapter-1-excerpts
             title: Excerpts (Post-Writing)
             instruction: "After writing, paste key excerpts from the chapter here for reference."
-            sections:
+            template: |
               - id: chapter-1-excerpt-beginning
                 title: Beginning
                 type: template-text
+                template: |
+                  > [Quote of the first paragraph of the chapter.]
               - id: chapter-1-excerpt-main-scene
                 title: Main Scene
                 type: template-text
+                template: |
+                  > [Quote of the middle of the chapter.]
               - id: chapter-1-excerpt-end
                 title: End
                 type: template-text
-
+                template: |
+                  > [Quote of the last paragraph of the chapter.]
   - id: change-log
     title: Document Change Log
     type: table
