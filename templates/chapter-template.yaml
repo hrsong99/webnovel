@@ -4,7 +4,7 @@ template:
   version: 1.0
   output:
     format: markdown
-    filename: chapters/chapter-{{chapter_num}}.md
+    filename: chapters/arc-{{arc_num}}/chapter-{{chapter_num}}.md
     title: "Chapter {{chapter_num}}"
 workflow:
   mode: interactive
@@ -51,7 +51,7 @@ sections:
       - [Describe the hook for the next chapter.]
   - id: chapter-excerpts
     title: Excerpts (Post-Writing)
-    instruction: "After writing, paste key excerpts from the chapter here for reference."
+    instruction: "Leave empty for now. After writing the chapter, paste key excerpts from the chapter here for reference."
     template: |
       - id: chapter-excerpt-beginning
         title: Beginning

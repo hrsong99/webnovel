@@ -1,0 +1,62 @@
+template:
+  id: webseries-chapter-content-template-v1
+  name: Webseries Chapter Content
+  version: 1.0
+  output:
+    format: markdown
+    filename: content/arc-{{arc_num}}/chapter-{{chapter_num}}.md
+    title: "Chapter {{chapter_num}}"
+workflow:
+  mode: interactive
+agent_config:
+  editable_sections:
+    - chapter-plan-reference
+    - chapter-prose
+    - authors-notes
+    - change-log
+sections:
+  - id: chapter-plan-reference
+    title: Chapter Plan (Reference)
+    type: template-text
+    instruction: |
+      **For reference only.** Before writing, copy and paste the detailed plan for this specific chapter from your arc document (e.g., from `/chapters/arc-{{arc_num}}/chapter-{{chapter_num}}.md`). This provides a clear guide for the scene.
+    template: |
+      ### Chapter Summary (from plan)
+      - [Plot point 1]
+      - [Plot point 2]
+      - ...
+
+      ### Main Gain / Plot Progression (from plan)
+      [Describe the main gain or progression.]
+
+      ### Main Goal of the Chapter (from plan)
+      [Describe the chapter's primary goal.]
+
+      ### Cliffhanger / Forward Hook (from plan)
+      [Describe the hook for the next chapter.]
+    owner: author
+
+  - id: chapter-prose
+    title: Chapter Content
+    type: template-text
+    instruction: |
+      Write the full text of the chapter here. Use standard markdown for formatting. For scene breaks, you can use a horizontal rule (---). Try to write around 2,000 ~ 3,000 words (3,000 ~ 4,000 characters).
+    template: |
+      [Start writing the chapter here...]
+    owner: author
+
+  - id: authors-notes
+    title: Author's Notes
+    type: bullet-list
+    instruction: "(Optional) Add any personal notes about this chapter, such as continuity reminders, ideas to revisit, or reflections on a character's voice."
+    template: |
+      - [Note about a specific scene or character interaction.]
+      - [Reminder to check consistency with a previous chapter.]
+    owner: author
+
+  - id: change-log
+    title: Document Change Log
+    type: table
+    columns: [Date, Version, Description, Author]
+    instruction: Track major revisions or edits made to this chapter's text.
+    owner: editor
