@@ -63,11 +63,11 @@ sections:
         type: template-text
         instruction: "Describe tone, pacing, voice, sentence rhythm, and typical devices (e.g., witty, short and punchy, technical metaphors, sharp banter)."
         template: |
-          [Briefly describe the writing style. Example: Witty, short and punchy lines with precise action beats; modern developer humor and metaphors threaded through Murim-inspired stakes.]
+          [Briefly describe the writing style. Example: Witty, short and punchy lines with precise action beats]
       - id: style-example
         title: Example Scene (Style Demonstration)
         type: code-block
-        instruction: "Write a short scene (150–300 words) that exemplifies the style above."
+        instruction: "Write a short scene (150–300 words) that exemplifies the style above. The scene should be in Korean."
         template: |
           ```
           [Write a short scene here that uses the style you described.]

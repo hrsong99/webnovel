@@ -1,47 +1,45 @@
 # Chapter 1
 
 ## Chapter Summary
-- Jaemin dies in a mundane but bitterly ironic workplace accident and experiences the "handoff"—a cold, spec-like void between systems.
-- He awakens in a weak body on a mountain path in Murim, disoriented and injured, with fragmented memories syncing.
-- He assesses threats and resources like a developer scanning logs: terrain, injuries, clothing, nearby sounds—survival mode bootstraps.
-- A tense encounter with distant bandit scouts forces him to move and mask his vulnerability without direct combat.
-- A faint interface flicker and inaudible chime tease the presence of a System; a translucent cursor blinks—and the chapter ends.
+- In a rain-soaked alley, Yoon Se-jin prevents Kang Dojin’s imminent Qi Deviation by correcting the fourth breath of the Heavenly Demon Breathing Technique (천마심법).
+- Word of a “physician who sees Ki” spreads among mercenaries and small-time fighters.
+- Se-jin sets a rule of treatment: medical neutrality and no participation in killings.
+- Kang Dojin offers a life-debt and hands over a strange iron emblem found on his attacker.
+- Shadowy observers mark Se-jin’s movements.
 
 ## Character Actions & Developments
-- Jaemin: Maintains composure under shock using diagnostic thinking; prioritizes information gathering; sets a survival baseline; acknowledges fear but frames it as latency to be amortized over action.
-- Bandit Scouts (unnamed): Probe the path opportunistically; their presence signals the world's harsh social contract and informs Jaemin's immediate risk model.
-- Environment (Murim): Functions almost as a character—thin mountain air, uneven paths, and cultural artifacts (saber marks on a tree, worn shrine) enrich context and constraints.
+- Yoon Se-jin: Demonstrates diagnostic sight; articulates clinic ethics; accepts emblem as a clue.
+- Kang Dojin: Survives, vows to spread Se-jin’s name; becomes first reliable ally/informant.
 
 ## Main Gain / Plot Progression
-- Confirmation of death and reincarnation; first implicit confirmation of a governing "System." 
-- Clear external threat introduced (bandits) without resolving it—stakes established.
-- Jaemin's approach to problem-solving (debugging mindset) becomes the primary tool and tone-setter.
+- Proof-of-concept for diagnostic corrections in the field.
+- Establishes the “rules of treatment.”
+- Obtains emblem that hints at a larger conspiracy.
 
 ## Main Goal of the Chapter
-- Onboard the reader into premise, tone, and survival constraints.
-- Seed the System as a real but unreliable interface to be interrogated.
-- End with a forward hook that promises an actionable tutorial in Chapter 2.
+- Introduce protagonist’s unique power, ethics, and the rumor engine that will drive clients and threats.
 
 ## Cliffhanger / Forward Hook
-- A translucent status window almost renders; a cursor blinks with a soft, off-timing chime. Then: [Press any thought to continue].
+- A figure with a matching emblem watches from the alley mouth as Se-jin departs.
 
 ## Excerpts (Post-Writing)
-
-### Beginning
-
-### Main Scene
-
-### End
-
->
-> [Initializing…]
->
-> The text smeared, corrected itself, then hung. A prompt pulsed: [Press any thought to continue].
->
-> Jaemin smiled despite the ache in his ribs. "If you're going to pretend to be code," he whispered, "I'll write better code."
+- id: chapter-excerpt-beginning
+  title: Beginning
+  type: quote-text
+  template: |
+    > [Quote of the first paragraph of the chapter.]
+- id: chapter-excerpt-main-scene
+  title: Main Scene
+  type: quote-text
+  template: |
+    > [Quote of the middle of the chapter.]
+- id: chapter-excerpt-end
+  title: End
+  type: quote-text
+  template: |
+    > [Quote of the last paragraph of the chapter.]
 
 ## Document Change Log
-
-| Date       | Version | Description                          | Author |
-|------------|---------|--------------------------------------|--------|
-| 2025-09-14 | 0.1     | Initial draft of Chapter 1 (outline + excerpts). | You    |
+| Date       | Version | Description                     | Author       |
+|------------|---------|---------------------------------|--------------|
+| 2025-09-14 | 0.1     | Initial chapter outline created | AI Assistant |
