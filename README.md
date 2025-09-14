@@ -23,7 +23,7 @@ The world is a harsh, ancient Chinese-inspired land where martial strength dicta
 Witty, short and punchy lines with precise action beats; modern developer humor and technical metaphors threaded through Murim stakes. Dialogue leans sharp and efficient; exposition is delivered via problem-solving and tests. Combat reads like code execution: inputs, side effects, and logs.
 
 Example Scene (150–300 words):
-
+```
 Jaemin ducked. Not elegantly—more like a thrown exception.
 
 The bandit's saber shaved air where his neck had been. A red notification blinked in the corner of his vision: "Dodge: success. Grace period: 0.3s."
@@ -49,6 +49,7 @@ Somewhere, a System rule checked him and timed out.
 The notification faded. The road was quiet again, except for two men rediscovering humility.
 
 He tightened his glove. "Next test," he said, and walked toward the mountain path—the console of this world still open, cursor waiting.
+```
 
 ## Arc Summaries
 

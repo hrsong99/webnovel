@@ -1,0 +1,76 @@
+template:
+  id: webseries-chapter-template-v1
+  name: Webseries Chapter Document
+  version: 1.0
+  output:
+    format: markdown
+    filename: chapters/chapter-{{chapter_num}}.md
+    title: "Chapter {{chapter_num}}"
+workflow:
+  mode: interactive
+agent_config:
+  editable_sections:
+    - chapter-summary
+    - chapters
+    - change-log
+sections:
+  - id: chapter-summary
+    title: Chapter Summary
+    type: bullet-list
+    instruction: "Provide a concise (~5 bullet points) summary of this chapter's events."
+    template: |
+      - [Plot point 1.1]
+      - [Plot point 1.2]
+      - [Plot point 1.3]
+      - [Plot point 1.4]
+      - [Plot point 1.5]
+  - id: chapter-character-updates
+    title: Character Actions & Developments
+    instruction: "Detail the key character actions and updates for this chapter."
+    type: bullet-list
+    template: |
+      - **Character A:** [Description of their significant actions (what they do) and character updates (what happens to them, how they change, what they learn, how their perspective is altered, etc.)]
+      - **Character B:** [Description of their significant actions (what they do) and character updates (what happens to them, how they change, what they learn, how their perspective is altered, etc.)]
+  - id: chapter-plot-progression
+    title: Main Gain / Plot Progression
+    type: bullet-list
+    instruction: "What is the key gain (new skill, item, information) or significant plot advancement in this chapter?"
+    template: |
+      - [Describe the main gain or progression.]
+  - id: chapter-goal
+    title: Main Goal of the Chapter
+    type: bullet-list
+    instruction: "What is the narrative purpose of this chapter? How does it connect to the Main Gain?"
+    template: |
+      - [Describe the chapter's primary goal.]
+  - id: chapter-cliffhanger
+    title: Cliffhanger / Forward Hook
+    type: bullet-list
+    instruction: "What is the cliffhanger or question that makes the reader want to continue?"
+    template: |
+      - [Describe the hook for the next chapter.]
+  - id: chapter-excerpts
+    title: Excerpts (Post-Writing)
+    instruction: "After writing, paste key excerpts from the chapter here for reference."
+    template: |
+      - id: chapter-excerpt-beginning
+        title: Beginning
+        type: quote-text
+        template: |
+          > [Quote of the first paragraph of the chapter.]
+      - id: chapter-excerpt-main-scene
+        title: Main Scene
+        type: quote-text
+        template: |
+          > [Quote of the middle of the chapter.]
+      - id: chapter-excerpt-end
+        title: End
+        type: quote-text
+        template: |
+          > [Quote of the last paragraph of the chapter.]
+  - id: change-log
+    title: Document Change Log
+    type: table
+    columns: [Date, Version, Description, Author]
+    instruction: Track changes made to this chapter document.
+    owner: editor

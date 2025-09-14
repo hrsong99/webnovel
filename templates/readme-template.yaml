@@ -27,7 +27,6 @@ sections:
       Example: Jaemin is a programmer who gets summoned to a fantasy martial arts world where he must adapt his coding knowledge to survive and understand the new world's "system".
     template: |
       [Insert concise story premise here.]
-    elicit: true
     owner: author
 
   - id: usp
@@ -38,7 +37,6 @@ sections:
       - [Unique charm point 1: e.g., Realistic application of modern logic to fantasy rules]
       - [Key differentiator 2: e.g., Focus on character relationships over pure strength progression]
       - [Series appeal 3: e.g., Intricate world-building based on specific cultural mythology]
-    elicit: true
     owner: author
 
   - id: tags
@@ -46,7 +44,6 @@ sections:
     type: template-text
     instruction: "List relevant genres and tags, separated by commas. Example: #isekai, #moohyeop, #romance, #munchkin, #system, #fantasy, #action"
     template: "#tag1, #tag2, #tag3"
-    elicit: true
     owner: author
 
   - id: world-setting
@@ -55,7 +52,6 @@ sections:
     instruction: "Describe the core concepts of the world, its rules, factions, and atmosphere. Example: An ancient Chinese-inspired world where martial strength dictates status, cultivation energy (Qi) follows strict hierarchical laws, and various sects vie for control of resources."
     template: |
       [Insert detailed world description, including key rules, major factions, and overall atmosphere.]
-    elicit: true
     owner: author
 
   - id: writing-style
@@ -69,40 +65,48 @@ sections:
         instruction: "Describe tone, pacing, voice, sentence rhythm, and typical devices (e.g., witty, short and punchy, technical metaphors, sharp banter)."
         template: |
           [Briefly describe the writing style. Example: Witty, short and punchy lines with precise action beats; modern developer humor and metaphors threaded through Murim-inspired stakes.]
-        elicit: true
       - id: style-example
         title: Example Scene (Style Demonstration)
-        type: template-text
+        type: code-block
         instruction: "Write a short scene (150–300 words) that exemplifies the style above."
         template: |
+          ```
           [Write a short scene here that uses the style you described.]
-        elicit: true
+          ```
 
   - id: arc-summaries
     title: Arc Summaries
-    instruction: "Break down the story plot arc by arc. Add new sections as needed for subsequent arcs."
+    instruction: "Break down the story plot arc by arc. Add new arc sections as needed by duplicating the 'Arc 1' structure. Each arc should be a single section."
     owner: author
     sections:
-      - id: arc-1-summary
-        title: "Arc 1: [Enter Arc Title Here]"
-        type: bullet-list
-        instruction: "Summarize the key plot points, character developments, and outcomes for Arc 1."
-        template: |
-          - [Key event or plot point 1.1]
-          - [Character development point 1.2]
-          - [Introduction of conflict/antagonist 1.3]
-          - [Climax or transition to next arc 1.4]
-        elicit: true
-      - id: arc-2-summary
-        title: "Arc 2: [Enter Arc Title Here]"
-        type: bullet-list
-        instruction: "Summarize the key plot points, character developments, and outcomes for Arc 2."
-        template: |
-          - [Key event or plot point 2.1]
-          - [New challenge or exploration 2.2]
-          - [Development of secondary characters 2.3]
-          - [Climax or transition to next arc 2.4]
-        elicit: true
+      # This entire section can be duplicated and updated for Arc 2, Arc 3, etc.
+      - id: arc-1
+        title: "Arc 1"
+        instruction: "Provide a high-level summary for the entire arc, followed by a detailed breakdown of each chapter."
+        owner: author
+        sections:
+          - id: arc-1-overall-summary
+            title: Overall Arc Summary
+            type: bullet-list
+            instruction: "Summarize the main journey of this arc in 5-10 key bullet points."
+            template: |
+              - [Main inciting incident or goal for the arc]
+              - [Key milestone or turning point]
+              - [Introduction of a major character or antagonist]
+              - [Mid-arc conflict or challenge]
+              - [Climax and resolution of the arc's main conflict]
+              - ...
+          - id: arc-1-chapter-breakdown
+            title: Chapter-by-Chapter Breakdown
+            type: bullet-list
+            instruction: "Summarize the key plot points and developments for each individual chapter within this arc."
+            template: |
+              - **Chapter 1:** [Key event or plot point], [Character development point], [Climax or hook for next chapter]
+              - **Chapter 2:** [Key event or plot point], [Character development point], [Climax or hook for next chapter]
+              - **Chapter 3:** [Key event or plot point], [Character development point], [Climax or hook for next chapter]
+              - **Chapter 4:** [Key event or plot point], [Character development point], [Climax or hook for next chapter]
+              - **Chapter 5:** [Key event or plot point], [Character development point], [Climax or hook for next chapter]
+              - ...
 
   - id: change-log
     title: Document Change Log
