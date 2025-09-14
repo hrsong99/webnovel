@@ -8,7 +8,6 @@ template:
     title: "Character Profile: {{character_name}}"
 workflow:
   mode: interactive
-  elicitation: advanced-elicitation
 agent_config:
   editable_sections:
     - name
@@ -24,7 +23,6 @@ sections:
     type: template-text
     instruction: "Enter the character's full name."
     template: "[Character Name]"
-    elicit: true
     owner: author
 
   - id: background
@@ -36,7 +34,6 @@ sections:
       - **History:**
       - **Goals:**
       - **Motivation:**
-    elicit: true
     owner: author
 
   - id: personality
@@ -44,7 +41,6 @@ sections:
     type: template-text
     instruction: "Describe the character's key personality traits."
     template: "[e.g., Cold and harsh on the surface, but fiercely loyal to those they trust.]"
-    elicit: true
     owner: author
 
   - id: speaking-style
@@ -53,7 +49,6 @@ sections:
     instruction: "Provide a representative quote that captures how the character speaks."
     template: |
       > [e.g., "For I am but a humble servant of the Lord."]
-    elicit: true
     owner: author
 
   - id: related-characters
@@ -65,7 +60,6 @@ sections:
         - **Update (Chapter X):** [Note on how the relationship evolves.]
       - **[Character Name]:** [Relationship type] - [Initial status.]
         - **Update (Chapter Y):** [Note on how the relationship evolves.]
-    elicit: true
     owner: author
 
   - id: updates-log
@@ -75,7 +69,6 @@ sections:
     template: |
       - **[Chapter 1]:** [Meets a key character, learns a new skill, faces a significant challenge, makes a decision, etc.]
       - **[Chapter 5]:** [Meets a key character, learns a new skill, faces a significant challenge, makes a decision, etc.]
-    elicit: true
     owner: author
 
   - id: change-log

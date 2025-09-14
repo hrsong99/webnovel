@@ -8,7 +8,6 @@ template:
     title: "Series Overview: {{series_title}}"
 workflow:
   mode: interactive
-  elicitation: advanced-elicitation
 agent_config:
   editable_sections:
     - premise
