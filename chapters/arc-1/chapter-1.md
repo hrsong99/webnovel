@@ -27,17 +27,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > [Quote of the first paragraph of the chapter.]
+    > 비가 그친 골목은 눅눅했고, 냄새는 무겁게 깔려 있었다. 젖은 먼지, 녹슨 칼집, 싸구려 약초.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > [Quote of the middle of the chapter.]
+    > “천마심법.” 내가 말했다. “네 번째 호흡에서 멈춘다. 들숨이 가슴을 넘지 못해.”
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > [Quote of the last paragraph of the chapter.]
+    > 주머니의 철패가 차갑게, 확실하게 존재했다.
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |

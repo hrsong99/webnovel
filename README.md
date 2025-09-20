@@ -20,41 +20,41 @@ A Murim world governed by sects, clans, and informal networks of mercenaries. In
 ## Writing Style
 
 ### Style Description
-Taut, clinical prose with precise action beats. Witty, dry observations folded into high-stakes diagnostics. Frequent use of technical metaphors (meridians as circuits, breath as clockwork) and short punchy lines during “procedures,” contrasted with slower, reflective passages on ethics and cost. Dialogue is sharp, layered with subtext and factional agendas. World terms (Qi, 주화입마, 천마심법) used deliberately for texture.
+Taut, clinical prose with precise action beats, written in close third person (limited). The narrative rides with Yoon Se-jin’s perceptions without using first-person pronouns, allowing interiority through observed detail and clinical inference. Witty, dry observations fold into high-stakes diagnostics. Use technical metaphors (meridians as circuits, breath as clockwork) and short punchy lines during “procedures,” contrasted with slower, reflective passages on ethics and cost. Dialogue stays sharp, layered with subtext and factional agendas. World terms (Qi, 주화입마, 천마심법) are used deliberately for texture.
 
 ### Example Scene (Style Demonstration)
 ```
 비가 그친 골목은 눅눅했고, 용병의 호흡은 삐걱거렸다.
-나는 맥을 짚지 않았다. 들려오는 숨만으로도 충분했다.
+윤세진은 맥을 짚지 않았다. 들려오는 숨만으로도 충분했다.
 
 “천마심법, 네 번째 호흡에서 멈춘다. 들숨이 가슴을 넘지 못해.”
-그의 어깨가 움찔했다. 손등에 푸른 혈관이 솟았다.
+남자의 어깨가 움찔했다. 손등에 푸른 혈관이 솟았다.
 
 “스승이 말하길, 더 밀어붙이면 벽을 깬다고—”
-“그 벽은 늑골이야. 그리고 그 뒤엔 심장.”
+“그 벽은 늑골이고, 그 뒤엔 심장.”
 
-나는 손가락 두 마디로 그의 흉골 아래를 가볍게 눌렀다. 울림이 탁, 막혔다.
+세진은 손가락 두 마디로 그의 흉골 아래를 가볍게 눌렀다. 울림이 탁, 막혔다.
 
-“기류가 흩어져. 상행 맥은 마딴데로 새고, 하행 맥은 비척거려. 지금 밀어붙이면 주화입마가 먼저 온다.”
+“기류가 흩어진다. 상행 맥은 마딴데로 새고, 하행 맥은 비척거려. 지금 밀어붙이면 주화입마가 먼저 온다.”
 
 그는 이를 갈았다. “그럼, 나는 평생—”
-“아니.” 나는 숨의 길이를 접듯 말끝을 접었다. “호흡을 바꿔.”
+“아니.” 세진은 숨의 길이를 접듯 말끝을 접었다. “호흡을 바꿔.”
 
-나는 박자를 꺼내 보였다. 짧게, 짧게, 길게. 허리를 먼저 열고, 가슴은 나중에. 혀끝은 미세하게 입천장에 닿게.
-그는 따라 했다. 처음엔 방망이질 같더니, 세 번째 사이클에서 떨림이 가라앉았다.
+세진은 박자를 꺼내 보였다. 짧게, 짧게, 길게. 허리를 먼저 열고, 가슴은 나중에. 혀끝은 미세하게 입천장에 닿게.
+남자는 따라 했다. 처음엔 방망이질 같더니, 세 번째 사이클에서 떨림이 가라앉았다.
 
 “지금, 기가 오른다.” 그는 놀란 얼굴로 속삭였다.
 “오르는 게 아니라 정렬되는 거지.”
 
 빗물이 처마 끝에서 한 방울 떨어졌다. 소리가 또렷했다.
-나는 그의 견갑 사이를 스치듯 짚었다. “왼쪽 견갑 뒤, 오래된 염증. 밤에 팔 저렸을 거야. 약첩 줄게. 그런데—”
+세진은 그의 견갑 사이를 스치듯 짚었다. “왼쪽 견갑 뒤, 오래된 염증. 밤에 팔 저렸을 거야. 약첩 줄게. 그런데—”
 
 골목 입구에 그림자 셋. 칼집에서 비린내가 났다.
 
-그는 본능적으로 한 발 앞으로 나섰다. 나는 고개를 저었다.
+그는 본능적으로 한 발 앞으로 나섰다. 세진은 고개를 저었다.
 “네가 싸우면 망가진다. 오늘은 숨이 네 칼날이야.”
 
-나는 셋을 향해 미소 지었다. “진단은 예약이 필요합니다.”
+세진은 셋을 향해 미소 지었다. “진단은 예약이 필요합니다.”
 그들의 발목에서, 불안이 먼저 흔들렸다.
 ```
 

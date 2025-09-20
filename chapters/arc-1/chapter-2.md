@@ -26,17 +26,19 @@
   title: Beginning
   type: quote-text
   template: |
-    > [Quote of the first paragraph of the chapter.]
+    > 비는 그쳤고, 물때가 남았다. 골목 끝의 작은 문짝에 종이를 붙였다. 글씨는 크지 않게, 읽으면 잊히지 않게.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > [Quote of the middle of the chapter.]
+    > “배달이면 언제든.”
+    > 
+    > “배송은 내가 하고, 가격은 네가 정해. 대신—” 그녀가 내 문짝의 종이를 가리켰다. “이 규칙, 지켜. 그러면 내 약도 규칙을 지킬게.”
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > [Quote of the last paragraph of the chapter.]
+    > 밤 공기는 얇았다. 골목의 물때가 냄새를 버리지 못하고 남아 있었다. 나는 봉투를 외투 안주머니에 넣고, 주머니의 다른 쇳조각—철패—를 손끝으로 확인했다.
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
