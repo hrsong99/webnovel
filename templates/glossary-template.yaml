@@ -1,0 +1,44 @@
+template:
+  id: webseries-glossary-template-v1
+  name: Webseries Glossary
+  version: 1.0
+  output:
+    format: markdown
+    filename: GLOSSARY.md
+    title: "Glossary"
+workflow:
+  mode: interactive
+agent_config:
+  editable_sections:
+    - intro
+    - terms
+    - notes
+sections:
+  - id: intro
+    title: About This Glossary
+    type: template-text
+    instruction: |
+      Briefly describe the purpose and scope of the glossary. Mention romanization conventions and how Korean terms are used alongside English.
+    template: |
+      This glossary tracks recurring in‑world terminology, techniques, and symbols used across arcs. Korean terms appear in Hangul first, optionally followed by an English gloss or brief description. Romanized names follow Revised Romanization for consistency (e.g., Yoon Se‑jin, Jang Hyeon).
+    owner: editor
+
+  - id: terms
+    title: Terms
+    type: table
+    columns: [Term (KO), Romanization/EN, Definition / Usage, First Notable Use]
+    instruction: |
+      Add entries for recurring concepts, techniques, items, factions, and motifs. Keep definitions 1–2 sentences and cite the first notable in‑story use.
+    owner: editor
+
+  - id: notes
+    title: Editorial Notes
+    type: bullet-list
+    instruction: |
+      Optional notes on style, capitalization, and when to prefer Korean vs. English terms.
+    template: |
+      - Use Hangul in prose when characters speak/think in‑world; in outlines, include concise English glosses as needed.
+      - Keep “역문” untranslated in prose; add (reverse gate) on first mention in paratext.
+      - Use consistent hyphenation for names (e.g., Se‑jin, not Sejin).
+    owner: editor
+
