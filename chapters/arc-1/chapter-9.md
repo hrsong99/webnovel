@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > 
+    > 아침은 얇게 시작했다. 벽에는 공문이 붙었고, 아래에는 복사가 늘어섰다. 탁자 위에는 ‘의료 중립 헌장(초안)’. 
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > 
+    > “서명하겠다. 다만—” 회색 잉크의 목록이 펼쳐졌다. ‘사건-기록집: 혈맥 붕괴—가계 단절.’ 도해의 빈 칸이 S자 모양으로 남아 있었다.
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > 
+    > 밤, 등불 아래 빈 칸의 그림자. 세진은 손끝으로 그 모양을 따라 그었다. “다음은, 빈 칸. 그리고 그 빈 칸을 가진 손.”
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
