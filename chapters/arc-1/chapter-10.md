@@ -25,17 +25,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > 
+    > 골목에서 두 번 꺾여 들어간 빈 창고는 숨을 가진 방이 되었다. 탁자 위엔 ‘의료 중립 헌장(초안)’과 빈 칸이 있는 사본.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > 
+    > “이게 열쇠.” S자, 끝이 닫히지 않은 선. 빈 칸을 살아 있는 사례로 메우기 위해 표를 펼쳤다. ‘사례 재구성—대상, 경락 흉, 호흡, 결과.’
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > 
+    > 피에 번진 종이 조각. 반쪽 도해가 기존의 빈 칸에 맞물렸다. 세진은 벽에 붙였다. ‘연구 공지—S패턴 증례 모집(무상).’
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
