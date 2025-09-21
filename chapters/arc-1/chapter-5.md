@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > 
+    > 장터가 닫히자, 말의 장터가 열렸다. 원의 경계에 서서, 세진은 낮게 말했다. “세 번째 박에서 멈춰. 허리를 먼저. 팔은 뒤에.”
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > 
+    > “짧게, 짧게, 길게.” 박자가 쪼개졌다. 도끼의 단절이 허공을 자를 때, 칼의 곡선이 이어졌다. 팔꿈치의 축을 뒤로—당기는 칼은 관절을 살렸다.
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > 
+    > 베일 쓴 관객이 남긴 얇은 종이. ‘간섭 금지—위법.’ 도장 아래의 이름은 장현이 아니었다.
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
