@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > [Quote of the first paragraph of the chapter.]
+    > 장마가 비껴간 날, 경기장은 먼지로 숨이 막혔다. 관중의 호흡이 파도처럼 밀려와 되돌아가고, 그 위로 북소리가 규칙을 만들었다. 4—4—5.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > [Quote of the middle of the chapter.]
+    > “혀, 한 번만.” 혀끝이 입천장을 한 번만 두드렸다. 척수의 반사가 다른 길을 탔다. 유검의 어깨가 내려가고, 칼끝이 가볍게 돌아섰다.
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > [Quote of the last paragraph of the chapter.]
+    > 그날 밤, 유검이 문을 두드렸다. “빚은 장부에.” 세진이 웃었다. “대신, 다치지 말 것.”
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |

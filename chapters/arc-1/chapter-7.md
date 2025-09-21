@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > [Quote of the first paragraph of the chapter.]
+    > 밤공기가 마른 칼처럼 피부를 스쳤다. 골목의 메아리가 짧았다. 누군가 소리를 줄이고 있었다.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > [Quote of the middle of the chapter.]
+    > “중립은 허상.” 여자의 목소리는 차갑지 않았다. 오히려 호기심이 있었다. “선택만이 남지.”
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > [Quote of the last paragraph of the chapter.]
+    > 종이에는 점과 선이 있었다. 이틀 후, 경기장. ‘붕괴’.
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |

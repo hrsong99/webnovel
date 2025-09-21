@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > [Quote of the first paragraph of the chapter.]
+    > 낮은 테이블 위에 종이들이 겹겹이 놓였다. 규칙 종이, 장부, 유검의 전갈, 곽진의 점열, 그리고 장현이 건넨 절차서.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > [Quote of the middle of the chapter.]
+    > 사례집의 첫 장에, 결손 표시가 있었다. ‘누락: 도해 4-문(門)-역.’ 세진은 그 표기를 손끝으로 더듬었다. 역문.
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > [Quote of the last paragraph of the chapter.]
+    > 밤, 문 앞에 익명의 봉투가 또 하나. ‘명단을 만들지 마라.’ 세진은 웃음도 분노도 없이 그 말 위에 작은 점을 하나 찍었다. “명단은 호흡에 있다.”
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |

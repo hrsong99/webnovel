@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > [Quote of the first paragraph of the chapter.]
+    > 날은 밝았지만, 공기는 무거웠다. 종이 두 장이 장부 맨 앞에서 마주 보고 있었다. ‘붕괴’와 ‘수확’.
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > [Quote of the middle of the chapter.]
+    > “아라.” “네.” “응급 분류 1번부터 3번까지는 네가. 불 끄지 말고, 문 닫지 마. 환기 유지.” 종 세 개가 ‘짧게, 짧게, 길게’를 나눴다.
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > [Quote of the last paragraph of the chapter.]
+    > 세진은 규칙 종이를 한 번 쓰다듬었다. 종이는 여전히 찢어지지 않았다.
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
