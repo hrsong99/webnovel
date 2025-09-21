@@ -26,17 +26,21 @@
   title: Beginning
   type: quote-text
   template: |
+    > 문턱 위의 매듭이 아직 풀리지 않았다. 바람이 멈추고, 멈춘 바람 속에서 발소리가 들렸다.
     > 
+    > “문은 숨을 막지 못해.”
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
+    > 차가운 바늘이 손등을 스쳤다. 세진은 자신의 명치 위 한 치를 눌러 상행 맥으로만 흐르게 했다. 동시에 그녀의 명치 위 공백을 톡—. 들숨이 박자를 놓쳤다.
     > 
+    > “중립은 신화다.”
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > 
+    > 종이 위 지명 하나. ‘해미촌 옛 의원.’ 세진은 적었다. ‘48시간—프로토콜 v3 준비.’
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
