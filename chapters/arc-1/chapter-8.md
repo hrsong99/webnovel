@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > 
+    > 해미촌 길은 얇았다. 바람이 한 방향으로만 불었다. “도착하면, 문과 창을 먼저.”
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > 
+    > 장터의 원이 무너졌다. “혀끝.” — “허리—지금. 팔—나중.” 잔해의 각이 변하고, 네 사람의 들숨이 하나로 모였다.
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > 
+    > 공문이 문틈으로 미끄러졌다. ‘안전 규정 위반—장의 붕괴 조사.’ 세진은 규칙 아래 한 줄을 더했다. ‘공문 사본—공개 보관.’
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
