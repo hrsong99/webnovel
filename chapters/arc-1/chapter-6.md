@@ -26,17 +26,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > 아라는 숫자를 적었고, 서련은 병을 채웠다. 종이, 약, 물, 불—네 가지가 흐트러지지 않게 돌았다.
+    > 
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > “역문.” 세진이 낮게 말했다. “문이 반대로 달려 있어.” 치유보다 기록이 더 중요했다. 숫자, 점, 선으로 패턴을 남겼다.
+    > 
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > “내일은 상회를 찾자.” 장부의 여백에 찍힌 간소한 문양이, 철패의 무게와 똑같이 차갑게 느껴졌다.
+    > 
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |

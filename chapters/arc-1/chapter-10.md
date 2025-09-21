@@ -25,17 +25,17 @@
   title: Beginning
   type: quote-text
   template: |
-    > 안쪽 골목, 창고였던 집 하나가 새로 숨을 쉬었다. 창틈은 좁고, 바닥은 두 겹, 벽 안쪽에는 종이와 약을 숨길 틈이 있었다.
+    > 
 - id: chapter-excerpt-main-scene
   title: Main Scene
   type: quote-text
   template: |
-    > 봉인 파일의 결손 도해를 대체할 방법은 하나였다. 살아 있는 페이지들. 환자들. “사례를 쌓자.”
+    > 
 - id: chapter-excerpt-end
   title: End
   type: quote-text
   template: |
-    > “시작하자.” 그는 조각을 연구 장부에 붙였다. “이제, 우리가 페이지다.”
+    > 
 
 ## Document Change Log
 | Date       | Version | Description                     | Author       |
