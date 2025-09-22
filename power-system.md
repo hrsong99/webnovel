@@ -44,9 +44,32 @@ The realm of living legends. This is a transformation that elevates a martial ar
     * **Physical Reformation:** The body violently expels all of its innate impurities. This is an excruciating process where one's bones are ground down and reformed, and meridians are forcibly widened and cleansed. Success results in a body that is a perfect vessel for Ki. Failure results in crippling injury or death.
     * **Mental Enlightenment (깨달음):** This is the more important and difficult part. The practitioner must achieve a profound understanding of their own martial art and its connection to the universe. They must find *their own unique truth* within their path. Without this mental breakthrough, the physical process will not even begin. It is a moment of pure, unadulterated insight that redefines their existence.
 
+***
+# **Part 2: The Path of Advancement**
+
+Advancing through the martial realms is a multi-faceted process that requires a combination of three key elements: **Ki Accumulation**, **Physical Conditioning**, and **Mental Insight**. While the end goal is the same, each faction approaches this path differently.
+
+### **1. Ki Accumulation: The Fuel of Power**
+Internal energy (내공) is the fundamental resource for any martial artist. A larger and purer reserve of Ki allows for more powerful techniques and faster recovery. There are three primary methods of accumulation:
+
+* **Meditation and Cultivation (운기조식):** This is the most common and stable method. By sitting in a meditative state and circulating Ki according to their sect's specific breathing techniques, a martial artist absorbs the ambient energy of the world and refines it into their own internal power. This is the foundation of the Orthodox and Buddhist paths.
+* **Consumption of Resources (영약):** Nature produces treasures rich in spiritual energy, such as thousand-year-old ginseng, spiritual mushrooms, or the Ki-rich blood of mystical beasts. Consuming these can grant a massive, instantaneous boost to one's internal energy. However, this power can be volatile and impure if not properly assimilated. The Unorthodox and Demonic factions often rely heavily on this method for rapid growth.
+* **Devouring Arts (흡성대법):** A forbidden and dangerous path, primarily used by Demonic practitioners. These techniques allow a user to forcibly absorb the internal energy of another living martial artist. While it offers the fastest growth, the absorbed Ki is often tainted with the victim's will and impurities, making it a direct path to Qi Deviation (주화입마).
+
+### **2. The Breakthrough: Condensing Ki and Insight**
+Moving from one realm to the next (e.g., Second-Rate to First-Rate) is not just about having enough Ki. It's a violent and deliberate process of qualitative change.
+
+* **Reaching the Barrier:** To advance, a martial artist must first reach the **High/Completion** stage of their current realm. This means their Dantian is filled to capacity with Ki of that realm's quality.
+* **The Condensation:** The breakthrough itself involves a dangerous period of intense, focused meditation. The practitioner must use their willpower and technique to forcibly **compress and condense** all the Ki in their Dantian. This process purifies the energy, raising its quality to the next level. It is incredibly painful and, if the user's control falters, can result in their meridians rupturing.
+* **The Role of Insight (깨달음):** Pure power is not enough. To successfully control the condensed energy and stabilize in the new realm, the martial artist must have a moment of insight relevant to that realm's core concept.
+    * **To reach First-Rate:** One must have an insight into the nature of "Projection." They must understand how their Ki can exist outside the body.
+    * **To reach the Peak Realm:** One needs an insight into "Harmony," understanding how their mind, body, and art can truly become one.
+
+This dual requirement of **sufficient power** and **sufficient understanding** is why many talented warriors remain stuck in a realm for decades. They may have the power, but lack the crucial spark of enlightenment.
+
 ---
 
-# **Part 2: The Divergent Paths - Factional Philosophies**
+# **Part 3: The Divergent Paths - Factional Philosophies**
 
 How a martial artist cultivates their Ki depends heavily on their faction's core philosophy. This affects the nature of their energy, their speed of progression, and their approach to Hwangoltaltae.
 
@@ -77,7 +100,7 @@ How a martial artist cultivates their Ki depends heavily on their faction's core
 Jin Cheol's **Sutra of Unraveling Principles** stands in stark opposition to all of these. While they all seek to build a tower of power, Jin Cheol is learning how to meticulously catalog its every brick and stone so that he can pull out the single one that will make it all collapse.
 
 
-# **Part 3: The Sutra of Unraveling Principles (해리심경)**
+# **Part 4: The Sutra of Unraveling Principles (해리심경)**
 
 The Sutra is not just about understanding; it's a complete system that forges the **Mind, Energy, and Body** into a single, cohesive weapon. The three pillars are inseparable, and progression in one requires and enables progression in the others.
 
@@ -101,31 +124,31 @@ Jin Cheol's growth would now look like this, with each stage representing a holi
 * **Murim Level:** Third-Rate (삼류)
 * **Mind:** He can perceive the general flow of Ki. He can tell if someone is a martial artist and get a rough sense of their power. It's like seeing the world in low-resolution thermal vision.
 * **Energy:** He cultivates his first strands of Solvent Qi. In terms of raw quantity, this puts him at the level of a **Third-Rate (삼류) Warrior**. This energy is crucial for fueling the Mind's Eye and for basic physical reinforcement. Without it, his eyes would see nothing, and his body would be too weak to react.
-* **Body:** He learns the basic stances and principles of the Body of Efficiency. He can now perform the elementary "Flowing Shadow Step." He isn't blindingly fast, but his movements are fluid and deceptive. Against the **Iron Axe Bandit Leader (a Second-Rate master)**, he wouldn't be able to outrun him in a straight line, but he could evade the leader's telegraphed, power-focused attacks just enough to survive and find an opening. His physical fitness is now far beyond that of a normal human.
+* **Body:** He learns the basic stances and principles of the Body of Efficiency. He can now perform the elementary "Flowing Shadow Step." He isn't blindingly fast, but his movements are fluid and deceptive. His physical fitness is now far beyond that of a normal human.
+* **Advancement Path:** For Jin Cheol, Ki accumulation is purely through **meditation**. His "Solvent Qi" is a neutral energy that cannot be bolstered by volatile elixirs. His progression is about **intellectual insight**. He advances from one stage to the next not by condensing power, but by achieving a new level of understanding about the nature of Ki itself. His first major insight was realizing that Ki itself was a "flaw" in the universe.
 
 #### **Stage 2: Analysis (분석 / 分析)**
 * **Murim Level:** Second-Rate (이류)
-* **Mind:** His perception sharpens dramatically. He no longer just sees the flow; he can discern the *structure* of a technique after seeing it a few times. He can identify the major principles and, more importantly, the critical flaws. This is where he was at the end of the first arc.
-* **Energy:** His Solvent Qi becomes denser and more potent. His internal energy reserves are now firmly at the **Second-Rate (이류) level**. This allows him to sustain his enhanced perception for longer periods and to begin projecting his Solvent Qi in a rudimentary fashion.
-* **Body:** His mastery of the "Flowing Shadow Step" deepens. Crucially, he now integrates his analytical ability with his movement. He doesn't just dodge; he moves to the optimal position to exploit the flaw he has perceived. His reactive speed appears to skyrocket because he begins to move *before* the opponent has even completed their attack, based on his analysis of their energy buildup. He can now physically keep up with and contend against other Second-Rate masters.
+* **Mind:** His perception sharpens dramatically. He no longer just sees the flow; he can discern the *structure* of a technique after seeing it a few times. He can identify the major principles and, more importantly, the critical flaws.
+* **Energy:** His Solvent Qi becomes denser and more potent as his understanding deepens. His internal energy reserves are now firmly at the **Second-Rate (이류) level**.
+* **Body:** His mastery of the "Flowing Shadow Step" deepens. Crucially, he now integrates his analytical ability with his movement. His reactive speed appears to skyrocket because he begins to move *before* the opponent has even completed their attack, based on his analysis of their energy buildup. He can now physically keep up with and contend against other Second-Rate masters.
 
 #### **Stage 3: Interference (간섭 / 干涉)**
 * **Murim Level:** First-Rate (일류)
 * **Mind:** He moves from passive observation to active intervention. He can now see the precise "keystone" of an opponent's technique—the critical node in their energy circulation that holds it all together.
-* **Energy:** His Solvent Qi is now incredibly refined, equivalent to a **First-Rate (일류) Master**. He can now project his Qi with pinpoint accuracy. He can "flick" a needle of Solvent Qi to disrupt an opponent's meridian at the "keystone" point his mind has identified, causing their ultimate technique to crumble into nothing.
-* **Body:** He can match the speed and power of First-Rate masters. His Body of Efficiency has reached a point where his every movement is purposeful. He generates maximum force with minimum effort. His "Flowing Shadow Step" becomes truly phantom-like, as he moves in perfect harmony with the chaotic energies of a high-level battle, making him almost impossible to track.
+* **Energy:** His Solvent Qi is now incredibly refined, equivalent to a **First-Rate (일류) Master**. He can now project his Qi with pinpoint accuracy to disrupt an opponent's meridian at the "keystone" point.
+* **Body:** He can match the speed and power of First-Rate masters. His Body of Efficiency has reached a point where his every movement is purposeful. His "Flowing Shadow Step" becomes truly phantom-like.
 
 #### **Stage 4: Synthesis (종합 / 綜合)**
 * **Murim Level:** **Peak (절정)**
-* **The Concept:** This is the new stage, representing the perfection of the Sutra's principles within the human limit. After learning to Perceive, Analyze, and Interfere, the practitioner now learns to **Synthesize**.
-* **Mind:** The practitioner's understanding becomes so profound that they can deconstruct an opponent's art in their mind and instantly reconstruct a perfect counter. More than that, they can **temporarily mimic or even improve upon** an opponent's technique after analyzing it, turning their own art against them in a more perfect form. This is the ultimate expression of martial arts theory.
-* **Energy of other arts without being corrupted. This is the engine that powers the act of Synthesis. The user's reserves and power are firmly at the Peak level.
-* **Body:** The body achieves **"predictive harmony."** The practitioner no longer just reacts or predicts; they intuitively understand the entire flow of a battle. Their body moves in perfect, minimalist harmony to neutralize threats and create opportunities, making them an almost untouchable opponent. This is the pinnacle of skill.
+* **Mind:** The practitioner's understanding becomes so profound that they can deconstruct an opponent's art in their mind and instantly reconstruct a perfect counter. More than that, they can **temporarily mimic or even improve upon** an opponent's technique after analyzing it.
+* **Energy:** His Solvent Qi reaches a state of **perfect equilibrium**. The user's reserves and power are firmly at the Peak level.
+* **Body:** The body achieves **"predictive harmony."** The practitioner no longer just reacts or predicts; they intuitively understand the entire flow of a battle.
 
 #### **Stage 5: Deconstruction (해체 / 解體)**
 * **Murim Level:** **Transcendent (초절정)**
-* **The Breakthrough:** This final stage is only achievable after undergoing the Sutra's unique form of **Hwangoltaltae (환골탈태)**—a "Reformation of Emptiness." This isn't about gaining more power but achieving a state of absolute purity, becoming a perfect conduit for the universal laws the Sutra operates on.
-* **Mind:** Achieves a god-like perspective. The practitioner no longer just analyzes a technique; they perceive the very foundation of an opponent's martial existence—the history of their training, the core of their enlightenment, and the conceptual framework holding their power together.
+* **The Breakthrough:** This final stage is only achievable after undergoing the Sutra's unique form of **Hwangoltaltae (환골탈태)**—a "Reformation of Emptiness." This isn't about gaining more power but achieving a state of absolute purity.
+* **Mind:** Achieves a god-like perspective. The practitioner no longer just analyzes a technique; they perceive the very foundation of an opponent's martial existence.
 * **Energy:** Transcends its previous form. It can now act as a true universal solvent, capable of fundamentally and **permanently unraveling** the internal energy and cultivated meridians of another martial artist with a touch.
 * **Body:** The body becomes a physical extension of the Sutra's principles. It exists in a state of "actionless action," where the smallest, most subtle gesture can bring about the complete dismantlement of an opponent.
 
