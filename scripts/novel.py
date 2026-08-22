@@ -23,6 +23,7 @@ EN_HEADING_RE = re.compile(r"^# Chapter ([1-9][0-9]*)\.\s+(.+?)\s*$")
 WORD_RE = re.compile(r"\b[A-Za-z0-9]+(?:[’'-][A-Za-z0-9]+)*\b")
 KOREAN_RE = re.compile(r"[가-힣ㄱ-ㅎㅏ-ㅣ]")
 SAFE_SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+IMAGE_MEDIA_TYPES = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".svg": "image/svg+xml"}
 PLACEHOLDER_RE = re.compile(r"(?i)(?:\b(?:TODO|TBD|FIXME|XXX|PLACEHOLDER)\b|(?:작성|집필|내용)\s*(?:예정|필요|추가)|추후\s*(?:작성|보강)|여기에\s*작성|미완성\s*본문)")
 EDITORIAL_RE = re.compile(r"(?im)(?:^---\s*$|<!--|-->|^\s*(?:[-*]\s*)?\[[ xX]\]\s+|(?:편집\s*메모|작가\s*(?:노트|메모)|기획\s*(?:메모|의도)|장면\s*(?:목적|요약)|시놉시스|복선|POV|관점|등장인물|키워드)\s*[:：])")
 REQUIRED_TEXT_FIELDS = ("slug", "title", "author", "language", "description", "genre", "quote", "about", "completion_title", "completion_text")
@@ -60,6 +61,17 @@ class Story:
     root: Path
     primary: Manuscript
     english: Manuscript | None
+    illustrations: dict[int, tuple["Illustration", ...]]
+
+
+@dataclass(frozen=True)
+class Illustration:
+    identifier: str
+    chapter: int
+    placement: dict[str, int]
+    asset: str
+    alt: dict[str, str]
+    caption: dict[str, str]
 
 
 def read_json(path: Path, label: str) -> Any:
@@ -262,6 +274,64 @@ def load_reviewer_note(root: Path, language: str, number: int) -> str:
     return body
 
 
+def load_illustrations(story_root: Path, languages: tuple[str, ...], chapter_numbers: set[int]) -> dict[int, tuple[Illustration, ...]]:
+    path = story_root / "manuscript" / "illustrations.json"
+    if not path.is_file():
+        return {}
+    raw = read_json(path, "illustrations.json")
+    if not isinstance(raw, dict) or raw.get("version") != 1 or not isinstance(raw.get("illustrations"), list):
+        raise NovelError("illustrations.json must be an object with version 1 and an 'illustrations' array")
+    errors: list[str] = []
+    records: dict[int, list[Illustration]] = collections.defaultdict(list)
+    identifiers: set[str] = set()
+    for index, item in enumerate(raw["illustrations"], 1):
+        label = f"illustrations.json item {index}"
+        item_error_count = len(errors)
+        if not isinstance(item, dict):
+            errors.append(f"{label} must be an object"); continue
+        identifier, chapter, asset = item.get("id"), item.get("chapter"), item.get("asset")
+        if not isinstance(identifier, str) or not SAFE_SLUG_RE.fullmatch(identifier):
+            errors.append(f"{label} id must be a path-safe slug")
+        elif identifier in identifiers:
+            errors.append(f"duplicate illustration id: {identifier}")
+        else:
+            identifiers.add(identifier)
+        if isinstance(chapter, bool) or not isinstance(chapter, int) or chapter not in chapter_numbers:
+            errors.append(f"{label} chapter must name a published chapter")
+        asset_path = Path(asset) if isinstance(asset, str) else Path()
+        if not isinstance(asset, str) or not asset or asset_path.is_absolute() or ".." in asset_path.parts or asset_path.parts[:1] != ("scenes",):
+            errors.append(f"{label} asset must be a relative path beneath assets/scenes")
+        elif asset_path.suffix.lower() not in IMAGE_MEDIA_TYPES:
+            errors.append(f"{label} asset must be JPG, PNG, WebP, or SVG")
+        elif not (story_root / "assets" / asset_path).is_file():
+            errors.append(f"{label} asset is missing: {story_root / 'assets' / asset_path}")
+        placement, alt = item.get("after_paragraph"), item.get("alt")
+        caption = item.get("caption", {})
+        for field, value in (("after_paragraph", placement), ("alt", alt)):
+            if not isinstance(value, dict): errors.append(f"{label} {field} must be a language map")
+        if not isinstance(caption, dict):
+            errors.append(f"{label} caption must be a language map when present"); caption = {}
+        for language in languages:
+            if not isinstance(placement, dict) or isinstance(placement.get(language), bool) or not isinstance(placement.get(language), int) or placement[language] < 1:
+                errors.append(f"{label} after_paragraph.{language} must be a positive integer")
+            if not isinstance(alt, dict) or not isinstance(alt.get(language), str) or not alt[language].strip():
+                errors.append(f"{label} alt.{language} must be non-empty")
+            if language in caption and (not isinstance(caption[language], str) or not caption[language].strip()):
+                errors.append(f"{label} caption.{language} must be non-empty when present")
+        provenance = item.get("provenance")
+        if not isinstance(provenance, dict):
+            errors.append(f"{label} provenance must be an object")
+        else:
+            for field in ("provider", "model", "prompt_id", "generated_at"):
+                if not isinstance(provenance.get(field), str) or not provenance[field].strip():
+                    errors.append(f"{label} provenance.{field} must be non-empty")
+        if len(errors) == item_error_count and isinstance(chapter, int) and not isinstance(chapter, bool):
+            records[chapter].append(Illustration(str(identifier), chapter, dict(placement or {}), str(asset or ""), dict(alt or {}), dict(caption or {})))
+    if errors:
+        raise NovelError("illustration validation failed:\n" + "\n".join(f"- {error}" for error in errors))
+    return {chapter: tuple(sorted(items, key=lambda item: (item.placement[languages[0]], item.identifier))) for chapter, items in records.items()}
+
+
 def load_story(slug: str, story_root: Path) -> Story:
     primary = read_manuscript(story_root, slug)
     english = read_translation(story_root, "en", slug)
@@ -280,7 +350,9 @@ def load_story(slug: str, story_root: Path) -> Story:
         missing.append("cover-en.svg or cover.svg")
     if missing:
         raise NovelError(f"missing story asset(s) for {slug}: " + ", ".join(missing))
-    return Story(slug, story_root, primary, english)
+    languages = ("ko", "en") if english else ("ko",)
+    illustrations = load_illustrations(story_root, languages, {chapter.number for chapter in primary.chapters})
+    return Story(slug, story_root, primary, english, illustrations)
 
 
 def load_catalog(root: Path, selected: str | None = None) -> tuple[list[Story], str]:
@@ -334,8 +406,32 @@ def standalone_html(manuscript: Manuscript) -> str:
     return f'<!doctype html><html lang="{html.escape(meta["language"])}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{html.escape(meta["title"])}</title><style>body{{font-family:serif;line-height:1.9;max-width:46rem;margin:auto;padding:2rem}}section{{margin:6rem 0}}p{{margin:.7em 0}}</style></head><body><header><h1>{html.escape(meta["title"])}</h1><p>{html.escape(meta["description"])}</p></header><nav><ol>{toc}</ol></nav><main>{chapters}</main></body></html>'
 
 
-def build_epub(manuscript: Manuscript, destination: Path) -> None:
+def epub_chapter_body(body: str, language: str, illustrations: tuple[Illustration, ...]) -> str:
+    rendered: list[str] = []
+    paragraph_index = 0
+    placed: set[str] = set()
+    for paragraph in re.split(r"\n\s*\n", body.strip()):
+        if paragraph.strip() == "***":
+            rendered.append('<hr class="scene-break"/>')
+            continue
+        paragraph_index += 1
+        rendered.append(f"<p>{html.escape(paragraph.strip()).replace(chr(10), '<br />')}</p>")
+        for illustration in illustrations:
+            if illustration.placement.get(language) != paragraph_index:
+                continue
+            placed.add(illustration.identifier)
+            caption = illustration.caption.get(language, "")
+            caption_html = f"<figcaption>{html.escape(caption)}</figcaption>" if caption else ""
+            rendered.append(f'<figure><img src="images/{html.escape(illustration.asset, quote=True)}" alt="{html.escape(illustration.alt[language], quote=True)}" />{caption_html}</figure>')
+    missing = [item.identifier for item in illustrations if item.identifier not in placed]
+    if missing:
+        raise NovelError(f"illustration placement exceeds {language} EPUB chapter paragraph count: {', '.join(missing)}")
+    return "".join(rendered)
+
+
+def build_epub(manuscript: Manuscript, destination: Path, illustrations: dict[int, tuple[Illustration, ...]] | None = None) -> None:
     meta = manuscript.metadata
+    illustrations = illustrations or {}
     language = str(meta["language"])
     identifier_source = f"{meta['slug']}:{language}"
     identifier = f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, identifier_source)}"
@@ -343,7 +439,9 @@ def build_epub(manuscript: Manuscript, destination: Path) -> None:
     items = "".join(f'<item id="c{c.number}" href="chapter-{c.number:03d}.xhtml" media-type="application/xhtml+xml"/>' for c in manuscript.chapters)
     spine = "".join(f'<itemref idref="c{c.number}"/>' for c in manuscript.chapters)
     links = "".join(f'<li><a href="chapter-{c.number:03d}.xhtml">{html.escape(c.heading)}</a></li>' for c in manuscript.chapters)
-    opf = f'<?xml version="1.0" encoding="utf-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="book-id"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="book-id">{identifier}</dc:identifier><dc:title>{html.escape(meta["title"])}</dc:title><dc:creator>{html.escape(meta["author"])}</dc:creator><dc:language>{language}</dc:language><meta property="dcterms:modified">{modified}</meta></metadata><manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>{items}</manifest><spine>{spine}</spine></package>'
+    image_assets = sorted({item.asset for chapter_items in illustrations.values() for item in chapter_items})
+    image_items = "".join(f'<item id="image-{index}" href="images/{html.escape(asset, quote=True)}" media-type="{IMAGE_MEDIA_TYPES[Path(asset).suffix.lower()]}"/>' for index, asset in enumerate(image_assets, 1))
+    opf = f'<?xml version="1.0" encoding="utf-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="book-id"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="book-id">{identifier}</dc:identifier><dc:title>{html.escape(meta["title"])}</dc:title><dc:creator>{html.escape(meta["author"])}</dc:creator><dc:language>{language}</dc:language><meta property="dcterms:modified">{modified}</meta></metadata><manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>{items}{image_items}</manifest><spine>{spine}</spine></package>'
     nav = f'<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml"><head><title>{html.escape(meta["title"])}</title></head><body><nav xmlns:epub="http://www.idpf.org/2007/ops" epub:type="toc"><ol>{links}</ol></nav></body></html>'
     container = '<?xml version="1.0" encoding="UTF-8"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>'
     with zipfile.ZipFile(destination, "w") as archive:
@@ -351,15 +449,18 @@ def build_epub(manuscript: Manuscript, destination: Path) -> None:
         archive.writestr("META-INF/container.xml", container, compress_type=zipfile.ZIP_DEFLATED)
         archive.writestr("OEBPS/content.opf", opf, compress_type=zipfile.ZIP_DEFLATED)
         archive.writestr("OEBPS/nav.xhtml", nav, compress_type=zipfile.ZIP_DEFLATED)
+        for asset in image_assets:
+            archive.write(manuscript.root / "assets" / asset, f"OEBPS/images/{asset}", compress_type=zipfile.ZIP_DEFLATED)
         for chapter in manuscript.chapters:
-            document = f'<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="{language}"><head><title>{html.escape(chapter.heading)}</title></head><body><h1>{html.escape(chapter.heading)}</h1>{body_paragraphs(chapter.body)}</body></html>'
+            body = epub_chapter_body(chapter.body, language, illustrations.get(chapter.number, ()))
+            document = f'<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="{language}"><head><title>{html.escape(chapter.heading)}</title></head><body><h1>{html.escape(chapter.heading)}</h1>{body}</body></html>'
             archive.writestr(f"OEBPS/chapter-{chapter.number:03d}.xhtml", document, compress_type=zipfile.ZIP_DEFLATED)
 
 
 def ui_copy(language: str) -> dict[str, str]:
     if language == "en":
-        return {"catalog":"All stories", "chapters":"Chapters", "about":"About", "edition":"Read in Korean", "start":"Begin chapter one", "resume":"Continue reading", "read":"READ", "download":"Download", "previous":"Previous", "next":"Next", "home":"Book home", "overview":"Editorial chapter overview", "hint":"Spoilers · plot structure, decisions, and progression constraints", "unit":"words", "minutes":"min read", "language":"한국어"}
-    return {"catalog":"전체 작품", "chapters":"목차", "about":"작품 소개", "edition":"Read in English", "start":"첫 화 읽기", "resume":"이어 읽기", "read":"읽음", "download":"내려받기", "previous":"이전화", "next":"다음화", "home":"작품 홈", "overview":"편집자용 회차 개요", "hint":"스포일러 · 주요 사건, 인물 선택, 성장 제약", "unit":"자", "minutes":"분", "language":"EN"}
+        return {"catalog":"All stories", "chapters":"Chapters", "about":"About", "edition":"Read in Korean", "start":"Begin chapter one", "resume":"Continue reading", "read":"READ", "download":"Download", "previous":"Previous", "next":"Next", "home":"Book home", "overview":"Editorial chapter overview", "hint":"Spoilers · plot structure, decisions, and progression constraints", "unit":"words", "minutes":"min read", "language":"한국어", "focus":"Focus", "focus_title":"Focus reading", "focus_hint":"Tap the clear paragraph to continue · ↑↓ move · Esc exits", "focus_end":"End of chapter · choose where to go next below", "smaller":"Smaller text", "larger":"Larger text", "theme":"Change color theme"}
+    return {"catalog":"전체 작품", "chapters":"목차", "about":"작품 소개", "edition":"Read in English", "start":"첫 화 읽기", "resume":"이어 읽기", "read":"읽음", "download":"내려받기", "previous":"이전화", "next":"다음화", "home":"작품 홈", "overview":"편집자용 회차 개요", "hint":"스포일러 · 주요 사건, 인물 선택, 성장 제약", "unit":"자", "minutes":"분", "language":"EN", "focus":"집중", "focus_title":"집중 읽기", "focus_hint":"선명한 문단을 누르면 다음으로 · ↑↓ 이동 · Esc 종료", "focus_end":"회차 끝 · 아래에서 다음 이동을 선택하세요", "smaller":"글자 작게", "larger":"글자 크게", "theme":"색상 테마 변경"}
 
 
 def asset_url(name: str, versions: dict[str, str]) -> str:
@@ -389,14 +490,27 @@ def simple_markdown_html(text: str) -> str:
     return "".join(blocks)
 
 
-def chapter_prose_html(body: str, language: str) -> str:
+def chapter_prose_html(body: str, language: str, illustrations: tuple[Illustration, ...] = (), asset_base: str = "") -> str:
     rendered = []
+    focus_index = 0
+    placed: set[str] = set()
     for paragraph in re.split(r"\n\s*\n", body.strip()):
         if paragraph.strip() == "***":
             rendered.append('<hr class="scene-break">')
         else:
+            focus_index += 1
             css = ' class="dialogue"' if paragraph.strip().startswith(("“", '"', "‘")) else ""
-            rendered.append(f"<p{css}>{html.escape(paragraph.strip()).replace(chr(10), '<br>')}</p>")
+            rendered.append(f'<p{css} data-focus-unit="{focus_index}">{html.escape(paragraph.strip()).replace(chr(10), "<br>")}</p>')
+            for illustration in illustrations:
+                if illustration.placement.get(language) != focus_index:
+                    continue
+                placed.add(illustration.identifier)
+                caption = illustration.caption.get(language, "")
+                caption_html = f"<figcaption>{html.escape(caption)}</figcaption>" if caption else ""
+                rendered.append(f'<figure class="story-illustration" data-focus-unit="illustration-{html.escape(illustration.identifier, quote=True)}"><img src="{asset_base}{html.escape(illustration.asset, quote=True)}" alt="{html.escape(illustration.alt[language], quote=True)}" loading="lazy" decoding="async">{caption_html}</figure>')
+    missing = [item.identifier for item in illustrations if item.identifier not in placed]
+    if missing:
+        raise NovelError(f"illustration placement exceeds {language} chapter paragraph count: {', '.join(missing)}")
     return "".join(rendered)
 
 
@@ -437,7 +551,9 @@ def chapter_page_html(story: Story, manuscript: Manuscript, chapter: Chapter, ve
     measure = chapter.word_count if language == "en" else chapter.korean_chars
     minutes = max(5, round(chapter.word_count / 220 if language == "en" else chapter.korean_chars / 500))
     end = "" if following else f'<div class="end-card"><strong>{html.escape(meta["completion_title"])}</strong><p>{html.escape(meta["completion_text"])}</p></div>'
-    return f'<!doctype html><html lang="{language}"><head>{head}{alternate}<script defer src="{asset_url("reader.js", versions)}"></script></head><body class="reader-page" data-story-slug="{slug}" data-chapter="{chapter.number}" data-language="{language}"><div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div><header class="reader-bar"><div class="reader-bar-inner"><a class="reader-home" href="{home}"><span class="brand-mark">冊</span><span>{html.escape(meta["title"])}</span></a><span class="reader-position">{chapter.number:02d} / {len(manuscript.chapters):02d}</span><div class="reader-tools">{language_link}<button class="tool-button" data-font-step="-1">A−</button><button class="tool-button" data-font-step="1">A+</button><button class="tool-button" data-action="theme">◐</button><details class="toc-toggle"><summary>☰</summary><nav class="toc-panel">{toc}</nav></details></div></div></header><main class="reader-main"><header class="chapter-head"><p class="chapter-label">CHAPTER {chapter.number:02d}</p><h1>{html.escape(chapter.title)}</h1><p>{measure:,} {ui["unit"]} · {minutes} {ui["minutes"]}</p></header><details class="reviewer-overview"><summary><span><strong>{ui["overview"]}</strong><small>{ui["hint"]}</small></span></summary><div class="reviewer-body">{note}</div></details><article class="prose">{chapter_prose_html(chapter.body, language)}</article><nav class="chapter-nav">{prev}{nxt}</nav>{end}</main></body></html>'
+    illustrations = story.illustrations.get(chapter.number, ())
+    prose = chapter_prose_html(chapter.body, language, illustrations, f"/stories/{slug}/assets/")
+    return f'<!doctype html><html lang="{language}"><head>{head}{alternate}<script defer src="{asset_url("reader.js", versions)}"></script></head><body class="reader-page" data-story-slug="{slug}" data-chapter="{chapter.number}" data-language="{language}"><div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div><header class="reader-bar"><div class="reader-bar-inner"><a class="reader-home" href="{home}"><span class="brand-mark">冊</span><span>{html.escape(meta["title"])}</span></a><span class="reader-position">{chapter.number:02d} / {len(manuscript.chapters):02d}</span><div class="reader-tools">{language_link}<button class="tool-button focus-tool" data-action="focus" aria-pressed="false" aria-controls="chapter-prose" title="{ui["focus_title"]}"><span aria-hidden="true">◎</span><span class="focus-label">{ui["focus"]}</span></button><button class="tool-button" data-font-step="-1" aria-label="{ui["smaller"]}">A−</button><button class="tool-button" data-font-step="1" aria-label="{ui["larger"]}">A+</button><button class="tool-button" data-action="theme" aria-label="{ui["theme"]}">◐</button><details class="toc-toggle"><summary aria-label="{ui["chapters"]}">☰</summary><nav class="toc-panel">{toc}</nav></details></div></div></header><main class="reader-main"><header class="chapter-head"><p class="chapter-label">CHAPTER {chapter.number:02d}</p><h1>{html.escape(chapter.title)}</h1><p>{measure:,} {ui["unit"]} · {minutes} {ui["minutes"]}</p></header><details class="reviewer-overview"><summary><span><strong>{ui["overview"]}</strong><small>{ui["hint"]}</small></span></summary><div class="reviewer-body">{note}</div></details><article class="prose" id="chapter-prose">{prose}</article><nav class="chapter-nav">{prev}{nxt}</nav>{end}</main><div class="focus-guide" role="status" aria-live="polite" data-default="{html.escape(ui["focus_hint"], quote=True)}" data-end="{html.escape(ui["focus_end"], quote=True)}">{ui["focus_hint"]}</div></body></html>'
 
 
 def catalog_html(stories: list[Story], versions: dict[str, str]) -> str:
@@ -458,7 +574,7 @@ def write_edition(story: Story, manuscript: Manuscript, root: Path, versions: di
     outputs[0].write_text(combined_markdown(manuscript), encoding="utf-8")
     outputs[1].write_text(standalone_html(manuscript), encoding="utf-8")
     outputs[2].write_text(plain_text(manuscript), encoding="utf-8")
-    build_epub(manuscript, outputs[3])
+    build_epub(manuscript, outputs[3], story.illustrations)
     index = root / "index.html"; index.write_text(landing_html(story, manuscript, versions), encoding="utf-8"); outputs.append(index)
     chapter_root = root / "chapters"; chapter_root.mkdir()
     for chapter in manuscript.chapters:
@@ -498,8 +614,10 @@ def build_all(root: Path, stories: list[Story], legacy_slug: str) -> list[Path]:
         for story in stories:
             story_dist = temp / "stories" / story.slug
             (story_dist / "assets").mkdir(parents=True)
-            for cover in story.root.joinpath("assets").iterdir():
-                if cover.is_file(): shutil.copy2(cover, story_dist / "assets" / cover.name)
+            for asset in story.root.joinpath("assets").iterdir():
+                destination = story_dist / "assets" / asset.name
+                if asset.is_file(): shutil.copy2(asset, destination)
+                elif asset.is_dir(): shutil.copytree(asset, destination)
             outputs.extend(write_edition(story, story.primary, story_dist, versions))
             if story.english:
                 outputs.extend(write_edition(story, story.english, story_dist / "en", versions))

@@ -15,9 +15,11 @@ stories/<slug>/
   manuscript/                        # 정본, 번역, 편집 개요
   assets/cover.svg                   # 필수 표지
   assets/cover-en.svg                # 선택적 영어 표지
+  assets/scenes/                     # 선택적 승인 삽화
 site/                                # 모든 작품이 공유하는 CSS, JS, 폰트, favicon
 scripts/novel.py                     # catalog validate / stats / build
 tests/                               # stdlib unittest
+docs/authoring-pipeline.md            # 기획부터 교정·삽화·출시까지 재사용 절차
 docs/fiction-craft-standard.md       # 장르 공통 집필·검토 기준
 dist/                                # 생성 결과(Git 제외)
 ```
@@ -33,6 +35,8 @@ python3 -m unittest -v
 python3 scripts/novel.py validate
 python3 scripts/novel.py stats
 python3 scripts/novel.py build
+python3 scripts/release_check.py          # 테스트·빌드·링크·EPUB 일괄 게이트
+python3 scripts/release_check.py --docker # 컨테이너까지 포함한 최종 게이트
 ```
 
 `validate`와 `stats`는 기본적으로 카탈로그 전체를 처리하며 `--story <slug>`로 한 작품만 선택할 수 있습니다. `build`는 항상 모든 작품을 먼저 검증한 다음 전체 카탈로그를 임시 디렉터리에 만들고 `dist/`를 교체합니다. 따라서 뒤쪽 작품의 검증 실패가 기존 배포본을 부분적으로 지우지 않습니다.
@@ -51,7 +55,7 @@ python3 scripts/novel.py build
 
 첫 번째 카탈로그 작품은 이전 배포 링크를 계속 제공합니다. 현재 `murim-abolitionist`에 대해 `/chapters/*.html`, `/en/`, `/en/chapters/*.html`, `/murim-abolitionist.{md,html,txt,epub}`가 유지되며 HTML에는 canonical 작품 URL과 절대 탐색·언어·자산 링크가 들어갑니다.
 
-읽기 진행률, 마지막 회차, 테마, 글자 크기는 `webnovel:<slug>:...` localStorage 키로 작품별 격리됩니다. 기존 `murim-*` 키는 `murim-abolitionist`에서 새 키가 비어 있을 때 한 번 호환 복사됩니다. 로그인이나 서버 저장소는 없습니다.
+읽기 진행률, 마지막 회차, 테마, 글자 크기는 `webnovel:<slug>:...` localStorage 키로 작품별 격리됩니다. 집중 읽기는 `◎` 버튼으로 각 페이지에서 명시적으로 켜며, 현재 문단만 선명하게 유지하고 탭·Space·J/K·↑↓로 약 0.2–0.4초 안에 다음 문단으로 이동합니다. 새 페이지에서 갑자기 본문이 흐려지지 않도록 집중 모드는 저장하지 않습니다. `Esc`로 즉시 끝나고 운영체제의 reduced-motion 설정에서는 애니메이션을 생략합니다. 기존 `murim-*` 키는 `murim-abolitionist`에서 새 키가 비어 있을 때 한 번 호환 복사됩니다. 로그인이나 서버 저장소는 없습니다.
 
 ## 새 작품 추가
 
@@ -60,7 +64,9 @@ python3 scripts/novel.py build
 3. `catalog.json`의 원하는 공개 순서에 slug를 추가합니다.
 4. `validate`, `stats`, 테스트, `build`를 실행합니다.
 
-원고 집필·편집은 [`docs/fiction-craft-standard.md`](docs/fiction-craft-standard.md)와 [`docs/web-novel-production-playbook.md`](docs/web-novel-production-playbook.md)를 따릅니다. 두 번째 작품의 보상 설계와 근거 경계는 [`research/dopamine-serial-design.md`](research/dopamine-serial-design.md)에 기록했습니다. 기계 검사는 문학적 품질을 판정하지 않고 누락, 번호, 길이, 오염, 반복 같은 값싼 오류를 막습니다.
+전체 제작은 [`docs/authoring-pipeline.md`](docs/authoring-pipeline.md), [`docs/fiction-craft-standard.md`](docs/fiction-craft-standard.md), [`docs/web-novel-production-playbook.md`](docs/web-novel-production-playbook.md)를 따릅니다. `docs/templates/`에는 작품 진행표, 연속성 장부, 비주얼 바이블 템플릿이 있습니다. 두 번째 작품의 보상 설계와 근거 경계는 [`research/dopamine-serial-design.md`](research/dopamine-serial-design.md)에 기록했습니다. 기계 검사는 문학적 품질을 판정하지 않고 누락, 번호, 길이, 오염, 반복 같은 값싼 오류를 막습니다.
+
+선택 삽화는 정본 Markdown에 공급자 문법을 넣지 않습니다. `manuscript/illustrations.json`에서 언어별 문단 위치, 로컬 `assets/scenes/` 파일, 대체 텍스트와 생성 provenance를 선언합니다. 빌더는 경로 탈출, 누락 파일, 언어별 배치, provenance를 검증하고 승인된 이미지만 독서 페이지에 삽입합니다.
 
 ## Dokploy / Docker
 
