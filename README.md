@@ -26,7 +26,9 @@ manuscript/
   chapters/                   # 한국어 정본 본문
   translations/en/            # 영어판 본문과 번역 계약
   reviewer-notes/{ko,en}/     # 접을 수 있는 편집자용 플롯 개요
+docs/fiction-craft-standard.md       # 모든 장르에 쓰는 집필·검토·개작 기준
 docs/web-novel-production-playbook.md # 후속 권을 위한 집필·편집·배포 교훈
+research/fiction-craft/             # 위 기준의 조사 근거와 출처
 research/source/              # 이전 시도, 원본 대화, 세계관 자료(참고용)
 scripts/novel.py              # validate / stats / build
 site/                         # 공개 리더 CSS·JavaScript·표지 원본
@@ -100,7 +102,7 @@ curl -f http://127.0.0.1:8080/healthz
 
 기계 검사는 문학적 품질을 판정하지 않습니다. 검사가 맡는 것은 누락과 반복 같은 값싼 실수를 막는 일이며, 장면의 감정·인물의 선택·문장의 생동감은 별도 편집 과정에서 판단합니다.
 
-후속 권에서 동일한 품질 기준을 재사용하려면 [`docs/web-novel-production-playbook.md`](docs/web-novel-production-playbook.md)를 먼저 읽습니다. 독서 화면의 근거와 시각 원칙은 [`docs/reader-design-notes.md`](docs/reader-design-notes.md)에 남겨 두었습니다.
+새 작품이나 개작을 시작할 때는 장르 공통 기준인 [`docs/fiction-craft-standard.md`](docs/fiction-craft-standard.md)를 먼저 읽고, 이 저장소의 구체적인 제작 절차는 [`docs/web-novel-production-playbook.md`](docs/web-novel-production-playbook.md)를 따릅니다. 기준의 조사 근거는 [`research/fiction-craft/fundamentals.md`](research/fiction-craft/fundamentals.md), 독서 화면의 근거와 시각 원칙은 [`docs/reader-design-notes.md`](docs/reader-design-notes.md)에 남겨 두었습니다.
 
 ## 설계상의 핵심 선택
 

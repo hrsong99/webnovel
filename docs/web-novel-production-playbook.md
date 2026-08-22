@@ -29,6 +29,8 @@ A long design transcript is evidence, not canon.
 
 ## 3. What makes a chapter work
 
+Use [`fiction-craft-standard.md`](fiction-craft-standard.md) as the genre-independent gate. The list below is this serial's current chapter overlay, not a universal plot formula.
+
 Every chapter should contain:
 
 - a concrete discovery;
