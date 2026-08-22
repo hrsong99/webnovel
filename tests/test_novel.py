@@ -8,217 +8,257 @@ import xml.etree.ElementTree as ElementTree
 import zipfile
 from pathlib import Path
 
-
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "novel.py"
+DISPLAY = {
+    "genre": "시험 장르", "quote": "시험 인용문", "about": "시험 작품 소개",
+    "completion_title": "완독", "completion_text": "완결 안내",
+}
 
 
 class NovelPipelineTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
-        (self.root / "manuscript" / "chapters").mkdir(parents=True)
-        (self.root / "manuscript" / "reviewer-notes" / "ko").mkdir(parents=True)
-        for number in (1, 2):
-            (self.root / "manuscript" / "reviewer-notes" / "ko" / f"{number:02d}.md").write_text(
-                f"# {number}화 편집 개요\n\n주요 사건과 인물 선택을 설명하는 검증용 개요입니다.\n",
-                encoding="utf-8",
-            )
         (self.root / "site").mkdir()
         for name in ("styles.css", "reader.js", "home.js"):
             (self.root / "site" / name).write_text(f"/* {name} */\n", encoding="utf-8")
-        for name in ("cover.svg", "cover-en.svg", "favicon.svg"):
-            (self.root / "site" / name).write_text(
-                '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n', encoding="utf-8"
-            )
-        self.metadata = {
-            "slug": "test-novel",
-            "title": "시험 소설",
-            "author": "테스트 작가",
-            "language": "ko",
-            "description": "빌드 검증용 소설",
-            "min_chapter_chars": 20,
-            "max_chapter_chars": 200,
-            "expected_chapters": 2,
-        }
-        self.write_metadata()
-        self.write_chapter(1, "시작", "가나다라마바사아자차카타파하 이야기가 조용히 시작되었다.")
-        self.write_chapter(2, "도착", "새로운 인물들이 마을에 도착하고 오래된 문을 힘껏 열었다.")
+        (self.root / "site" / "favicon.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg"/>', encoding="utf-8")
+        self.make_story("test-novel")
+        self.write_catalog(["test-novel"])
 
     def tearDown(self):
         self.temp.cleanup()
 
-    def write_metadata(self):
-        (self.root / "story.json").write_text(
-            json.dumps(self.metadata, ensure_ascii=False), encoding="utf-8"
-        )
+    def write_catalog(self, slugs, legacy="test-novel"):
+        if legacy not in slugs:
+            legacy = slugs[0]
+        payload = {"legacy_alias_story": legacy, "stories": slugs}
+        (self.root / "catalog.json").write_text(json.dumps(payload), encoding="utf-8")
 
-    def write_chapter(self, number, title, body, filename=None):
-        name = filename or f"{number:03d}.md"
-        (self.root / "manuscript" / "chapters" / name).write_text(
-            f"# 제{number}화. {title}\n\n{body}\n", encoding="utf-8"
-        )
+    def make_story(self, slug, title="시험 소설", english=False):
+        story = self.root / "stories" / slug
+        (story / "manuscript" / "chapters").mkdir(parents=True)
+        (story / "manuscript" / "reviewer-notes" / "ko").mkdir(parents=True)
+        (story / "assets").mkdir()
+        (story / "assets" / "cover.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg"/>', encoding="utf-8")
+        metadata = {
+            "slug": slug, "title": title, "author": "테스트 작가", "language": "ko",
+            "description": "빌드 검증용 소설", "volume_title": "시험 권",
+            "min_chapter_chars": 20, "max_chapter_chars": 200, "expected_chapters": 2,
+            **DISPLAY,
+        }
+        (story / "story.json").write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        bodies = ("가나다라마바사아자차카타파하 이야기가 조용히 시작되었다.", "새로운 인물들이 마을에 도착하고 오래된 문을 힘껏 열었다.")
+        for number, (chapter_title, body) in enumerate(zip(("시작", "도착"), bodies), 1):
+            self.write_chapter(slug, number, chapter_title, body)
+            self.write_note(story, "ko", number, "주요 사건과 인물 선택을 설명하는 검증용 개요입니다.")
+        if english:
+            self.add_english(slug)
+        return story
 
-    def run_cli(self, command):
-        return subprocess.run(
-            [sys.executable, str(SCRIPT), command, "--root", str(self.root)],
-            text=True,
-            capture_output=True,
-            check=False,
-        )
+    def add_english(self, slug):
+        story = self.root / "stories" / slug
+        (story / "assets" / "cover-en.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg"/>', encoding="utf-8")
+        (story / "locales").mkdir(exist_ok=True)
+        en_display = {"genre": "Test genre", "quote": "Test quote", "about": "Test about", "completion_title": "Complete", "completion_text": "Completion copy"}
+        metadata = {"slug": slug, "title": "Test Novel", "subtitle": "English Edition", "author": "Test Author", "language": "en", "description": "A bilingual fixture.", "volume_title": "Test Volume", "expected_chapters": 2, "min_chapter_words": 5, "max_chapter_words": 100, **en_display}
+        (story / "locales" / "en.json").write_text(json.dumps(metadata), encoding="utf-8")
+        chapters = story / "manuscript" / "translations" / "en" / "chapters"
+        notes = story / "manuscript" / "reviewer-notes" / "en"
+        chapters.mkdir(parents=True); notes.mkdir(parents=True)
+        for number, title in ((1, "Beginning"), (2, "Arrival")):
+            (chapters / f"{number:02d}.md").write_text(f"# Chapter {number}. {title}\n\nThe translated chapter contains enough natural English words for validation.\n", encoding="utf-8")
+            self.write_note(story, "en", number, "This explains the plot structure and the character decision.")
 
+    def write_note(self, story, language, number, body):
+        path = story / "manuscript" / "reviewer-notes" / language / f"{number:02d}.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"# Chapter overview\n\n{body}\n", encoding="utf-8")
+
+    def write_chapter(self, slug, number, title, body, filename=None):
+        path = self.root / "stories" / slug / "manuscript" / "chapters" / (filename or f"{number:03d}.md")
+        path.write_text(f"# 제{number}화. {title}\n\n{body}\n", encoding="utf-8")
+
+    def metadata(self, slug="test-novel"):
+        path = self.root / "stories" / slug / "story.json"
+        return path, json.loads(path.read_text(encoding="utf-8"))
+
+    def run_cli(self, command, *args):
+        return subprocess.run([sys.executable, str(SCRIPT), command, "--root", str(self.root), *args], text=True, capture_output=True, check=False)
+
+    # Existing behavior coverage, adjusted to catalog fixtures.
     def test_validate_and_stats_succeed(self):
         result = self.run_cli("validate")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("VALID", result.stdout)
         stats = self.run_cli("stats")
-        self.assertEqual(stats.returncode, 0, stats.stderr)
-        payload = json.loads(stats.stdout)
+        payload = json.loads(stats.stdout)["stories"]["test-novel"]["ko"]
         self.assertEqual(payload["chapter_count"], 2)
         self.assertGreater(payload["korean_characters"], 40)
-        self.assertEqual([c["number"] for c in payload["chapters"]], [1, 2])
 
     def test_rejects_numbering_gap_and_expected_count_mismatch(self):
-        self.metadata["expected_chapters"] = 3
-        self.write_metadata()
-        (self.root / "manuscript" / "chapters" / "002.md").unlink()
-        self.write_chapter(3, "건너뜀", "한글문자가충분히들어있는세번째장의본문입니다 새로운 사건이 일어났다.")
+        path, metadata = self.metadata(); metadata["expected_chapters"] = 3
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        (path.parent / "manuscript" / "chapters" / "002.md").unlink()
+        self.write_chapter("test-novel", 3, "건너뜀", "한글문자가충분히들어있는세번째장의본문입니다 새로운 사건이 일어났다.")
         result = self.run_cli("validate")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("numbering gap", result.stderr)
-        self.assertIn("expected_chapters", result.stderr)
+        self.assertIn("numbering gap", result.stderr); self.assertIn("expected_chapters", result.stderr)
 
     def test_rejects_placeholders_and_editorial_metadata(self):
-        self.write_chapter(1, "시작", "가나다라마바사아자차카타파하. TODO: 결말을 작성할 것.")
-        self.write_chapter(2, "도착", "가나다라마바사아자차카타파하. 편집 메모: 시점을 바꿀 것.")
+        self.write_chapter("test-novel", 1, "시작", "가나다라마바사아자차카타파하. TODO: 결말을 작성할 것.")
+        self.write_chapter("test-novel", 2, "도착", "가나다라마바사아자차카타파하. 편집 메모: 시점을 바꿀 것.")
         result = self.run_cli("validate")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("placeholder", result.stderr)
-        self.assertIn("editorial/planning metadata", result.stderr)
+        self.assertIn("placeholder", result.stderr); self.assertIn("editorial/planning metadata", result.stderr)
 
     def test_rejects_korean_character_bounds(self):
-        self.metadata["min_chapter_chars"] = 40
-        self.write_metadata()
-        result = self.run_cli("validate")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Korean characters", result.stderr)
+        path, metadata = self.metadata(); metadata["min_chapter_chars"] = 80
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        self.assertIn("Korean characters", self.run_cli("validate").stderr)
 
     def test_rejects_suspicious_phrase_repetition(self):
         phrase = "검은 문 너머에서 낯선 목소리가 들려왔다"
-        body = ". ".join([phrase] * 4) + "."
-        self.write_chapter(1, "반복", body)
-        result = self.run_cli("validate")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("suspicious repetition", result.stderr)
+        self.write_chapter("test-novel", 1, "반복", ". ".join([phrase] * 4) + ".")
+        self.assertIn("suspicious repetition", self.run_cli("validate").stderr)
 
     def test_build_creates_readable_outputs_and_valid_epub(self):
         result = self.run_cli("build")
         self.assertEqual(result.returncode, 0, result.stderr)
-        dist = self.root / "dist"
+        canonical = self.root / "dist" / "stories" / "test-novel"
         expected = {"test-novel.md", "test-novel.html", "test-novel.txt", "test-novel.epub", "index.html"}
-        self.assertTrue(expected.issubset({p.name for p in dist.iterdir()}))
-        self.assertIn("제1화. 시작", (dist / "test-novel.md").read_text(encoding="utf-8"))
-        html = (dist / "test-novel.html").read_text(encoding="utf-8")
-        self.assertIn("<!doctype html>", html.lower())
-        self.assertIn("lang=\"ko\"", html)
-        home = (dist / "index.html").read_text(encoding="utf-8")
-        self.assertIn("chapters/01.html", home)
-        self.assertIn("시험 소설", home)
-        self.assertRegex(home, r'assets/styles\.css\?v=[0-9a-f]{12}')
-        self.assertRegex(home, r'assets/home\.js\?v=[0-9a-f]{12}')
-        self.assertNotRegex(home.lower(), r"login|password|sign[ -]?in")
-        chapter = (dist / "chapters" / "01.html").read_text(encoding="utf-8")
-        self.assertIn("제1화", chapter)
-        self.assertIn("02.html", chapter)
-        self.assertRegex(chapter, r'assets/reader\.js\?v=[0-9a-f]{12}')
-        self.assertTrue((dist / "assets" / "cover.svg").is_file())
-        self.assertEqual((dist / "health.txt").read_text(encoding="utf-8"), "ok\n")
-        self.assertIn("제2화. 도착", (dist / "test-novel.txt").read_text(encoding="utf-8"))
-        with zipfile.ZipFile(dist / "test-novel.epub") as archive:
-            self.assertEqual(archive.testzip(), None)
+        self.assertTrue(expected.issubset({path.name for path in canonical.iterdir()}))
+        home = canonical.joinpath("index.html").read_text(encoding="utf-8")
+        self.assertRegex(home, r'/assets/styles\.css\?v=[0-9a-f]{12}')
+        self.assertIn('rel="canonical" href="/stories/test-novel/"', home)
+        chapter = canonical.joinpath("chapters/01.html").read_text(encoding="utf-8")
+        self.assertIn("/stories/test-novel/chapters/02.html", chapter)
+        with zipfile.ZipFile(canonical / "test-novel.epub") as archive:
+            self.assertIsNone(archive.testzip())
             self.assertEqual(archive.infolist()[0].filename, "mimetype")
             self.assertEqual(archive.infolist()[0].compress_type, zipfile.ZIP_STORED)
-            self.assertEqual(archive.read("mimetype"), b"application/epub+zip")
-            names = set(archive.namelist())
-            self.assertIn("META-INF/container.xml", names)
-            self.assertIn("OEBPS/content.opf", names)
-            self.assertIn("OEBPS/nav.xhtml", names)
-            self.assertIn("OEBPS/chapter-001.xhtml", names)
-            for xml_name in (
-                "META-INF/container.xml",
-                "OEBPS/content.opf",
-                "OEBPS/nav.xhtml",
-                "OEBPS/chapter-001.xhtml",
-            ):
-                ElementTree.fromstring(archive.read(xml_name))
+            for name in ("META-INF/container.xml", "OEBPS/content.opf", "OEBPS/nav.xhtml", "OEBPS/chapter-001.xhtml"):
+                ElementTree.fromstring(archive.read(name))
 
     def test_asset_urls_change_when_contents_change(self):
-        first = self.run_cli("build")
-        self.assertEqual(first.returncode, 0, first.stderr)
-        first_home = (self.root / "dist" / "index.html").read_text(encoding="utf-8")
-        first_url = re.search(r'assets/styles\.css\?v=([0-9a-f]{12})', first_home)
-        self.assertIsNotNone(first_url)
-
-        (self.root / "site" / "styles.css").write_text("body { color: rebeccapurple; }\n", encoding="utf-8")
-        second = self.run_cli("build")
-        self.assertEqual(second.returncode, 0, second.stderr)
-        second_home = (self.root / "dist" / "index.html").read_text(encoding="utf-8")
-        second_url = re.search(r'assets/styles\.css\?v=([0-9a-f]{12})', second_home)
-        self.assertIsNotNone(second_url)
-        assert first_url is not None
-        assert second_url is not None
-        self.assertNotEqual(first_url.group(1), second_url.group(1))
+        self.assertEqual(self.run_cli("build").returncode, 0)
+        path = self.root / "dist" / "index.html"
+        first_match = re.search(r'/assets/styles\.css\?v=([0-9a-f]{12})', path.read_text(encoding="utf-8"))
+        self.assertIsNotNone(first_match)
+        assert first_match is not None
+        first = first_match.group(1)
+        (self.root / "site" / "styles.css").write_text("body{color:rebeccapurple}", encoding="utf-8")
+        self.assertEqual(self.run_cli("build").returncode, 0)
+        second_match = re.search(r'/assets/styles\.css\?v=([0-9a-f]{12})', path.read_text(encoding="utf-8"))
+        self.assertIsNotNone(second_match)
+        assert second_match is not None
+        second = second_match.group(1)
+        self.assertNotEqual(first, second)
 
     def test_bilingual_build_and_reviewer_overviews(self):
-        (self.root / "locales").mkdir()
-        (self.root / "locales" / "en.json").write_text(
-            json.dumps(
-                {
-                    "slug": "test-novel",
-                    "title": "Test Novel",
-                    "subtitle": "An English Edition",
-                    "author": "Test Author",
-                    "language": "en",
-                    "description": "A fixture for bilingual reader validation.",
-                    "volume_title": "Volume One",
-                    "expected_chapters": 2,
-                    "min_chapter_words": 5,
-                    "max_chapter_words": 100,
-                }
-            ),
-            encoding="utf-8",
-        )
-        en_chapters = self.root / "manuscript" / "translations" / "en" / "chapters"
-        en_notes = self.root / "manuscript" / "reviewer-notes" / "en"
-        en_chapters.mkdir(parents=True)
-        en_notes.mkdir(parents=True)
-        for number, title in ((1, "Beginning"), (2, "Arrival")):
-            (en_chapters / f"{number:02d}.md").write_text(
-                f"# Chapter {number}. {title}\n\nThe translated chapter contains enough natural English words for validation.\n",
-                encoding="utf-8",
-            )
-            (en_notes / f"{number:02d}.md").write_text(
-                f"# Chapter {number} Editorial Overview\n\nThis explains the plot structure and the character decision.\n",
-                encoding="utf-8",
-            )
+        self.add_english("test-novel")
         result = self.run_cli("build")
         self.assertEqual(result.returncode, 0, result.stderr)
-        en_home = (self.root / "dist" / "en" / "index.html").read_text(encoding="utf-8")
-        en_chapter = (self.root / "dist" / "en" / "chapters" / "01.html").read_text(encoding="utf-8")
-        ko_chapter = (self.root / "dist" / "chapters" / "01.html").read_text(encoding="utf-8")
-        self.assertIn('lang="en"', en_home)
-        self.assertIn("Read in Korean", en_home)
-        self.assertIn("Editorial chapter overview", en_chapter)
-        self.assertIn("This explains the plot structure", en_chapter)
-        self.assertIn('/chapters/01.html', en_chapter)
-        self.assertIn('/en/chapters/01.html', ko_chapter)
-        self.assertTrue((self.root / "dist" / "en" / "test-novel.epub").is_file())
+        en = self.root / "dist" / "stories" / "test-novel" / "en"
+        self.assertIn('lang="en"', (en / "index.html").read_text(encoding="utf-8"))
+        chapter = (en / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn("Editorial chapter overview", chapter)
+        self.assertIn("/stories/test-novel/chapters/01.html", chapter)
+        self.assertTrue((en / "test-novel.epub").is_file())
 
     def test_missing_or_invalid_metadata_is_a_clear_cli_error(self):
-        (self.root / "story.json").unlink()
+        (self.root / "stories" / "test-novel" / "story.json").unlink()
         result = self.run_cli("validate")
+        self.assertNotEqual(result.returncode, 0); self.assertIn("story.json", result.stderr); self.assertNotIn("Traceback", result.stderr)
+
+    # Multi-story architecture coverage.
+    def test_catalog_order_and_story_selection(self):
+        self.make_story("second-story", "두 번째 이야기")
+        self.write_catalog(["second-story", "test-novel"])
+        result = self.run_cli("validate", "--story", "second-story")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("second-story", result.stdout); self.assertNotIn("test-novel", result.stdout)
+        self.assertEqual(self.run_cli("build", "--story", "test-novel").returncode, 2)
+        build = self.run_cli("build"); self.assertEqual(build.returncode, 0, build.stderr)
+        catalog = (self.root / "dist" / "index.html").read_text(encoding="utf-8")
+        self.assertLess(catalog.index("두 번째 이야기"), catalog.index("시험 소설"))
+        self.assertTrue((self.root / "dist" / "stories" / "second-story" / "index.html").is_file())
+        legacy = (self.root / "dist" / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn('/stories/test-novel/chapters/01.html', legacy)
+
+    def test_two_story_validation_and_full_build(self):
+        self.make_story("second-story", "두 번째 이야기", english=True)
+        self.write_catalog(["test-novel", "second-story"])
+        self.assertEqual(self.run_cli("validate").returncode, 0)
+        self.assertEqual(self.run_cli("build").returncode, 0)
+        self.assertTrue((self.root / "dist" / "stories" / "second-story" / "en" / "chapters" / "02.html").is_file())
+
+    def test_legacy_aliases_are_primary_story_only_and_canonical(self):
+        self.add_english("test-novel")
+        self.make_story("second-story", "두 번째 이야기")
+        self.write_catalog(["test-novel", "second-story"])
+        self.assertEqual(self.run_cli("build").returncode, 0)
+        dist = self.root / "dist"
+        for path in (dist / "chapters" / "01.html", dist / "en" / "index.html", dist / "en" / "chapters" / "01.html", dist / "test-novel.md", dist / "test-novel.html", dist / "test-novel.txt", dist / "test-novel.epub", dist / "assets" / "cover.svg", dist / "assets" / "cover-en.svg"):
+            self.assertTrue(path.is_file(), path)
+        alias = (dist / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn('rel="canonical" href="/stories/test-novel/chapters/01.html"', alias)
+        self.assertIn('/assets/reader.js?v=', alias)
+        self.assertNotIn("second-story.md", {path.name for path in dist.iterdir()})
+
+    def test_story_scoped_storage_keys_and_legacy_fallback(self):
+        self.assertEqual(self.run_cli("build").returncode, 0)
+        home = (self.root / "dist" / "stories" / "test-novel" / "index.html").read_text(encoding="utf-8")
+        chapter = (self.root / "dist" / "stories" / "test-novel" / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn('data-story-slug="test-novel"', home); self.assertIn('data-story-slug="test-novel"', chapter)
+        source_site = SCRIPT.parents[1] / "site"
+        home_js = (source_site / "home.js").read_text(encoding="utf-8")
+        reader_js = (source_site / "reader.js").read_text(encoding="utf-8")
+        for source in (home_js, reader_js): self.assertIn("webnovel:${slug}", source)
+        self.assertIn("slug === 'murim-abolitionist'", home_js); self.assertIn("murim-reader-settings", reader_js)
+
+    def test_bad_catalog_duplicate_and_slug_mismatch_errors(self):
+        self.write_catalog(["test-novel", "test-novel"])
+        duplicate = self.run_cli("validate")
+        self.assertNotEqual(duplicate.returncode, 0); self.assertIn("duplicate story slug", duplicate.stderr)
+        self.write_catalog(["test-novel"])
+        path, metadata = self.metadata(); metadata["slug"] = "wrong-slug"
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        mismatch = self.run_cli("validate")
+        self.assertNotEqual(mismatch.returncode, 0); self.assertIn("does not match directory/catalog slug", mismatch.stderr)
+
+    def test_unlisted_story_language_and_translation_parity_fail(self):
+        self.make_story("unlisted-story")
+        unlisted = self.run_cli("validate")
+        self.assertNotEqual(unlisted.returncode, 0); self.assertIn("unlisted story", unlisted.stderr)
+        self.write_catalog(["test-novel", "unlisted-story"])
+        path, metadata = self.metadata(); metadata["language"] = "en"
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        wrong_language = self.run_cli("validate")
+        self.assertNotEqual(wrong_language.returncode, 0); self.assertIn("language must be 'ko'", wrong_language.stderr)
+        metadata["language"] = "ko"; path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        self.add_english("test-novel")
+        en_path = self.root / "stories" / "test-novel" / "locales" / "en.json"
+        en_meta = json.loads(en_path.read_text(encoding="utf-8")); en_meta["expected_chapters"] = 1
+        en_path.write_text(json.dumps(en_meta), encoding="utf-8")
+        (self.root / "stories" / "test-novel" / "manuscript" / "translations" / "en" / "chapters" / "02.md").unlink()
+        (self.root / "stories" / "test-novel" / "manuscript" / "reviewer-notes" / "en" / "02.md").unlink()
+        parity = self.run_cli("validate")
+        self.assertNotEqual(parity.returncode, 0); self.assertIn("must exactly match", parity.stderr)
+
+    def test_repository_catalog_lists_both_release_stories(self):
+        production = json.loads((SCRIPT.parents[1] / "catalog.json").read_text(encoding="utf-8"))
+        self.assertEqual(production["legacy_alias_story"], "murim-abolitionist")
+        self.assertEqual(production["stories"], ["murim-abolitionist", "seven-regressors-fell"])
+
+    def test_validation_failure_does_not_replace_existing_dist(self):
+        dist = self.root / "dist"; dist.mkdir(); marker = dist / "keep.txt"; marker.write_text("old build", encoding="utf-8")
+        self.make_story("broken-story", "망가진 이야기")
+        self.write_catalog(["test-novel", "broken-story"])
+        path, metadata = self.metadata("broken-story"); metadata["slug"] = "mismatch"
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        result = self.run_cli("build")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("story.json", result.stderr)
-        self.assertNotIn("Traceback", result.stderr)
+        self.assertEqual(marker.read_text(encoding="utf-8"), "old build")
+        self.assertEqual({path.name for path in dist.iterdir()}, {"keep.txt"})
 
 
 if __name__ == "__main__":

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800" role="img" aria-labelledby="title desc">
+  <title id="title">회귀자 일곱이 죽고 점소이만 남았다 표지</title>
+  <desc id="desc">어두운 객잔 문과 일곱 개의 별, 그 아래 홀로 선 점소이</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090d18"/><stop offset=".55" stop-color="#15192a"/><stop offset="1" stop-color="#301517"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#f3c572" stop-opacity=".8"/><stop offset="1" stop-color="#f3c572" stop-opacity="0"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+  </defs>
+  <rect width="1200" height="1800" fill="url(#bg)"/>
+  <circle cx="600" cy="970" r="420" fill="none" stroke="#d8b56a" stroke-opacity=".13" stroke-width="2"/>
+  <circle cx="600" cy="970" r="345" fill="none" stroke="#d8b56a" stroke-opacity=".08" stroke-width="1"/>
+  <g fill="#e7d9b5">
+    <path d="M600 500l13 28 31 4-23 21 6 31-27-15-27 15 6-31-23-21 31-4z"/>
+    <path d="M845 620l11 24 27 4-20 18 5 27-23-13-24 13 6-27-20-18 27-4z" opacity=".86"/>
+    <path d="M930 875l10 22 25 3-18 17 4 24-21-12-21 12 5-24-19-17 25-3z" opacity=".72"/>
+    <path d="M790 1110l10 22 25 3-18 17 4 24-21-12-21 12 5-24-19-17 25-3z" opacity=".55"/>
+    <path d="M410 1110l10 22 25 3-18 17 4 24-21-12-21 12 5-24-19-17 25-3z" opacity=".55"/>
+    <path d="M270 875l10 22 25 3-18 17 4 24-21-12-21 12 5-24-19-17 25-3z" opacity=".72"/>
+    <path d="M355 620l11 24 27 4-20 18 5 27-23-13-24 13 6-27-20-18 27-4z" opacity=".86"/>
+  </g>
+  <circle cx="600" cy="970" r="180" fill="url(#glow)" filter="url(#blur)" opacity=".28"/>
+  <path d="M430 1280V790l170-120 170 120v490" fill="#080a10" stroke="#d8b56a" stroke-opacity=".35" stroke-width="5"/>
+  <path d="M470 1280V820h260v460" fill="#101322"/>
+  <path d="M600 815v465" stroke="#d8b56a" stroke-opacity=".25" stroke-width="3"/>
+  <circle cx="620" cy="1040" r="8" fill="#d8b56a"/>
+  <g fill="#06080d">
+    <circle cx="600" cy="1170" r="42"/>
+    <path d="M550 1375l18-167h64l20 167z"/>
+    <path d="M566 1240l-95 76 18 22 94-54zm67 0l99 72-17 23-99-52z"/>
+  </g>
+  <text x="600" y="138" fill="#d8b56a" text-anchor="middle" font-family="sans-serif" font-size="27" font-weight="700" letter-spacing="10">DOPAMINE MURIM · VOLUME ONE</text>
+  <text x="600" y="260" fill="#f3eee2" text-anchor="middle" font-family="serif" font-size="76" font-weight="700">회귀자 일곱이 죽고</text>
+  <text x="600" y="355" fill="#f3eee2" text-anchor="middle" font-family="serif" font-size="76" font-weight="700">점소이만 남았다</text>
+  <line x1="390" y1="410" x2="810" y2="410" stroke="#a7453b" stroke-width="5"/>
+  <text x="600" y="1510" fill="#d8b56a" text-anchor="middle" font-family="sans-serif" font-size="32" letter-spacing="3">9,431번의 실패가 전부 내 무공이 되었다</text>
+  <text x="600" y="1665" fill="#918a82" text-anchor="middle" font-family="sans-serif" font-size="24" letter-spacing="6">NITTY GRITTY NOVEL LAB</text>
+</svg>

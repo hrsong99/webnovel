@@ -4,9 +4,8 @@ FROM python:3.12-alpine AS builder
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
-COPY story.json ./
-COPY locales/ locales/
-COPY manuscript/ manuscript/
+COPY catalog.json ./
+COPY stories/ stories/
 COPY scripts/ scripts/
 COPY site/ site/
 COPY tests/ tests/
