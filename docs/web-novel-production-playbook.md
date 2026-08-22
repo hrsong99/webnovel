@@ -6,13 +6,14 @@ This document preserves the editorial and technical lessons learned while turnin
 
 Treat these as the accepted sources of truth, in order:
 
-1. `story.json` and locale metadata: publishing contract.
-2. `manuscript/story-bible.md`: premise, cast, power rules, continuity, prohibited shortcuts.
-3. `manuscript/outline.md`: causal chapter design and promised payoff.
-4. `manuscript/chapters/`: Korean source edition.
-5. `manuscript/translations/`: editions derived from the Korean source.
-6. `manuscript/reviewer-notes/`: editorial summaries, not story canon.
-7. `research/source/`: design history only.
+1. `catalog.json`: public story order and library membership.
+2. `stories/<slug>/story.json` and locale metadata: each story’s publishing contract.
+3. `stories/<slug>/manuscript/story-bible.md`: premise, cast, power rules, continuity, prohibited shortcuts.
+4. `stories/<slug>/manuscript/outline.md`: causal chapter design and promised payoff.
+5. `stories/<slug>/manuscript/chapters/`: Korean source edition.
+6. `stories/<slug>/manuscript/translations/`: editions derived from the Korean source.
+7. `stories/<slug>/manuscript/reviewer-notes/`: editorial summaries, not story canon.
+8. `research/`: design evidence and history, not story canon.
 
 Never copy plans, change logs, prompt history, or editorial notes into publishable prose. Git stores history; the manuscript should contain only the book.
 
