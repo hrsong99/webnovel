@@ -1,92 +1,100 @@
-# Series Overview: The Heavenly Physician Who Diagnoses Martial Arts (무공을 진단하는 신의)
+# 무림철폐론자 — 상처를 닫는 대장장이
 
-## Story Premise
-A genius doctor from a fallen medical family cannot cultivate his own internal energy, but he can see the flow of Ki in others as if reading a medical chart. With a glance, he diagnoses flawed techniques, internal injuries, and hidden potential—making him the most sought-after and most hunted man in the Murim world.
+고수들의 결투로 가족과 마을을 잃은 대장장이 진철이, 복수가 아니라 무림이라는 치외법권 자체를 끝내려는 한국어 무협 웹소설 프로젝트입니다.
 
-## Unique Selling Proposition (USP)
-- Knowledge over force: the protagonist wins by diagnosis, systems thinking, and mentorship rather than direct combat.
-- Medical lens on martial arts: injuries, meridians, breathing methods, and mental states treated with clinical precision.
-- Ethical dilemmas and diplomacy: torn between Orthodox, Unorthodox, and Demonic factions, he navigates politics through favors and triage-like decisions.
-- Progressive network-building: saves mercenaries and minor figures first, who later become pivotal allies and informants.
-- Technique-correction set pieces: tense “operating room” scenes where he rewrites breathing patterns (e.g., 천마심법) to prevent 주화입마.
-- Restoration mystery: overarching quest to cure a legendary, “incurable” martial affliction and restore his family’s honor.
+이 저장소는 **좋은 원고를 만드는 일**과 **원고를 기계적으로 검증·배포하는 일**을 분리합니다. 모델이나 제공자에 종속된 자동 생성기를 두지 않습니다. 사람 또는 어떤 집필 에이전트든 동일한 작품 바이블과 회차 구성을 읽고 원고를 쓸 수 있고, 표준 라이브러리만 사용하는 로컬 도구가 결과를 검증하고 전자책으로 묶습니다.
 
-## Tags and Keywords
-#murim, #moohyeop, #wuxia, #medical, #healer, #system, #diagnosis, #intrigue, #orthodox, #unorthodox, #demonic-cult, #strategy, #mentorship, #redemption
+## 현재 결과물
 
-## World Setting Overview
-A Murim world governed by sects, clans, and informal networks of mercenaries. Internal energy (Qi/내공) flows through meridians whose misalignment can cripple or empower a martial artist. The Orthodox Faction seeks stability and moral authority, the Unorthodox Faction prizes freedom and results, and the Demonic Cult weaponizes forbidden methods. Breathing arts and mind-cultivation determine status; mistakes cause Qi Deviation (주화입마) with devastating physical and psychological fallout. Clinics, apothecaries, and secret archives compete over rare formulas and diagnostic techniques. Alliances revolve around favors—life-saving interventions become political bonds, and medical neutrality is constantly challenged.
+- 제1권 미니 아크 6화
+- 순수 원고 Markdown
+- 빌드 결과: 합본 Markdown, 읽기용 HTML, TXT, EPUB 3
+- 연속성·문체 계약과 회차별 구성
+- 길이, 누락, 기획 메모 혼입, 자리표시자, 과도한 문장 반복을 검사하는 CLI
+- 임시 픽스처 기반 자동 테스트
 
-## Writing Style
+## 구조
 
-### Style Description
-Taut, clinical prose with precise action beats, written in close third person (limited). The narrative rides with Yoon Se-jin’s perceptions without using first-person pronouns, allowing interiority through observed detail and clinical inference. Witty, dry observations fold into high-stakes diagnostics. Use technical metaphors (meridians as circuits, breath as clockwork) and short punchy lines during “procedures,” contrasted with slower, reflective passages on ethics and cost. Dialogue stays sharp, layered with subtext and factional agendas. World terms (Qi, 주화입마, 천마심법) are used deliberately for texture.
-
-### Example Scene (Style Demonstration)
-```
-비가 그친 골목은 눅눅했고, 용병의 호흡은 삐걱거렸다.
-윤세진은 맥을 짚지 않았다. 들려오는 숨만으로도 충분했다.
-
-“천마심법, 네 번째 호흡에서 멈춘다. 들숨이 가슴을 넘지 못해.”
-남자의 어깨가 움찔했다. 손등에 푸른 혈관이 솟았다.
-
-“스승이 말하길, 더 밀어붙이면 벽을 깬다고—”
-“그 벽은 늑골이고, 그 뒤엔 심장.”
-
-세진은 손가락 두 마디로 그의 흉골 아래를 가볍게 눌렀다. 울림이 탁, 막혔다.
-
-“기류가 흩어진다. 상행 맥은 마딴데로 새고, 하행 맥은 비척거려. 지금 밀어붙이면 주화입마가 먼저 온다.”
-
-그는 이를 갈았다. “그럼, 나는 평생—”
-“아니.” 세진은 숨의 길이를 접듯 말끝을 접었다. “호흡을 바꿔.”
-
-세진은 박자를 꺼내 보였다. 짧게, 짧게, 길게. 허리를 먼저 열고, 가슴은 나중에. 혀끝은 미세하게 입천장에 닿게.
-남자는 따라 했다. 처음엔 방망이질 같더니, 세 번째 사이클에서 떨림이 가라앉았다.
-
-“지금, 기가 오른다.” 그는 놀란 얼굴로 속삭였다.
-“오르는 게 아니라 정렬되는 거지.”
-
-빗물이 처마 끝에서 한 방울 떨어졌다. 소리가 또렷했다.
-세진은 그의 견갑 사이를 스치듯 짚었다. “왼쪽 견갑 뒤, 오래된 염증. 밤에 팔 저렸을 거야. 약첩 줄게. 그런데—”
-
-골목 입구에 그림자 셋. 칼집에서 비린내가 났다.
-
-그는 본능적으로 한 발 앞으로 나섰다. 세진은 고개를 저었다.
-“네가 싸우면 망가진다. 오늘은 숨이 네 칼날이야.”
-
-세진은 셋을 향해 미소 지었다. “진단은 예약이 필요합니다.”
-그들의 발목에서, 불안이 먼저 흔들렸다.
+```text
+story.json                    # 제목, 언어, 회차 수, 길이 기준
+manuscript/
+  story-bible.md              # 정본 설정·인물·문체·성장 제약
+  outline.md                  # 제1권 인과관계와 회차별 독자 보상
+  chapters/                   # 출판 가능한 본문만
+research/source/              # 이전 시도, 원본 대화, 세계관 자료(참고용)
+scripts/novel.py              # validate / stats / build
+site/                         # 공개 리더 CSS·JavaScript·표지 원본
+Dockerfile                    # Dokploy용 멀티스테이지 프로덕션 이미지
+compose.yaml                  # 선택 가능한 Dokploy Compose 진입점
+deploy/nginx.conf             # non-root Nginx와 헬스체크
+tests/                        # stdlib unittest
+dist/                         # 생성된 웹사이트·전자책; Git 제외
+editorial/                    # 교정 기록과 최종 편집 보고서
 ```
 
-## Arc Summaries
+`research/source/`는 설계의 역사이며 정본이 아닙니다. 충돌할 경우 `story.json`과 `manuscript/story-bible.md`가 우선합니다.
 
-### Arc 1
+## 실행
 
-#### Overall Arc Summary
-- The fallen physician reveals his unique sight by saving a wounded mercenary from imminent Qi Deviation in a back-alley “procedure.”
-- Rumors spread; minor clans and wandering fighters seek discreet corrections to their techniques.
-- The Orthodox Faction approaches with an offer of protection in exchange for selective mentorship.
-- Unorthodox agents test him, dangling freedom and resources for unsanctioned research.
-- A Demonic Cult envoy attempts abduction to harvest his knowledge.
-- He establishes “rules of treatment” to maintain medical neutrality—immediately pressured by politics.
-- He uncovers traces of an “incurable” martial affliction linked to his family’s downfall.
-- First major set piece: a public diagnostic duel where he corrects a famed master mid-bout without throwing a single punch.
-- Arc climax: he must choose who to save when simultaneous crises hit—cementing alliances and enmities.
-- Resolution: he secures a hidden clinic and a fledgling network of debtors bound by life-saving favors.
+Python 3 외 의존성은 없습니다.
 
-#### Chapter-by-Chapter Breakdown
-- Chapter 1: Back-alley rescue; demonstration of diagnostic sight; rumor ignites; hook—mysterious emblem from the patient.
-- Chapter 2: First requests from small-time fighters; technique-correction montage; introduces rules of treatment; new ally: apothecary.
-- Chapter 3: Orthodox delegation; ethics debate; offer of protection; he negotiates for access to sealed medical texts.
-- Chapter 4: Unorthodox test and ambush; he outmaneuvers without fighting; rescues an enemy for information; hint of Demonic Cult interest.
-- Chapter 5: Public arena “diagnostic duel”; he rethreads a master’s breathing mid-fight; wins influence and enemies.
-- Chapter 6: Clinic setup; triage protocol; network map of favors; first clue about the incurable affliction.
-- Chapter 7: Demonic Cult envoy strikes; abduction attempt fails through precise sabotage of captor’s Qi flow.
-- Chapter 8: Simultaneous crises force a choice; he saves one, redirects another; moral cost tallied.
-- Chapter 9: Aftermath diplomacy; formalized protection pacts; hostile watchlists form.
-- Chapter 10: Arc resolution; hidden clinic secured; vow to trace the affliction to its source and reclaim his family’s honor.
+```bash
+python3 -m unittest -v
+python3 scripts/novel.py validate
+python3 scripts/novel.py stats
+python3 scripts/novel.py build
+```
 
-## Document Change Log
-| Date       | Version | Description                                   | Author       |
-|------------|---------|-----------------------------------------------|--------------|
-| 2025-09-14 | 0.1     | Initial README created from concept summary.  | AI Assistant |
+빌드가 성공하면 다음 파일이 생깁니다.
+
+```text
+dist/index.html                         # 공개 작품 홈
+dist/chapters/01.html ... 06.html       # 회차별 리더
+dist/assets/cover.svg                   # 표지
+dist/murim-abolitionist.epub
+dist/murim-abolitionist.html            # 단일 파일 합본 리더
+dist/murim-abolitionist.txt
+dist/murim-abolitionist.md
+```
+
+공개 리더에는 로그인이나 서버 저장소가 없습니다. 읽은 회차, 테마, 글자 크기는 해당 브라우저의 `localStorage`에만 보관됩니다.
+
+## Dokploy 배포
+
+가장 단순한 방법은 Dokploy에서 이 GitHub 저장소의 `main` 브랜치를 **Dockerfile** 애플리케이션으로 연결하는 것입니다.
+
+- Dockerfile 경로: `Dockerfile`
+- 컨테이너 포트: `8080`
+- 헬스체크: `GET /healthz` → `200 ok`
+- 환경 변수·데이터베이스·볼륨: 필요 없음
+- 도메인 라우팅: Dokploy에서 컨테이너 포트 `8080`으로 연결
+
+Compose 애플리케이션을 선호하면 저장소 루트의 `compose.yaml`을 사용하고 `web` 서비스의 포트 `8080`을 라우팅합니다. 두 방식 모두 빌드 단계에서 테스트, 원고 검증, 사이트 생성을 실행한 뒤 non-root Nginx로 정적 결과물만 제공합니다.
+
+로컬 컨테이너 확인:
+
+```bash
+docker build -t murim-abolitionist:local .
+docker run --rm -p 8080:8080 murim-abolitionist:local
+curl -f http://127.0.0.1:8080/healthz
+```
+
+`main`에 원고나 사이트 자산을 푸시하면 Dokploy의 자동 배포가 새 이미지를 빌드하며, 새 회차와 목차·전자책이 함께 공개됩니다.
+
+## 단순하지만 견고한 집필 순서
+
+1. **계약 고정:** 작품 바이블에서 독자 약속, 힘의 한계, 시점, 금지할 지름길을 먼저 고정한다.
+2. **회차 설계:** 각 화에 되돌릴 수 없는 선택, 구체적인 보상, 다음 행동을 촉발하는 끝을 둔다.
+3. **순수 원고 작성:** `manuscript/chapters/`에는 본문만 둔다. 계획과 작가 메모를 복사하지 않는다.
+4. **기계 검증:** `validate`로 번호·길이·오염·반복을 잡는다.
+5. **세 번의 사람 검토:** 인과와 긴장 → 인물·연속성 → 한국어 문장과 리듬 순으로 교정한다.
+6. **다시 검증하고 빌드:** 테스트, 검증, 통계, EPUB 구조 확인 뒤 배포본을 만든다.
+
+기계 검사는 문학적 품질을 판정하지 않습니다. 검사가 맡는 것은 누락과 반복 같은 값싼 실수를 막는 일이며, 장면의 감정·인물의 선택·문장의 생동감은 별도 편집 과정에서 판단합니다.
+
+## 설계상의 핵심 선택
+
+- 기존의 수동 YAML 템플릿 다섯 개는 실행되지 않았고 계획을 본문에 중복시켰습니다. 원본은 연구 자료로 보존하되 현재 워크플로에서는 사용하지 않습니다.
+- 거대한 프롬프트 하나로 전권을 생성하지 않습니다. 짧은 정본 계약과 회차 구성으로 컨텍스트를 제한합니다.
+- LLM API를 코드에 박지 않습니다. 품질은 제공자 선택보다 정본 관리, 독립 검토, 반복 수정에 더 크게 좌우되며, 결정적 빌드와 재현성도 유지됩니다.
+- Git이 변경 이력을 제공하므로 각 회차 안의 변경 로그와 발췌문 복제본을 제거했습니다.
