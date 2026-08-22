@@ -79,6 +79,20 @@ class NovelPipelineTests(unittest.TestCase):
         path = self.root / "stories" / slug / "manuscript" / "chapters" / (filename or f"{number:03d}.md")
         path.write_text(f"# 제{number}화. {title}\n\n{body}\n", encoding="utf-8")
 
+    def add_illustration(self, slug="test-novel"):
+        story = self.root / "stories" / slug
+        scenes = story / "assets" / "scenes"; scenes.mkdir()
+        (scenes / "chapter-one.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg"/>', encoding="utf-8")
+        payload = {"version": 1, "illustrations": [{
+            "id": "ch01-scene", "chapter": 1,
+            "after_paragraph": {"ko": 1},
+            "asset": "scenes/chapter-one.svg",
+            "alt": {"ko": "시험 장면 삽화"},
+            "caption": {"ko": "첫 장면"},
+            "provenance": {"provider": "test", "model": "fixture", "prompt_id": "scene-1", "generated_at": "2026-01-01"},
+        }]}
+        (story / "manuscript" / "illustrations.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
     def metadata(self, slug="test-novel"):
         path = self.root / "stories" / slug / "story.json"
         return path, json.loads(path.read_text(encoding="utf-8"))
@@ -131,6 +145,9 @@ class NovelPipelineTests(unittest.TestCase):
         self.assertIn('rel="canonical" href="/stories/test-novel/"', home)
         chapter = canonical.joinpath("chapters/01.html").read_text(encoding="utf-8")
         self.assertIn("/stories/test-novel/chapters/02.html", chapter)
+        self.assertIn('data-action="focus"', chapter)
+        self.assertIn('data-focus-unit="1"', chapter)
+        self.assertIn('class="focus-guide"', chapter)
         with zipfile.ZipFile(canonical / "test-novel.epub") as archive:
             self.assertIsNone(archive.testzip())
             self.assertEqual(archive.infolist()[0].filename, "mimetype")
@@ -152,6 +169,42 @@ class NovelPipelineTests(unittest.TestCase):
         assert second_match is not None
         second = second_match.group(1)
         self.assertNotEqual(first, second)
+
+    def test_optional_illustrations_are_validated_copied_and_placed(self):
+        self.add_illustration()
+        result = self.run_cli("build")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        chapter = (self.root / "dist" / "stories" / "test-novel" / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn('class="story-illustration"', chapter)
+        self.assertIn('/stories/test-novel/assets/scenes/chapter-one.svg', chapter)
+        self.assertLess(chapter.index('data-focus-unit="1"'), chapter.index('class="story-illustration"'))
+        self.assertTrue((self.root / "dist" / "stories" / "test-novel" / "assets" / "scenes" / "chapter-one.svg").is_file())
+        with zipfile.ZipFile(self.root / "dist" / "stories" / "test-novel" / "test-novel.epub") as archive:
+            self.assertIn("OEBPS/images/scenes/chapter-one.svg", archive.namelist())
+            self.assertIn(b"images/scenes/chapter-one.svg", archive.read("OEBPS/chapter-001.xhtml"))
+            ElementTree.fromstring(archive.read("OEBPS/chapter-001.xhtml"))
+
+    def test_illustration_manifest_rejects_missing_or_unsafe_assets(self):
+        self.add_illustration()
+        path = self.root / "stories" / "test-novel" / "manuscript" / "illustrations.json"
+        payload = json.loads(path.read_text(encoding="utf-8")); payload["illustrations"][0]["asset"] = "../cover.svg"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        result = self.run_cli("validate")
+        self.assertNotEqual(result.returncode, 0); self.assertIn("beneath assets/scenes", result.stderr)
+
+    def test_bilingual_illustrations_require_and_render_both_languages(self):
+        self.add_english("test-novel"); self.add_illustration()
+        path = self.root / "stories" / "test-novel" / "manuscript" / "illustrations.json"
+        missing = self.run_cli("validate")
+        self.assertNotEqual(missing.returncode, 0); self.assertIn("after_paragraph.en", missing.stderr)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["illustrations"][0]["after_paragraph"]["en"] = 1
+        payload["illustrations"][0]["alt"]["en"] = "Test scene illustration"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        result = self.run_cli("build")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        chapter = (self.root / "dist" / "stories" / "test-novel" / "en" / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn('alt="Test scene illustration"', chapter)
 
     def test_bilingual_build_and_reviewer_overviews(self):
         self.add_english("test-novel")

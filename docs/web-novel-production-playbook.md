@@ -146,7 +146,20 @@ Successful long-form readers such as Kindle Cloud Reader, Royal Road, Medium, an
 - theme, font size, and language are user choices;
 - metadata and community chrome stay away from the prose.
 
+This reader also offers an optional focus mode. It is not auto-scroll: the reader controls each step. Activating `◎` centers the nearest paragraph, de-emphasizes surrounding units, and advances only on an explicit tap, Space, or arrow key. Escape exits immediately. Motion must honor `prefers-reduced-motion`, ordinary scrolling must remain available, and images may participate as focus units without trapping keyboard or touch users.
+
 Borrow patterns, not branding or ornamental clutter.
+
+## 11A. Illustration publishing contract
+
+- Keep canonical prose free of provider-specific image syntax.
+- Define approved scenes in `manuscript/illustrations.json` with language-specific paragraph placement.
+- Store final files beneath `assets/scenes/`; never hotlink expiring provider URLs.
+- Require non-empty alt text for every published language.
+- Record provider, model, prompt ID, generation date, seed, and reference assets in repository-owned visual material.
+- Build character and location references before recurring scenes; a shared seed alone is not identity control.
+- Reject watermarks, fake writing, anatomy defects, character drift, illegal power effects, wrong injuries, and spoiler-heavy placement.
+- Prove the image remains legible at mobile width and does not create horizontal overflow.
 
 ## 12. Docker and deployment
 

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "illustrations": [
+    {
+      "id": "ch01-example",
+      "chapter": 1,
+      "after_paragraph": {
+        "ko": 12,
+        "en": 10
+      },
+      "asset": "scenes/ch01-example.webp",
+      "alt": {
+        "ko": "서사 정보를 설명하는 한국어 대체 텍스트",
+        "en": "English alt text describing useful narrative information"
+      },
+      "caption": {
+        "ko": "선택적이고 스포일러가 없는 캡션",
+        "en": "Optional caption without unrevealed spoilers"
+      },
+      "provenance": {
+        "provider": "provider name",
+        "model": "exact model id",
+        "prompt_id": "prompt-book-id",
+        "generated_at": "YYYY-MM-DD",
+        "seed": 12345,
+        "references": [
+          "scenes/references/character-v1.webp",
+          "scenes/references/style-v1.webp"
+        ]
+      }
+    }
+  ]
+}
