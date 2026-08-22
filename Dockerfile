@@ -5,6 +5,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
 COPY story.json ./
+COPY locales/ locales/
 COPY manuscript/ manuscript/
 COPY scripts/ scripts/
 COPY site/ site/

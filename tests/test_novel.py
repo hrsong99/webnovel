@@ -16,6 +16,12 @@ class NovelPipelineTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         (self.root / "manuscript" / "chapters").mkdir(parents=True)
+        (self.root / "manuscript" / "reviewer-notes" / "ko").mkdir(parents=True)
+        for number in (1, 2):
+            (self.root / "manuscript" / "reviewer-notes" / "ko" / f"{number:02d}.md").write_text(
+                f"# {number}화 편집 개요\n\n주요 사건과 인물 선택을 설명하는 검증용 개요입니다.\n",
+                encoding="utf-8",
+            )
         (self.root / "site").mkdir()
         for name in ("styles.css", "reader.js", "home.js"):
             (self.root / "site" / name).write_text(f"/* {name} */\n", encoding="utf-8")
@@ -140,6 +146,51 @@ class NovelPipelineTests(unittest.TestCase):
                 "OEBPS/chapter-001.xhtml",
             ):
                 ElementTree.fromstring(archive.read(xml_name))
+
+    def test_bilingual_build_and_reviewer_overviews(self):
+        (self.root / "locales").mkdir()
+        (self.root / "locales" / "en.json").write_text(
+            json.dumps(
+                {
+                    "slug": "test-novel",
+                    "title": "Test Novel",
+                    "subtitle": "An English Edition",
+                    "author": "Test Author",
+                    "language": "en",
+                    "description": "A fixture for bilingual reader validation.",
+                    "volume_title": "Volume One",
+                    "expected_chapters": 2,
+                    "min_chapter_words": 5,
+                    "max_chapter_words": 100,
+                }
+            ),
+            encoding="utf-8",
+        )
+        en_chapters = self.root / "manuscript" / "translations" / "en" / "chapters"
+        en_notes = self.root / "manuscript" / "reviewer-notes" / "en"
+        en_chapters.mkdir(parents=True)
+        en_notes.mkdir(parents=True)
+        for number, title in ((1, "Beginning"), (2, "Arrival")):
+            (en_chapters / f"{number:02d}.md").write_text(
+                f"# Chapter {number}. {title}\n\nThe translated chapter contains enough natural English words for validation.\n",
+                encoding="utf-8",
+            )
+            (en_notes / f"{number:02d}.md").write_text(
+                f"# Chapter {number} Editorial Overview\n\nThis explains the plot structure and the character decision.\n",
+                encoding="utf-8",
+            )
+        result = self.run_cli("build")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        en_home = (self.root / "dist" / "en" / "index.html").read_text(encoding="utf-8")
+        en_chapter = (self.root / "dist" / "en" / "chapters" / "01.html").read_text(encoding="utf-8")
+        ko_chapter = (self.root / "dist" / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn('lang="en"', en_home)
+        self.assertIn("Read in Korean", en_home)
+        self.assertIn("Editorial chapter overview", en_chapter)
+        self.assertIn("This explains the plot structure", en_chapter)
+        self.assertIn('/chapters/01.html', en_chapter)
+        self.assertIn('/en/chapters/01.html', ko_chapter)
+        self.assertTrue((self.root / "dist" / "en" / "test-novel.epub").is_file())
 
     def test_missing_or_invalid_metadata_is_a_clear_cli_error(self):
         (self.root / "story.json").unlink()
