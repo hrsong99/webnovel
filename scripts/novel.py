@@ -19,6 +19,8 @@ from typing import Any, Iterable
 
 
 HEADING_RE = re.compile(r"^# 제([1-9][0-9]*)화\.\s+(.+?)\s*$")
+EN_HEADING_RE = re.compile(r"^# Chapter ([1-9][0-9]*)\.\s+(.+?)\s*$")
+WORD_RE = re.compile(r"\b[A-Za-z0-9]+(?:[’'-][A-Za-z0-9]+)*\b")
 KOREAN_RE = re.compile(r"[가-힣ㄱ-ㅎㅏ-ㅣ]")
 PLACEHOLDER_RE = re.compile(
     r"(?i)(?:\b(?:TODO|TBD|FIXME|XXX|PLACEHOLDER)\b|"
@@ -44,10 +46,14 @@ class Chapter:
     title: str
     body: str
     path: Path
-    korean_chars: int
+    korean_chars: int = 0
+    language: str = "ko"
+    word_count: int = 0
 
     @property
     def heading(self) -> str:
+        if self.language == "en":
+            return f"Chapter {self.number}. {self.title}"
         return f"제{self.number}화. {self.title}"
 
 
@@ -189,12 +195,90 @@ def read_manuscript(root: Path) -> Manuscript:
     return Manuscript(root, metadata, tuple(chapters))
 
 
+def read_translation(root: Path, language: str) -> Manuscript | None:
+    metadata_path = root / "locales" / f"{language}.json"
+    if not metadata_path.is_file():
+        return None
+    try:
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise NovelError(f"invalid translation metadata {metadata_path}: {exc}") from exc
+    if not isinstance(metadata, dict):
+        raise NovelError(f"translation metadata must be an object: {metadata_path}")
+    errors: list[str] = []
+    for field in REQUIRED_TEXT_FIELDS:
+        value = metadata.get(field)
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"{metadata_path.name} field {field!r} must be a non-empty string")
+    expected = metadata.get("expected_chapters")
+    minimum = metadata.get("min_chapter_words")
+    maximum = metadata.get("max_chapter_words")
+    for field, value in (("expected_chapters", expected), ("min_chapter_words", minimum), ("max_chapter_words", maximum)):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            errors.append(f"{metadata_path.name} field {field!r} must be a positive integer")
+    chapter_dir = root / "manuscript" / "translations" / language / "chapters"
+    files = sorted(chapter_dir.glob("*.md")) if chapter_dir.is_dir() else []
+    if not files:
+        errors.append(f"no translated chapters found in {chapter_dir}")
+    chapters: list[Chapter] = []
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        lines = text.splitlines()
+        match = EN_HEADING_RE.fullmatch(lines[0]) if lines else None
+        if not match:
+            errors.append(f"{path.name}: first line must match '# Chapter N. Title'")
+            continue
+        number = int(match.group(1))
+        body = "\n".join(lines[1:]).strip()
+        words = len(WORD_RE.findall(body))
+        if not body:
+            errors.append(f"{path.name}: translated chapter body is empty")
+        if isinstance(minimum, int) and isinstance(maximum, int) and not (minimum <= words <= maximum):
+            errors.append(f"{path.name}: {words} English words; required range is {minimum}-{maximum}")
+        if PLACEHOLDER_RE.search(body) or re.search(r"(?i)\b(?:TODO|TBD|FIXME|translator(?:'s)? note)\b", body):
+            errors.append(f"{path.name}: placeholder or translator note found in prose")
+        english_sentences = [
+            re.sub(r"\s+", " ", sentence).strip(" \t\"'“”‘’")
+            for sentence in re.split(r"(?<=[.!?])\s+|\n+", body)
+        ]
+        repeated_english = [
+            sentence for sentence, count in collections.Counter(english_sentences).items()
+            if count >= 3 and len(WORD_RE.findall(sentence)) >= 8
+        ]
+        if repeated_english:
+            errors.append(f"{path.name}: suspicious English repetition found: {repeated_english[0][:80]!r}")
+        chapters.append(Chapter(number, match.group(2).strip(), body, path, 0, language, words))
+    chapters.sort(key=lambda item: item.number)
+    numbers = [item.number for item in chapters]
+    if numbers and numbers != list(range(1, max(numbers) + 1)):
+        errors.append(f"{language} translation numbering gap: found {numbers}")
+    if isinstance(expected, int) and len(chapters) != expected:
+        errors.append(f"{language} expected_chapters is {expected}, but found {len(chapters)}")
+    if errors:
+        raise NovelError("translation validation failed:\n" + "\n".join(f"- {error}" for error in errors))
+    return Manuscript(root, metadata, tuple(chapters))
+
+
+def load_reviewer_note(root: Path, language: str, number: int) -> str:
+    path = root / "manuscript" / "reviewer-notes" / language / f"{number:02d}.md"
+    if not path.is_file():
+        raise NovelError(f"missing reviewer overview: {path}")
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if not lines or not lines[0].startswith("# "):
+        raise NovelError(f"reviewer overview needs a level-one heading: {path}")
+    body = "\n".join(lines[1:]).strip()
+    if not body:
+        raise NovelError(f"reviewer overview is empty: {path}")
+    return body
+
+
 def manuscript_stats(manuscript: Manuscript) -> dict[str, Any]:
     chapter_stats = [
         {
             "number": chapter.number,
             "title": chapter.title,
             "korean_characters": chapter.korean_chars,
+            "words": chapter.word_count,
             "source": chapter.path.name,
         }
         for chapter in manuscript.chapters
@@ -202,8 +286,10 @@ def manuscript_stats(manuscript: Manuscript) -> dict[str, Any]:
     return {
         "slug": manuscript.metadata["slug"],
         "title": manuscript.metadata["title"],
+        "language": manuscript.metadata["language"],
         "chapter_count": len(manuscript.chapters),
         "korean_characters": sum(chapter.korean_chars for chapter in manuscript.chapters),
+        "words": sum(chapter.word_count for chapter in manuscript.chapters),
         "chapters": chapter_stats,
     }
 
@@ -213,9 +299,10 @@ def combined_markdown(manuscript: Manuscript) -> str:
     parts = [f"# {meta['title']}"]
     if meta.get("subtitle"):
         parts.append(f"*{meta['subtitle']}*")
+    author_label = "Author" if meta.get("language") == "en" else "저자"
     parts.extend(
         [
-            f"**저자:** {meta['author']}",
+            f"**{author_label}:** {meta['author']}",
             str(meta["description"]),
         ]
     )
@@ -276,166 +363,194 @@ def site_head(meta: dict[str, Any], page_title: str, prefix: str = "") -> str:
 <link rel="stylesheet" href="{prefix}assets/styles.css">'''
 
 
-def chapter_prose_html(body: str) -> str:
+def chapter_prose_html(body: str, language: str = "ko") -> str:
     rendered = []
     for paragraph in re.split(r"\n\s*\n", body.strip()):
         stripped = paragraph.strip()
         if stripped == "***":
-            rendered.append('<hr class="scene-break" aria-label="장면 전환">')
+            label = "Scene break" if language == "en" else "장면 전환"
+            rendered.append(f'<hr class="scene-break" aria-label="{label}">')
             continue
         css_class = ' class="dialogue"' if stripped.startswith(("“", '"', "‘")) else ""
         rendered.append(f"<p{css_class}>{html.escape(stripped).replace(chr(10), '<br>')}</p>")
     return "\n".join(rendered)
 
 
+def simple_markdown_html(text: str) -> str:
+    """Render the tiny reviewer-note Markdown subset without trusting raw HTML."""
+    blocks = re.split(r"\n\s*\n", text.strip())
+    rendered: list[str] = []
+    for block in blocks:
+        lines = [line.strip() for line in block.splitlines() if line.strip()]
+        if lines and all(line.startswith(("- ", "* ")) for line in lines):
+            items = "".join(f"<li>{inline_markdown(line[2:])}</li>" for line in lines)
+            rendered.append(f"<ul>{items}</ul>")
+        else:
+            rendered.append(f"<p>{inline_markdown(' '.join(lines))}</p>")
+    return "\n".join(rendered)
+
+
+def inline_markdown(text: str) -> str:
+    escaped = html.escape(text)
+    return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", escaped)
+
+
+def edition_copy(language: str) -> dict[str, str]:
+    if language == "en":
+        return {
+            "skip": "Skip to chapters", "chapters": "Chapters", "about": "About",
+            "edition": "Read in Korean", "eyebrow": "A MURIM NOVEL · VOLUME ONE",
+            "count": "chapters", "unit": "words", "genre": "Wuxia · Progression · Institutional rebellion",
+            "start": "Begin chapter one", "resume": "Continue reading", "contents": "Explore the chapters",
+            "volume": "VOLUME ONE", "quote": "To abolish murim, he first had to become a martial artist.",
+            "about_text": "How light is an ordinary life beneath a master's enlightenment? Jin Cheol takes aim not only at the two masters who destroyed his family, but at the order that declared them innocent.",
+            "built": "This edition is generated directly from the canonical manuscript. New chapters update the reader and ebooks together.",
+            "download": "Download", "local": "No account. Reading progress and preferences stay in this browser.",
+            "read": "Read", "read_mark": "READ", "toc": "Table of contents", "home": "Book home",
+            "previous": "Previous", "next": "Next", "complete": "Volume one complete",
+            "complete_text": "Jin Cheol's first fracture has drawn the attention of the Murim Alliance.",
+            "review_summary": "Editorial chapter overview", "review_hint": "Spoilers · plot structure, decisions, and progression constraints",
+            "smaller": "Smaller text", "larger": "Larger text", "theme": "Change reading theme",
+            "minutes": "min read", "chapter": "Chapter", "language_short": "한국어",
+        }
+    return {
+        "skip": "회차로 건너뛰기", "chapters": "목차", "about": "작품 소개",
+        "edition": "Read in English", "eyebrow": "한국 무협 웹소설 · 제1권",
+        "count": "화", "unit": "자", "genre": "무협 · 성장 · 제도 혁명",
+        "start": "첫 화 읽기", "resume": "이어 읽기", "contents": "회차 둘러보기",
+        "volume": "제1권", "quote": "무림을 없애려면, 먼저 무인이 되어야 했다.",
+        "about_text": "고수의 깨달음 아래에서 평범한 사람의 삶은 얼마나 가벼운가. 대장장이 진철은 가족을 죽인 두 사람만이 아니라, 그들을 무죄로 만든 질서를 겨눈다.",
+        "built": "이 판본은 정본 원고에서 직접 생성됩니다. 새 회차가 추가되면 리더와 전자책이 함께 갱신됩니다.",
+        "download": "내려받기", "local": "계정 없이 읽습니다. 독서 기록과 설정은 이 브라우저에만 남습니다.",
+        "read": "읽기", "read_mark": "읽음", "toc": "회차 목차", "home": "작품 홈",
+        "previous": "이전화", "next": "다음화", "complete": "제1권 완독",
+        "complete_text": "진철이 만든 첫 균열을 무림맹이 바라보기 시작합니다.",
+        "review_summary": "편집자용 회차 개요", "review_hint": "스포일러 · 주요 사건, 인물 선택, 성장 제약",
+        "smaller": "글자 작게", "larger": "글자 크게", "theme": "읽기 테마 바꾸기",
+        "minutes": "분", "chapter": "제", "language_short": "EN",
+    }
+
+
 def landing_html(manuscript: Manuscript) -> str:
     meta = manuscript.metadata
+    language = str(meta["language"])
+    en = language == "en"
+    ui = edition_copy(language)
     stats = manuscript_stats(manuscript)
+    asset_prefix = "../" if en else ""
+    language_href = "/" if en else "/en/"
+    total = stats["words"] if en else stats["korean_characters"]
+    volume_title = meta.get("volume_title", "검성의 사과")
     cards = "\n".join(
         f'''<a class="chapter-card" href="chapters/{chapter.number:02d}.html" data-chapter-link="{chapter.number}">
-<span class="chapter-no">CH. {chapter.number:02d}</span>
-<span class="chapter-title">{html.escape(chapter.title)} <span class="progress-note">읽음</span></span>
-<span class="chapter-length">{chapter.korean_chars:,}자</span>
+<span class="chapter-index">{chapter.number:02d}</span>
+<span class="chapter-copy"><strong>{html.escape(chapter.title)}</strong><small>{chapter.word_count:,} words</small></span>
+<span class="chapter-state"><span class="progress-note">{ui['read_mark']}</span><span aria-hidden="true">↗</span></span>
+</a>'''
+        if en else
+        f'''<a class="chapter-card" href="chapters/{chapter.number:02d}.html" data-chapter-link="{chapter.number}">
+<span class="chapter-index">{chapter.number:02d}</span>
+<span class="chapter-copy"><strong>{html.escape(chapter.title)}</strong><small>{chapter.korean_chars:,}자</small></span>
+<span class="chapter-state"><span class="progress-note">{ui['read_mark']}</span><span aria-hidden="true">↗</span></span>
 </a>'''
         for chapter in manuscript.chapters
     )
-    schema = json.dumps(
-        {
-            "@context": "https://schema.org",
-            "@type": "Book",
-            "name": meta["title"],
-            "alternateName": meta.get("subtitle", ""),
-            "author": {"@type": "Organization", "name": meta["author"]},
-            "inLanguage": meta["language"],
-            "description": meta["description"],
-            "bookFormat": "EBook",
-            "numberOfPages": len(manuscript.chapters),
-        },
-        ensure_ascii=False,
-    ).replace("</", "<\\/")
+    schema = json.dumps({
+        "@context": "https://schema.org", "@type": "Book", "name": meta["title"],
+        "alternateName": meta.get("subtitle", ""),
+        "author": {"@type": "Organization", "name": meta["author"]},
+        "inLanguage": language, "description": meta["description"], "bookFormat": "EBook",
+    }, ensure_ascii=False).replace("</", "<\\/")
+    head = site_head(meta, f"{meta['title']} — {meta.get('subtitle', '')}", asset_prefix)
     return f'''<!doctype html>
-<html lang="{html.escape(str(meta['language']), quote=True)}">
-<head>
-{site_head(meta, f"{meta['title']} — {meta.get('subtitle', '')}")}
-<script type="application/ld+json">{schema}</script>
-<script defer src="assets/home.js"></script>
-</head>
-<body>
-<a class="skip-link" href="#chapters">본문으로 건너뛰기</a>
-<header class="site-header">
-  <a class="brand" href="/"><span class="brand-mark">無</span><span>{html.escape(str(meta['title']))}</span></a>
-  <nav class="header-links" aria-label="주요 메뉴"><a href="#chapters">목차</a><a class="optional" href="#about">작품 소개</a><a href="{meta['slug']}.epub" download>EPUB</a></nav>
-</header>
+<html lang="{html.escape(language, quote=True)}"><head>{head}
+<link rel="alternate" hreflang="{'ko' if en else 'en'}" href="{language_href}">
+<script type="application/ld+json">{schema}</script><script defer src="{asset_prefix}assets/home.js"></script></head>
+<body class="library-page" data-language="{language}">
+<a class="skip-link" href="#chapters">{ui['skip']}</a>
+<header class="site-header"><a class="brand" href="{'/en/' if en else '/'}"><span class="brand-mark">無</span><span>{html.escape(str(meta['title']))}</span></a>
+<nav class="header-links" aria-label="{ui['toc']}"><a href="#chapters">{ui['chapters']}</a><a href="#about">{ui['about']}</a><a class="language-link" href="{language_href}">{ui['edition']}</a></nav></header>
 <main>
-<section class="hero">
-  <div class="cover-wrap"><img class="cover" src="assets/cover.svg" alt="{html.escape(str(meta['title']))} 표지" width="1200" height="1800"></div>
-  <div class="hero-copy">
-    <p class="eyebrow">Korean Murim Web Novel · Volume One</p>
-    <h1>{html.escape(str(meta['title']))}</h1>
-    <p class="subtitle">{html.escape(str(meta.get('subtitle', '')))}</p>
-    <p class="synopsis">{html.escape(str(meta['description']))}</p>
-    <div class="meta-row"><span>전 {stats['chapter_count']}화</span><span>{stats['korean_characters']:,}자</span><span>무협 · 성장 · 제도 혁명</span></div>
-    <div class="actions"><a class="button primary" href="chapters/01.html" data-resume>첫 화 읽기 →</a><a class="button secondary" href="#chapters">목차 보기</a></div>
-  </div>
-</section>
-<section class="section" id="chapters">
-  <p class="section-kicker">VOLUME ONE</p><h2>검성의 사과</h2>
-  <div class="chapter-list">{cards}</div>
-</section>
-<section class="section" id="about">
-  <div class="about-grid">
-    <blockquote>“무림을 없애려면,<br>먼저 무인이 되어야 했다.”</blockquote>
-    <div class="about-copy"><p>고수의 깨달음 아래에서 평범한 사람의 삶은 얼마나 가벼운가. 대장장이 진철은 가족을 죽인 두 사람만이 아니라, 그들을 무죄로 만든 질서를 겨눈다. 그리고 모든 내공이 영혼에 낸 상처에서 시작된다는 사실을 알게 된다.</p><p>이 웹사이트는 정본 원고에서 자동으로 만들어집니다. 새 회차가 저장소에 추가되면 목차와 전자책, 독서 페이지가 함께 갱신됩니다.</p>
-      <div class="downloads"><a href="{meta['slug']}.epub" download>EPUB 내려받기</a><a href="{meta['slug']}.txt" download>TXT 내려받기</a><a href="{meta['slug']}.md" download>Markdown</a></div>
-    </div>
-  </div>
-</section>
-</main>
-<footer class="site-footer"><span>© {html.escape(str(meta['author']))}</span><span>로그인 없이, 브라우저에만 독서 기록을 저장합니다.</span></footer>
-</body></html>'''
+<section class="hero"><div class="hero-copy"><p class="eyebrow">{ui['eyebrow']}</p><h1>{html.escape(str(meta['title']))}</h1><p class="subtitle">{html.escape(str(meta.get('subtitle', '')))}</p>
+<p class="synopsis">{html.escape(str(meta['description']))}</p><div class="meta-row"><span>{len(manuscript.chapters)} {ui['count']}</span><span>{total:,} {ui['unit']}</span><span>{ui['genre']}</span></div>
+<div class="actions"><a class="button primary" href="chapters/01.html" data-resume>{ui['start']} <span>→</span></a><a class="text-link" href="#chapters">{ui['contents']} ↓</a></div></div>
+<div class="cover-stage"><div class="cover-glow"></div><img class="cover" src="{asset_prefix}assets/{'cover-en.svg' if en else 'cover.svg'}" alt="{html.escape(str(meta['title']))}" width="1200" height="1800"><span class="cover-caption">{html.escape(str(meta['author']))}</span></div></section>
+<section class="chapter-section" id="chapters"><div class="section-heading"><div><p class="section-kicker">{ui['volume']}</p><h2>{html.escape(str(volume_title))}</h2></div><p>{len(manuscript.chapters):02d} / {len(manuscript.chapters):02d}</p></div><div class="chapter-list">{cards}</div></section>
+<section class="manifesto" id="about"><p class="manifesto-mark">“</p><blockquote>{ui['quote']}</blockquote><div class="manifesto-copy"><p>{ui['about_text']}</p><p>{ui['built']}</p><div class="downloads"><span>{ui['download']}</span><a href="{meta['slug']}.epub" download>EPUB</a><a href="{meta['slug']}.txt" download>TXT</a><a href="{meta['slug']}.md" download>MD</a></div></div></section>
+</main><footer class="site-footer"><span>© {html.escape(str(meta['author']))}</span><span>{ui['local']}</span></footer></body></html>'''
 
 
 def chapter_page_html(manuscript: Manuscript, chapter: Chapter) -> str:
     meta = manuscript.metadata
+    language = str(meta["language"])
+    en = language == "en"
+    ui = edition_copy(language)
     chapters = manuscript.chapters
-    toc_parts = []
+    asset_prefix = "../../" if en else "../"
+    home_href = "../" if en else "../"
+    switch_href = f"/chapters/{chapter.number:02d}.html" if en else f"/en/chapters/{chapter.number:02d}.html"
+    toc_parts: list[str] = []
     for item in chapters:
         current = ' aria-current="page"' if item.number == chapter.number else ""
         toc_parts.append(
-            f'<a href="{item.number:02d}.html"{current}>제{item.number}화. {html.escape(item.title)}</a>'
+            f'<a href="{item.number:02d}.html"{current}><span>{item.number:02d}</span>{html.escape(item.title)}</a>'
         )
     toc = "".join(toc_parts)
     previous = next((item for item in chapters if item.number == chapter.number - 1), None)
     following = next((item for item in chapters if item.number == chapter.number + 1), None)
-    prev_html = (
-        f'<a class="prev" href="{previous.number:02d}.html"><small>이전화</small>← {html.escape(previous.title)}</a>'
-        if previous else '<a class="prev" href="../"><small>작품 홈</small>← 표지로</a>'
-    )
-    next_html = (
-        f'<a class="next" href="{following.number:02d}.html"><small>다음화</small>{html.escape(following.title)} →</a>'
-        if following else '<a class="next" href="../"><small>제1권 완독</small>작품 홈 →</a>'
-    )
-    end_card = "" if following else '''<div class="end-card"><strong>제1권을 모두 읽었습니다.</strong><p>진철의 첫 균열은 이제 무림맹의 시선과 마주합니다.</p><a class="button secondary" href="../">작품 홈으로</a></div>'''
+    prev_html = f'<a class="prev" href="{previous.number:02d}.html"><small>{ui["previous"]}</small><span>← {html.escape(previous.title)}</span></a>' if previous else f'<a class="prev" href="{home_href}"><small>{ui["home"]}</small><span>← {html.escape(str(meta["title"]))}</span></a>'
+    next_html = f'<a class="next" href="{following.number:02d}.html"><small>{ui["next"]}</small><span>{html.escape(following.title)} →</span></a>' if following else f'<a class="next" href="{home_href}"><small>{ui["complete"]}</small><span>{ui["home"]} →</span></a>'
+    note = load_reviewer_note(manuscript.root, language, chapter.number)
+    measure = chapter.word_count if en else chapter.korean_chars
+    minutes = max(5, round(chapter.word_count / 220 if en else chapter.korean_chars / 500))
+    chapter_title = chapter.heading
+    head = site_head(meta, f"{chapter_title} | {meta['title']}", asset_prefix)
     return f'''<!doctype html>
-<html lang="{html.escape(str(meta['language']), quote=True)}">
-<head>{site_head(meta, f"제{chapter.number}화. {chapter.title} | {meta['title']}", "../")}<script defer src="../assets/reader.js"></script></head>
-<body class="reader-page" data-chapter="{chapter.number}">
-<a class="skip-link" href="#chapter-text">본문으로 건너뛰기</a>
-<div class="read-progress" role="progressbar" aria-label="회차 읽기 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
-<header class="reader-bar"><div class="reader-bar-inner">
-  <a class="reader-home" href="../">{html.escape(str(meta['title']))}</a>
-  <span class="reader-position">제{chapter.number}화 / 전 {len(chapters)}화</span>
-  <div class="reader-tools"><button class="tool-button" type="button" data-font-step="-1" aria-label="글자 작게">가−</button><button class="tool-button" type="button" data-font-step="1" aria-label="글자 크게">가+</button><button class="tool-button" type="button" data-action="theme" aria-label="읽기 테마 바꾸기">◐</button>
-    <details class="toc-toggle"><summary aria-label="목차 열기">목차</summary><nav class="toc-panel" aria-label="회차 목차">{toc}</nav></details>
-  </div>
-</div></header>
-<main class="reader-main" id="chapter-text">
-  <header class="chapter-head"><p class="chapter-label">CHAPTER {chapter.number:02d}</p><h1>{html.escape(chapter.title)}</h1><p>{chapter.korean_chars:,}자 · 예상 독서 시간 {max(5, round(chapter.korean_chars / 500))}분</p></header>
-  <article class="prose">{chapter_prose_html(chapter.body)}</article>
-  <nav class="chapter-nav" aria-label="이전 및 다음 회차">{prev_html}{next_html}</nav>{end_card}
-</main>
-</body></html>'''
+<html lang="{html.escape(language, quote=True)}"><head>{head}<link rel="alternate" hreflang="{'ko' if en else 'en'}" href="{switch_href}"><script defer src="{asset_prefix}assets/reader.js"></script></head>
+<body class="reader-page" data-chapter="{chapter.number}" data-language="{language}">
+<a class="skip-link" href="#chapter-text">{ui['skip']}</a><div class="read-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+<header class="reader-bar"><div class="reader-bar-inner"><a class="reader-home" href="{home_href}"><span class="brand-mark">無</span><span>{html.escape(str(meta['title']))}</span></a>
+<span class="reader-position">{chapter.number:02d} / {len(chapters):02d}</span><div class="reader-tools"><a class="tool-button language-tool" href="{switch_href}" aria-label="{ui['edition']}">{ui['language_short']}</a><button class="tool-button" type="button" data-font-step="-1" aria-label="{ui['smaller']}">A−</button><button class="tool-button" type="button" data-font-step="1" aria-label="{ui['larger']}">A+</button><button class="tool-button" type="button" data-action="theme" aria-label="{ui['theme']}">◐</button><details class="toc-toggle"><summary aria-label="{ui['toc']}">☰</summary><nav class="toc-panel" aria-label="{ui['toc']}">{toc}</nav></details></div></div></header>
+<main class="reader-main" id="chapter-text"><header class="chapter-head"><p class="chapter-label">CHAPTER {chapter.number:02d}</p><h1>{html.escape(chapter.title)}</h1><p>{measure:,} {ui['unit']} · {minutes} {ui['minutes']}</p></header>
+<details class="reviewer-overview"><summary><span><strong>{ui['review_summary']}</strong><small>{ui['review_hint']}</small></span><span class="summary-icon" aria-hidden="true">＋</span></summary><div class="reviewer-body">{simple_markdown_html(note)}</div></details>
+<article class="prose">{chapter_prose_html(chapter.body, language)}</article><nav class="chapter-nav" aria-label="Chapter navigation">{prev_html}{next_html}</nav>
+{'' if following else f'<div class="end-card"><strong>{ui["complete"]}</strong><p>{ui["complete_text"]}</p><a class="button secondary" href="{home_href}">{ui["home"]}</a></div>'}</main></body></html>'''
 
 
-def build_website(manuscript: Manuscript, dist: Path) -> list[Path]:
-    site_source = manuscript.root / "site"
+def build_website(korean: Manuscript, dist: Path, english: Manuscript | None = None) -> list[Path]:
+    site_source = korean.root / "site"
     required = ("styles.css", "reader.js", "home.js", "cover.svg", "favicon.svg")
     missing = [name for name in required if not (site_source / name).is_file()]
     if missing:
         raise NovelError("missing website asset(s): " + ", ".join(missing))
     assets = dist / "assets"
-    assets.mkdir(parents=True, exist_ok=True)
-    for name in required:
-        shutil.copy2(site_source / name, assets / name)
-
-    index = dist / "index.html"
-    index.write_text(landing_html(manuscript), encoding="utf-8")
-    chapter_dir = dist / "chapters"
-    chapter_dir.mkdir(parents=True, exist_ok=True)
-    chapter_files = []
-    for chapter in manuscript.chapters:
-        path = chapter_dir / f"{chapter.number:02d}.html"
-        path.write_text(chapter_page_html(manuscript, chapter), encoding="utf-8")
-        chapter_files.append(path)
-
+    shutil.copytree(site_source, assets, dirs_exist_ok=True)
+    outputs: list[Path] = []
+    editions = [(korean, dist)]
+    if english:
+        editions.append((english, dist / "en"))
+    for edition, edition_root in editions:
+        edition_root.mkdir(parents=True, exist_ok=True)
+        index = edition_root / "index.html"
+        index.write_text(landing_html(edition), encoding="utf-8")
+        outputs.append(index)
+        chapter_dir = edition_root / "chapters"
+        chapter_dir.mkdir(parents=True, exist_ok=True)
+        for chapter in edition.chapters:
+            path = chapter_dir / f"{chapter.number:02d}.html"
+            path.write_text(chapter_page_html(edition, chapter), encoding="utf-8")
+            outputs.append(path)
     manifest = {
-        "name": manuscript.metadata["title"],
-        "short_name": manuscript.metadata["title"],
-        "description": manuscript.metadata["description"],
-        "lang": manuscript.metadata["language"],
-        "start_url": "/",
-        "display": "standalone",
-        "background_color": "#f3efe5",
-        "theme_color": "#211c18",
+        "name": korean.metadata["title"], "short_name": korean.metadata["title"],
+        "description": korean.metadata["description"], "lang": "ko", "start_url": "/",
+        "display": "standalone", "background_color": "#f5f0e6", "theme_color": "#1b1916",
         "icons": [{"src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml"}],
     }
     manifest_path = dist / "manifest.webmanifest"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    robots = dist / "robots.txt"
-    robots.write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
-    health = dist / "health.txt"
-    health.write_text("ok\n", encoding="utf-8")
-    return [index, *chapter_files, manifest_path, robots, health, *(assets / name for name in required)]
+    robots = dist / "robots.txt"; robots.write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
+    health = dist / "health.txt"; health.write_text("ok\n", encoding="utf-8")
+    return [*outputs, manifest_path, robots, health, assets]
 
 
 def plain_text(manuscript: Manuscript) -> str:
@@ -457,7 +572,8 @@ def xhtml_document(language: str, title: str, body: str) -> str:
 def build_epub(manuscript: Manuscript, destination: Path) -> None:
     meta = manuscript.metadata
     language = str(meta["language"])
-    identifier = f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, str(meta['slug']))}"
+    identifier_source = f"{meta['slug']}:{language}"
+    identifier = f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, identifier_source)}"
     modified = _datetime.datetime.now(_datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     chapter_items = "\n".join(
         f'<item id="chapter-{c.number}" href="chapter-{c.number:03d}.xhtml" media-type="application/xhtml+xml"/>'
@@ -509,7 +625,18 @@ def build(manuscript: Manuscript) -> list[Path]:
     outputs[1].write_text(standalone_html(manuscript), encoding="utf-8")
     outputs[2].write_text(plain_text(manuscript), encoding="utf-8")
     build_epub(manuscript, outputs[3])
-    outputs.extend(build_website(manuscript, dist))
+
+    english = read_translation(manuscript.root, "en")
+    if english:
+        en_dist = dist / "en"
+        en_dist.mkdir(parents=True, exist_ok=True)
+        en_outputs = [en_dist / f"{slug}.{extension}" for extension in ("md", "html", "txt", "epub")]
+        en_outputs[0].write_text(combined_markdown(english), encoding="utf-8")
+        en_outputs[1].write_text(standalone_html(english), encoding="utf-8")
+        en_outputs[2].write_text(plain_text(english), encoding="utf-8")
+        build_epub(english, en_outputs[3])
+        outputs.extend(en_outputs)
+    outputs.extend(build_website(manuscript, dist, english))
     return outputs
 
 
@@ -531,14 +658,31 @@ def main(argv: Iterable[str] | None = None) -> int:
     args = make_parser().parse_args(argv)
     try:
         manuscript = read_manuscript(args.root)
+        english = read_translation(manuscript.root, "en")
+        for chapter in manuscript.chapters:
+            load_reviewer_note(manuscript.root, "ko", chapter.number)
+        if english:
+            for chapter in english.chapters:
+                load_reviewer_note(manuscript.root, "en", chapter.number)
         if args.command == "validate":
             stats = manuscript_stats(manuscript)
-            print(
-                f"VALID: {stats['chapter_count']} chapter(s), "
+            message = (
+                f"VALID: {stats['chapter_count']} Korean chapter(s), "
                 f"{stats['korean_characters']} Korean characters"
             )
+            if english:
+                en_stats = manuscript_stats(english)
+                message += f"; {en_stats['chapter_count']} English chapter(s), {en_stats['words']} words"
+            print(message)
         elif args.command == "stats":
-            print(json.dumps(manuscript_stats(manuscript), ensure_ascii=False, indent=2))
+            if english:
+                payload: dict[str, Any] = {
+                    "ko": manuscript_stats(manuscript),
+                    "en": manuscript_stats(english),
+                }
+            else:
+                payload = manuscript_stats(manuscript)
+            print(json.dumps(payload, ensure_ascii=False, indent=2))
         elif args.command == "build":
             outputs = build(manuscript)
             print("BUILT:")

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800" role="img" aria-labelledby="title desc">
+  <title id="title">The Murim Abolitionist cover</title>
+  <desc id="desc">Ink-dark mountains, a fractured red circle, and a blacksmith's hammer</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9e0cd"/><stop offset=".55" stop-color="#d8ccb6"/><stop offset="1" stop-color="#b9a98e"/></linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ba3e31"/><stop offset="1" stop-color="#6f1715"/></linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="4" seed="7" result="noise"/><feColorMatrix in="noise" type="saturate" values="0" result="mono"/><feComponentTransfer in="mono"><feFuncA type="table" tableValues="0 .11"/></feComponentTransfer></filter>
+  </defs>
+  <rect width="1200" height="1800" fill="url(#paper)"/><rect width="1200" height="1800" filter="url(#grain)" opacity=".34"/>
+  <circle cx="810" cy="540" r="252" fill="none" stroke="#201a16" stroke-width="22" opacity=".92"/>
+  <path d="M835 279 L789 439 L855 521 L802 633 L860 797" fill="none" stroke="url(#red)" stroke-width="38"/>
+  <circle cx="810" cy="540" r="180" fill="none" stroke="#201a16" stroke-width="2" opacity=".25"/>
+  <path d="M0 1150 L180 940 L305 1080 L500 805 L690 1030 L865 860 L1200 1120 L1200 1440 L0 1440 Z" fill="#342d27"/>
+  <path d="M0 1275 L220 1105 L400 1230 L595 1025 L765 1200 L950 1055 L1200 1245 L1200 1500 L0 1500 Z" fill="#1f1b18"/>
+  <path d="M0 1410 C180 1350 300 1450 470 1370 C640 1290 770 1435 930 1355 C1050 1300 1130 1335 1200 1370 L1200 1800 L0 1800 Z" fill="#151210"/>
+  <g transform="translate(670 1000) rotate(-18)"><rect x="-22" y="90" width="44" height="380" rx="15" fill="#8b6e4d"/><path d="M-150 20 H145 L115 145 H-105 Z" fill="#211b17"/><path d="M-138 36 H130" stroke="#8f8171" stroke-width="10" opacity=".45"/></g>
+  <g fill="#201a16" font-family="Georgia,serif"><text x="94" y="175" font-size="25" letter-spacing="8">NITTY GRITTY NOVEL LAB</text><text x="90" y="365" font-size="100" font-weight="700" letter-spacing="-4">THE MURIM</text><text x="90" y="470" font-size="100" font-weight="700" letter-spacing="-4">ABOLITIONIST</text><text x="96" y="545" font-size="30" letter-spacing="5" fill="#7d2a22">THE BLACKSMITH WHO CLOSES WOUNDS</text></g>
+  <g transform="translate(930 1480) rotate(-7)"><rect x="-72" y="-72" width="144" height="144" fill="none" stroke="#a23328" stroke-width="8"/><text x="0" y="-5" text-anchor="middle" font-family="Georgia,serif" font-size="22" font-weight="700" fill="#a23328">VOLUME</text><text x="0" y="35" text-anchor="middle" font-family="Georgia,serif" font-size="34" font-weight="700" fill="#a23328">ONE</text></g>
+  <text x="95" y="1680" fill="#b7a890" font-family="Georgia,serif" font-size="20" letter-spacing="6">A NOVEL OF POWER, WOUNDS, AND REVOLT</text>
+</svg>

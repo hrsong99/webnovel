@@ -6,21 +6,27 @@
 
 ## 현재 결과물
 
-- 제1권 미니 아크 6화
-- 순수 원고 Markdown
-- 빌드 결과: 합본 Markdown, 읽기용 HTML, TXT, EPUB 3
+- 제1권 미니 아크 6화, 한국어 정본과 완역 영어판
+- 회차마다 접을 수 있는 한·영 편집자용 플롯 개요
+- 순수 원고 Markdown과 번역 용어·문체 계약
+- 빌드 결과: 한·영 작품 홈, 회차별 리더, 합본 HTML, Markdown, TXT, EPUB 3
+- 언어 전환, 읽기 진행률, 테마·글자 크기 로컬 저장
 - 연속성·문체 계약과 회차별 구성
-- 길이, 누락, 기획 메모 혼입, 자리표시자, 과도한 문장 반복을 검사하는 CLI
+- 길이, 누락, 번역 완결성, 기획 메모 혼입, 자리표시자, 과도한 문장 반복을 검사하는 CLI
 - 임시 픽스처 기반 자동 테스트
 
 ## 구조
 
 ```text
-story.json                    # 제목, 언어, 회차 수, 길이 기준
+story.json                    # 한국어 제목, 언어, 회차 수, 길이 기준
+locales/en.json               # 영어판 출판 메타데이터와 단어 수 기준
 manuscript/
   story-bible.md              # 정본 설정·인물·문체·성장 제약
   outline.md                  # 제1권 인과관계와 회차별 독자 보상
-  chapters/                   # 출판 가능한 본문만
+  chapters/                   # 한국어 정본 본문
+  translations/en/            # 영어판 본문과 번역 계약
+  reviewer-notes/{ko,en}/     # 접을 수 있는 편집자용 플롯 개요
+docs/web-novel-production-playbook.md # 후속 권을 위한 집필·편집·배포 교훈
 research/source/              # 이전 시도, 원본 대화, 세계관 자료(참고용)
 scripts/novel.py              # validate / stats / build
 site/                         # 공개 리더 CSS·JavaScript·표지 원본
@@ -48,13 +54,15 @@ python3 scripts/novel.py build
 빌드가 성공하면 다음 파일이 생깁니다.
 
 ```text
-dist/index.html                         # 공개 작품 홈
-dist/chapters/01.html ... 06.html       # 회차별 리더
-dist/assets/cover.svg                   # 표지
-dist/murim-abolitionist.epub
-dist/murim-abolitionist.html            # 단일 파일 합본 리더
-dist/murim-abolitionist.txt
-dist/murim-abolitionist.md
+dist/index.html                         # 한국어 작품 홈
+dist/chapters/01.html ... 06.html       # 한국어 회차별 리더
+dist/en/index.html                      # English edition home
+dist/en/chapters/01.html ... 06.html    # English chapter reader
+dist/assets/cover.svg                   # 한국어 표지
+dist/assets/cover-en.svg                # 영어 표지
+dist/murim-abolitionist.epub            # 한국어 EPUB
+dist/en/murim-abolitionist.epub         # English EPUB
+dist/{,en/}murim-abolitionist.{html,txt,md}
 ```
 
 공개 리더에는 로그인이나 서버 저장소가 없습니다. 읽은 회차, 테마, 글자 크기는 해당 브라우저의 `localStorage`에만 보관됩니다.
@@ -91,6 +99,8 @@ curl -f http://127.0.0.1:8080/healthz
 6. **다시 검증하고 빌드:** 테스트, 검증, 통계, EPUB 구조 확인 뒤 배포본을 만든다.
 
 기계 검사는 문학적 품질을 판정하지 않습니다. 검사가 맡는 것은 누락과 반복 같은 값싼 실수를 막는 일이며, 장면의 감정·인물의 선택·문장의 생동감은 별도 편집 과정에서 판단합니다.
+
+후속 권에서 동일한 품질 기준을 재사용하려면 [`docs/web-novel-production-playbook.md`](docs/web-novel-production-playbook.md)를 먼저 읽습니다. 독서 화면의 근거와 시각 원칙은 [`docs/reader-design-notes.md`](docs/reader-design-notes.md)에 남겨 두었습니다.
 
 ## 설계상의 핵심 선택
 

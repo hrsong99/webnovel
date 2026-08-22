@@ -3,6 +3,7 @@
   const storage = window.localStorage;
   const key = 'murim-reader-settings';
   const currentChapter = Number(document.body.dataset.chapter || 0);
+  const language = document.body.dataset.language || 'ko';
 
   function loadSettings() {
     try {
@@ -19,7 +20,7 @@
   const settings = loadSettings();
   const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   root.dataset.theme = settings.theme || preferredTheme;
-  root.style.setProperty('--reader-size', `${settings.fontSize || 20}px`);
+  root.style.setProperty('--reader-size', `${settings.fontSize || 19}px`);
 
   const themeButton = document.querySelector('[data-action="theme"]');
   if (themeButton) {
@@ -30,7 +31,10 @@
       const updated = loadSettings();
       updated.theme = next;
       saveSettings(updated);
-      themeButton.setAttribute('aria-label', `읽기 테마: ${next}`);
+      themeButton.setAttribute(
+        'aria-label',
+        language === 'en' ? `Reading theme: ${next}` : `읽기 테마: ${next}`,
+      );
     });
   }
 
@@ -57,7 +61,12 @@
   updateProgress();
 
   if (currentChapter) {
-    const read = new Set(JSON.parse(storage.getItem('murim-read-chapters') || '[]'));
+    let read = new Set();
+    try {
+      read = new Set(JSON.parse(storage.getItem('murim-read-chapters') || '[]'));
+    } catch (_) {
+      storage.removeItem('murim-read-chapters');
+    }
     read.add(currentChapter);
     storage.setItem('murim-read-chapters', JSON.stringify([...read].sort((a, b) => a - b)));
     storage.setItem('murim-last-chapter', String(currentChapter));
