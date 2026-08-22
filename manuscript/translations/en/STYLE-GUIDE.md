@@ -4,12 +4,18 @@ The Korean chapters in `manuscript/chapters/` are canonical. The English edition
 
 ## Voice
 
+The English edition is a localization of the Korean literary effect, not a preservation of Korean sentence count, omitted subjects, connective logic, or paragraph count. Before revising a scene, name what the Korean is doing—dry humor, acceleration, social pressure, intimacy, dread, or impact—and rebuild that effect as native English prose.
+
 - Close third person, usually Jin Cheol.
 - Concrete, restrained, and physical. Let emotion appear through work, breath, injury, and choice.
 - Preserve the forge, weaving, stress, grain, fracture, and resonance image families without repeating one metaphor mechanically.
 - Dialogue should be contemporary-readable but not modern slangy.
 - Avoid faux-archaic English, game terminology, cultivation stat language, and unexplained corporate jargon.
 - Do not flatten Yeonhwa into a supportive fiancée; preserve her authority, anger, practical intelligence, and enforceable conditions.
+- Connect cause, qualification, and perception into natural English syntax where Korean can leave them implicit.
+- Keep a short sentence when it lands a joke, image, decision, or blow; do not use clipped subject-verb paragraphs as the default rhythm.
+- Recreate dry humor through timing, attitude, and social contrast rather than literal word order.
+- Read each chapter aloud and all chapters continuously as English fiction before comparing back to canon.
 
 ## Names
 
@@ -83,6 +89,6 @@ Then publishable English prose only. Preserve scene breaks as `***`. Do not incl
 - Jin Cheol has no internal energy until Chapter 5 and reaches only the entry of the third-rate realm by Chapter 6.
 - In Chapter 6, Unraveling Qi stays inside his body. Do Changsu’s timing failure is caused by physical resonance and reflex, not projected qi.
 - Fifteen villagers die; there are fourteen graves because Jin Cheol’s parents share one.
-- Seven children are endangered; six are rescued from the rite, and the seventh is the child later demanded as payment.
+- Seven children are subjected to the Chapter 3 initiation rite: six are rescued and one child dies. Gangho, demanded as payment in Chapter 6, is a separate eighth endangered child.
 - Jin Cheol and Yeonhwa remain betrothed but the wedding is indefinitely postponed by Yeonhwa’s choice.
 - The ledger, manual, and resonance implements have explicit shared-custody rules.
