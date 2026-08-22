@@ -16,6 +16,13 @@ class NovelPipelineTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         (self.root / "manuscript" / "chapters").mkdir(parents=True)
+        (self.root / "site").mkdir()
+        for name in ("styles.css", "reader.js", "home.js"):
+            (self.root / "site" / name).write_text(f"/* {name} */\n", encoding="utf-8")
+        for name in ("cover.svg", "favicon.svg"):
+            (self.root / "site" / name).write_text(
+                '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n', encoding="utf-8"
+            )
         self.metadata = {
             "slug": "test-novel",
             "title": "시험 소설",
@@ -100,12 +107,21 @@ class NovelPipelineTests(unittest.TestCase):
         result = self.run_cli("build")
         self.assertEqual(result.returncode, 0, result.stderr)
         dist = self.root / "dist"
-        expected = {"test-novel.md", "test-novel.html", "test-novel.txt", "test-novel.epub"}
-        self.assertEqual({p.name for p in dist.iterdir()}, expected)
+        expected = {"test-novel.md", "test-novel.html", "test-novel.txt", "test-novel.epub", "index.html"}
+        self.assertTrue(expected.issubset({p.name for p in dist.iterdir()}))
         self.assertIn("제1화. 시작", (dist / "test-novel.md").read_text(encoding="utf-8"))
         html = (dist / "test-novel.html").read_text(encoding="utf-8")
         self.assertIn("<!doctype html>", html.lower())
         self.assertIn("lang=\"ko\"", html)
+        home = (dist / "index.html").read_text(encoding="utf-8")
+        self.assertIn("chapters/01.html", home)
+        self.assertIn("시험 소설", home)
+        self.assertNotRegex(home.lower(), r"login|password|sign[ -]?in")
+        chapter = (dist / "chapters" / "01.html").read_text(encoding="utf-8")
+        self.assertIn("제1화", chapter)
+        self.assertIn("02.html", chapter)
+        self.assertTrue((dist / "assets" / "cover.svg").is_file())
+        self.assertEqual((dist / "health.txt").read_text(encoding="utf-8"), "ok\n")
         self.assertIn("제2화. 도착", (dist / "test-novel.txt").read_text(encoding="utf-8"))
         with zipfile.ZipFile(dist / "test-novel.epub") as archive:
             self.assertEqual(archive.testzip(), None)

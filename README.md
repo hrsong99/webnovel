@@ -23,8 +23,12 @@ manuscript/
   chapters/                   # 출판 가능한 본문만
 research/source/              # 이전 시도, 원본 대화, 세계관 자료(참고용)
 scripts/novel.py              # validate / stats / build
+site/                         # 공개 리더 CSS·JavaScript·표지 원본
+Dockerfile                    # Dokploy용 멀티스테이지 프로덕션 이미지
+compose.yaml                  # 선택 가능한 Dokploy Compose 진입점
+deploy/nginx.conf             # non-root Nginx와 헬스체크
 tests/                        # stdlib unittest
-dist/                         # 생성물; Git에는 포함하지 않음
+dist/                         # 생성된 웹사이트·전자책; Git 제외
 editorial/                    # 교정 기록과 최종 편집 보고서
 ```
 
@@ -44,11 +48,38 @@ python3 scripts/novel.py build
 빌드가 성공하면 다음 파일이 생깁니다.
 
 ```text
-dist/murim-abolitionist.md
-dist/murim-abolitionist.html
-dist/murim-abolitionist.txt
+dist/index.html                         # 공개 작품 홈
+dist/chapters/01.html ... 06.html       # 회차별 리더
+dist/assets/cover.svg                   # 표지
 dist/murim-abolitionist.epub
+dist/murim-abolitionist.html            # 단일 파일 합본 리더
+dist/murim-abolitionist.txt
+dist/murim-abolitionist.md
 ```
+
+공개 리더에는 로그인이나 서버 저장소가 없습니다. 읽은 회차, 테마, 글자 크기는 해당 브라우저의 `localStorage`에만 보관됩니다.
+
+## Dokploy 배포
+
+가장 단순한 방법은 Dokploy에서 이 GitHub 저장소의 `main` 브랜치를 **Dockerfile** 애플리케이션으로 연결하는 것입니다.
+
+- Dockerfile 경로: `Dockerfile`
+- 컨테이너 포트: `8080`
+- 헬스체크: `GET /healthz` → `200 ok`
+- 환경 변수·데이터베이스·볼륨: 필요 없음
+- 도메인 라우팅: Dokploy에서 컨테이너 포트 `8080`으로 연결
+
+Compose 애플리케이션을 선호하면 저장소 루트의 `compose.yaml`을 사용하고 `web` 서비스의 포트 `8080`을 라우팅합니다. 두 방식 모두 빌드 단계에서 테스트, 원고 검증, 사이트 생성을 실행한 뒤 non-root Nginx로 정적 결과물만 제공합니다.
+
+로컬 컨테이너 확인:
+
+```bash
+docker build -t murim-abolitionist:local .
+docker run --rm -p 8080:8080 murim-abolitionist:local
+curl -f http://127.0.0.1:8080/healthz
+```
+
+`main`에 원고나 사이트 자산을 푸시하면 Dokploy의 자동 배포가 새 이미지를 빌드하며, 새 회차와 목차·전자책이 함께 공개됩니다.
 
 ## 단순하지만 견고한 집필 순서
 

@@ -1,0 +1,10 @@
+.git
+.gitignore
+.github
+__pycache__
+*.py[cod]
+dist
+editorial
+research
+*.log
+.env*
