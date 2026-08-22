@@ -1,4 +1,5 @@
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -25,7 +26,7 @@ class NovelPipelineTests(unittest.TestCase):
         (self.root / "site").mkdir()
         for name in ("styles.css", "reader.js", "home.js"):
             (self.root / "site" / name).write_text(f"/* {name} */\n", encoding="utf-8")
-        for name in ("cover.svg", "favicon.svg"):
+        for name in ("cover.svg", "cover-en.svg", "favicon.svg"):
             (self.root / "site" / name).write_text(
                 '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n', encoding="utf-8"
             )
@@ -122,10 +123,13 @@ class NovelPipelineTests(unittest.TestCase):
         home = (dist / "index.html").read_text(encoding="utf-8")
         self.assertIn("chapters/01.html", home)
         self.assertIn("시험 소설", home)
+        self.assertRegex(home, r'assets/styles\.css\?v=[0-9a-f]{12}')
+        self.assertRegex(home, r'assets/home\.js\?v=[0-9a-f]{12}')
         self.assertNotRegex(home.lower(), r"login|password|sign[ -]?in")
         chapter = (dist / "chapters" / "01.html").read_text(encoding="utf-8")
         self.assertIn("제1화", chapter)
         self.assertIn("02.html", chapter)
+        self.assertRegex(chapter, r'assets/reader\.js\?v=[0-9a-f]{12}')
         self.assertTrue((dist / "assets" / "cover.svg").is_file())
         self.assertEqual((dist / "health.txt").read_text(encoding="utf-8"), "ok\n")
         self.assertIn("제2화. 도착", (dist / "test-novel.txt").read_text(encoding="utf-8"))
@@ -146,6 +150,23 @@ class NovelPipelineTests(unittest.TestCase):
                 "OEBPS/chapter-001.xhtml",
             ):
                 ElementTree.fromstring(archive.read(xml_name))
+
+    def test_asset_urls_change_when_contents_change(self):
+        first = self.run_cli("build")
+        self.assertEqual(first.returncode, 0, first.stderr)
+        first_home = (self.root / "dist" / "index.html").read_text(encoding="utf-8")
+        first_url = re.search(r'assets/styles\.css\?v=([0-9a-f]{12})', first_home)
+        self.assertIsNotNone(first_url)
+
+        (self.root / "site" / "styles.css").write_text("body { color: rebeccapurple; }\n", encoding="utf-8")
+        second = self.run_cli("build")
+        self.assertEqual(second.returncode, 0, second.stderr)
+        second_home = (self.root / "dist" / "index.html").read_text(encoding="utf-8")
+        second_url = re.search(r'assets/styles\.css\?v=([0-9a-f]{12})', second_home)
+        self.assertIsNotNone(second_url)
+        assert first_url is not None
+        assert second_url is not None
+        self.assertNotEqual(first_url.group(1), second_url.group(1))
 
     def test_bilingual_build_and_reviewer_overviews(self):
         (self.root / "locales").mkdir()

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import collections
 import datetime as _datetime
+import hashlib
 import html
 import json
 import re
@@ -344,10 +345,24 @@ def standalone_html(manuscript: Manuscript) -> str:
 '''
 
 
-def site_head(meta: dict[str, Any], page_title: str, prefix: str = "") -> str:
+def asset_href(prefix: str, name: str, versions: dict[str, str]) -> str:
+    """Return an immutable asset URL whose query changes with its contents."""
+    version = versions.get(name)
+    suffix = f"?v={version}" if version else ""
+    return f"{prefix}assets/{name}{suffix}"
+
+
+def site_head(
+    meta: dict[str, Any],
+    page_title: str,
+    prefix: str = "",
+    versions: dict[str, str] | None = None,
+) -> str:
+    versions = versions or {}
     title = html.escape(page_title)
     description = html.escape(str(meta["description"]), quote=True)
-    cover = f"{prefix}assets/cover.svg"
+    cover_name = "cover-en.svg" if meta.get("language") == "en" else "cover.svg"
+    cover = asset_href(prefix, cover_name, versions)
     return f'''<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{description}">
@@ -358,9 +373,9 @@ def site_head(meta: dict[str, Any], page_title: str, prefix: str = "") -> str:
 <meta property="og:image" content="{cover}">
 <meta name="twitter:card" content="summary_large_image">
 <title>{title}</title>
-<link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{asset_href(prefix, 'favicon.svg', versions)}" type="image/svg+xml">
 <link rel="manifest" href="{prefix}manifest.webmanifest">
-<link rel="stylesheet" href="{prefix}assets/styles.css">'''
+<link rel="stylesheet" href="{asset_href(prefix, 'styles.css', versions)}">'''
 
 
 def chapter_prose_html(body: str, language: str = "ko") -> str:
@@ -431,7 +446,8 @@ def edition_copy(language: str) -> dict[str, str]:
     }
 
 
-def landing_html(manuscript: Manuscript) -> str:
+def landing_html(manuscript: Manuscript, versions: dict[str, str] | None = None) -> str:
+    versions = versions or {}
     meta = manuscript.metadata
     language = str(meta["language"])
     en = language == "en"
@@ -461,11 +477,11 @@ def landing_html(manuscript: Manuscript) -> str:
         "author": {"@type": "Organization", "name": meta["author"]},
         "inLanguage": language, "description": meta["description"], "bookFormat": "EBook",
     }, ensure_ascii=False).replace("</", "<\\/")
-    head = site_head(meta, f"{meta['title']} — {meta.get('subtitle', '')}", asset_prefix)
+    head = site_head(meta, f"{meta['title']} — {meta.get('subtitle', '')}", asset_prefix, versions)
     return f'''<!doctype html>
 <html lang="{html.escape(language, quote=True)}"><head>{head}
 <link rel="alternate" hreflang="{'ko' if en else 'en'}" href="{language_href}">
-<script type="application/ld+json">{schema}</script><script defer src="{asset_prefix}assets/home.js"></script></head>
+<script type="application/ld+json">{schema}</script><script defer src="{asset_href(asset_prefix, 'home.js', versions)}"></script></head>
 <body class="library-page" data-language="{language}">
 <a class="skip-link" href="#chapters">{ui['skip']}</a>
 <header class="site-header"><a class="brand" href="{'/en/' if en else '/'}"><span class="brand-mark">無</span><span>{html.escape(str(meta['title']))}</span></a>
@@ -474,13 +490,18 @@ def landing_html(manuscript: Manuscript) -> str:
 <section class="hero"><div class="hero-copy"><p class="eyebrow">{ui['eyebrow']}</p><h1>{html.escape(str(meta['title']))}</h1><p class="subtitle">{html.escape(str(meta.get('subtitle', '')))}</p>
 <p class="synopsis">{html.escape(str(meta['description']))}</p><div class="meta-row"><span>{len(manuscript.chapters)} {ui['count']}</span><span>{total:,} {ui['unit']}</span><span>{ui['genre']}</span></div>
 <div class="actions"><a class="button primary" href="chapters/01.html" data-resume>{ui['start']} <span>→</span></a><a class="text-link" href="#chapters">{ui['contents']} ↓</a></div></div>
-<div class="cover-stage"><div class="cover-glow"></div><img class="cover" src="{asset_prefix}assets/{'cover-en.svg' if en else 'cover.svg'}" alt="{html.escape(str(meta['title']))}" width="1200" height="1800"><span class="cover-caption">{html.escape(str(meta['author']))}</span></div></section>
+<div class="cover-stage"><div class="cover-glow"></div><img class="cover" src="{asset_href(asset_prefix, 'cover-en.svg' if en else 'cover.svg', versions)}" alt="{html.escape(str(meta['title']))}" width="1200" height="1800"><span class="cover-caption">{html.escape(str(meta['author']))}</span></div></section>
 <section class="chapter-section" id="chapters"><div class="section-heading"><div><p class="section-kicker">{ui['volume']}</p><h2>{html.escape(str(volume_title))}</h2></div><p>{len(manuscript.chapters):02d} / {len(manuscript.chapters):02d}</p></div><div class="chapter-list">{cards}</div></section>
 <section class="manifesto" id="about"><p class="manifesto-mark">“</p><blockquote>{ui['quote']}</blockquote><div class="manifesto-copy"><p>{ui['about_text']}</p><p>{ui['built']}</p><div class="downloads"><span>{ui['download']}</span><a href="{meta['slug']}.epub" download>EPUB</a><a href="{meta['slug']}.txt" download>TXT</a><a href="{meta['slug']}.md" download>MD</a></div></div></section>
 </main><footer class="site-footer"><span>© {html.escape(str(meta['author']))}</span><span>{ui['local']}</span></footer></body></html>'''
 
 
-def chapter_page_html(manuscript: Manuscript, chapter: Chapter) -> str:
+def chapter_page_html(
+    manuscript: Manuscript,
+    chapter: Chapter,
+    versions: dict[str, str] | None = None,
+) -> str:
+    versions = versions or {}
     meta = manuscript.metadata
     language = str(meta["language"])
     en = language == "en"
@@ -504,9 +525,9 @@ def chapter_page_html(manuscript: Manuscript, chapter: Chapter) -> str:
     measure = chapter.word_count if en else chapter.korean_chars
     minutes = max(5, round(chapter.word_count / 220 if en else chapter.korean_chars / 500))
     chapter_title = chapter.heading
-    head = site_head(meta, f"{chapter_title} | {meta['title']}", asset_prefix)
+    head = site_head(meta, f"{chapter_title} | {meta['title']}", asset_prefix, versions)
     return f'''<!doctype html>
-<html lang="{html.escape(language, quote=True)}"><head>{head}<link rel="alternate" hreflang="{'ko' if en else 'en'}" href="{switch_href}"><script defer src="{asset_prefix}assets/reader.js"></script></head>
+<html lang="{html.escape(language, quote=True)}"><head>{head}<link rel="alternate" hreflang="{'ko' if en else 'en'}" href="{switch_href}"><script defer src="{asset_href(asset_prefix, 'reader.js', versions)}"></script></head>
 <body class="reader-page" data-chapter="{chapter.number}" data-language="{language}">
 <a class="skip-link" href="#chapter-text">{ui['skip']}</a><div class="read-progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
 <header class="reader-bar"><div class="reader-bar-inner"><a class="reader-home" href="{home_href}"><span class="brand-mark">無</span><span>{html.escape(str(meta['title']))}</span></a>
@@ -525,6 +546,14 @@ def build_website(korean: Manuscript, dist: Path, english: Manuscript | None = N
         raise NovelError("missing website asset(s): " + ", ".join(missing))
     assets = dist / "assets"
     shutil.copytree(site_source, assets, dirs_exist_ok=True)
+    versioned_names = (
+        "styles.css", "reader.js", "home.js", "cover.svg", "cover-en.svg", "favicon.svg"
+    )
+    versions = {
+        name: hashlib.sha256((assets / name).read_bytes()).hexdigest()[:12]
+        for name in versioned_names
+        if (assets / name).is_file()
+    }
     outputs: list[Path] = []
     editions = [(korean, dist)]
     if english:
@@ -532,19 +561,19 @@ def build_website(korean: Manuscript, dist: Path, english: Manuscript | None = N
     for edition, edition_root in editions:
         edition_root.mkdir(parents=True, exist_ok=True)
         index = edition_root / "index.html"
-        index.write_text(landing_html(edition), encoding="utf-8")
+        index.write_text(landing_html(edition, versions), encoding="utf-8")
         outputs.append(index)
         chapter_dir = edition_root / "chapters"
         chapter_dir.mkdir(parents=True, exist_ok=True)
         for chapter in edition.chapters:
             path = chapter_dir / f"{chapter.number:02d}.html"
-            path.write_text(chapter_page_html(edition, chapter), encoding="utf-8")
+            path.write_text(chapter_page_html(edition, chapter, versions), encoding="utf-8")
             outputs.append(path)
     manifest = {
         "name": korean.metadata["title"], "short_name": korean.metadata["title"],
         "description": korean.metadata["description"], "lang": "ko", "start_url": "/",
         "display": "standalone", "background_color": "#f5f0e6", "theme_color": "#1b1916",
-        "icons": [{"src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml"}],
+        "icons": [{"src": asset_href("/", "favicon.svg", versions), "sizes": "any", "type": "image/svg+xml"}],
     }
     manifest_path = dist / "manifest.webmanifest"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
