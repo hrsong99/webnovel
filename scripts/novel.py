@@ -86,36 +86,83 @@ def read_json(path: Path, label: str) -> Any:
 
 
 def discover_catalog(root: Path) -> tuple[list[tuple[str, Path]], str]:
+    """Return publishable stories while validating every lifecycle bucket.
+
+    `stories` is the public catalog. `projects` and `retired_stories` keep
+    planning and historical packages under the same repository architecture
+    without making incomplete or withdrawn prose publishable.
+    """
     root = root.resolve()
     raw = read_json(root / "catalog.json", "catalog.json")
     if not isinstance(raw, dict) or not isinstance(raw.get("stories"), list):
         raise NovelError("catalog.json must be an object with a 'stories' array")
-    slugs = raw["stories"]
-    legacy_slug = raw.get("legacy_alias_story")
+
     errors: list[str] = []
-    if not slugs:
+    lifecycle_keys = {
+        "stories": "published",
+        "projects": "planning",
+        "retired_stories": "retired",
+    }
+    buckets: dict[str, list[Any]] = {}
+    for key in lifecycle_keys:
+        value = raw.get(key, [])
+        if not isinstance(value, list):
+            errors.append(f"catalog.json {key!r} must be an array")
+            value = []
+        buckets[key] = value
+        for slug in value:
+            if not isinstance(slug, str) or not SAFE_SLUG_RE.fullmatch(slug):
+                errors.append(f"invalid {key} story slug: {slug!r}")
+        duplicates = [slug for slug, count in collections.Counter(value).items() if count > 1]
+        if duplicates:
+            errors.append(f"duplicate story slug(s) in {key}: " + ", ".join(map(str, duplicates)))
+
+    published = buckets["stories"]
+    if not published:
         errors.append("catalog.json 'stories' must not be empty")
-    for slug in slugs:
-        if not isinstance(slug, str) or not SAFE_SLUG_RE.fullmatch(slug):
-            errors.append(f"invalid catalog story slug: {slug!r}")
-    duplicates = [slug for slug, count in collections.Counter(slugs).items() if count > 1]
-    if duplicates:
-        errors.append("duplicate story slug(s) in catalog: " + ", ".join(map(str, duplicates)))
+    all_slugs = [slug for values in buckets.values() for slug in values]
+    cross_duplicates = [slug for slug, count in collections.Counter(all_slugs).items() if count > 1]
+    if cross_duplicates:
+        errors.append("story slug(s) listed in multiple lifecycle buckets: " + ", ".join(map(str, cross_duplicates)))
+
+    legacy_slug = raw.get("legacy_alias_story")
     if not isinstance(legacy_slug, str) or not SAFE_SLUG_RE.fullmatch(legacy_slug):
         errors.append("catalog.json 'legacy_alias_story' must be a path-safe story slug")
-    elif legacy_slug not in slugs:
-        errors.append(f"legacy alias story {legacy_slug!r} is not listed in catalog.json")
+    elif legacy_slug not in published:
+        errors.append(f"legacy alias story {legacy_slug!r} is not listed in published catalog stories")
+
     discovered: list[tuple[str, Path]] = []
-    for slug in slugs:
-        if not isinstance(slug, str) or not SAFE_SLUG_RE.fullmatch(slug):
-            continue
-        story_root = root / "stories" / slug
-        if not story_root.is_dir():
-            errors.append(f"catalog story directory is missing: {story_root}")
-        else:
-            discovered.append((slug, story_root))
-    listed = {slug for slug in slugs if isinstance(slug, str)}
     stories_root = root / "stories"
+    for key, expected_status in lifecycle_keys.items():
+        for slug in buckets[key]:
+            if not isinstance(slug, str) or not SAFE_SLUG_RE.fullmatch(slug):
+                continue
+            story_root = stories_root / slug
+            if not story_root.is_dir():
+                errors.append(f"{key} story directory is missing: {story_root}")
+                continue
+            metadata_path = story_root / "story.json"
+            if not metadata_path.is_file():
+                errors.append(f"{key} story metadata is missing: {metadata_path}")
+                continue
+            try:
+                metadata = read_json(metadata_path, "story.json")
+            except NovelError as exc:
+                errors.append(str(exc))
+                continue
+            actual_status = metadata.get("status", "published") if isinstance(metadata, dict) else None
+            if actual_status != expected_status:
+                errors.append(
+                    f"{metadata_path} status must be {expected_status!r} for catalog bucket {key!r}, "
+                    f"found {actual_status!r}"
+                )
+            actual_slug = metadata.get("slug") if isinstance(metadata, dict) else None
+            if actual_slug != slug:
+                errors.append(f"{metadata_path} slug {actual_slug!r} does not match directory/catalog slug {slug!r}")
+            if key == "stories":
+                discovered.append((slug, story_root))
+
+    listed = {slug for slug in all_slugs if isinstance(slug, str)}
     if stories_root.is_dir():
         unlisted = sorted(path.parent.name for path in stories_root.glob("*/story.json") if path.parent.name not in listed)
         if unlisted:

@@ -70,7 +70,22 @@ def check_epubs(dist: Path) -> dict[str, int]:
     return {"epubs": len(epubs), "xml_documents": xml_documents}
 
 
-def docker_check(port: int) -> dict[str, str]:
+def published_smoke_routes(dist: Path) -> list[str]:
+    routes = {"/", "/chapters/01.html"}
+    stories_root = dist / "stories"
+    if stories_root.is_dir():
+        for story_root in sorted(path for path in stories_root.iterdir() if path.is_dir()):
+            slug = story_root.name
+            routes.add(f"/stories/{slug}/")
+            for chapter_root in (story_root / "chapters", story_root / "en" / "chapters"):
+                chapters = sorted(chapter_root.glob("*.html")) if chapter_root.is_dir() else []
+                if chapters:
+                    relative = chapters[-1].relative_to(dist).as_posix()
+                    routes.add("/" + relative)
+    return sorted(routes)
+
+
+def docker_check(port: int, routes: list[str]) -> dict[str, object]:
     if not shutil.which("docker"): raise SystemExit("docker is required for --docker")
     tag = f"webnovel-release-check:{uuid.uuid4().hex[:8]}"; name = f"webnovel-release-{uuid.uuid4().hex[:8]}"
     docker = ["docker"] if subprocess.run(["docker", "info"], capture_output=True).returncode == 0 else ["sudo", "-n", "docker"]
@@ -97,9 +112,9 @@ def docker_check(port: int) -> dict[str, str]:
             time.sleep(.5)
         print(state)
         if "running healthy" not in state or "user=101" not in state: raise SystemExit(f"unexpected container state: {state}")
-        for route in ("/", "/stories/seven-regressors-fell/", "/stories/seven-regressors-fell/en/chapters/06.html", "/chapters/01.html"):
+        for route in routes:
             urllib.request.urlopen(f"http://127.0.0.1:{port}{route}", timeout=5).read(1)
-        return {"health": response, "state": state}
+        return {"health": response, "state": state, "routes": routes}
     finally:
         subprocess.run([*docker, "rm", "-f", name], capture_output=True)
         subprocess.run([*docker, "image", "rm", tag], capture_output=True)
@@ -122,7 +137,7 @@ def main() -> int:
 
     graph = check_reference_graph(ROOT / "dist")
     epub = check_epubs(ROOT / "dist")
-    container = docker_check(args.port) if args.docker else None
+    container = docker_check(args.port, published_smoke_routes(ROOT / "dist")) if args.docker else None
     print(json.dumps({"status": "PASS", "stats": stats, "reference_graph": graph, "epub": epub, "container": container}, ensure_ascii=False, indent=2))
     return 0
 
