@@ -6,7 +6,7 @@ This document preserves the editorial and technical lessons learned while turnin
 
 Treat these as the accepted sources of truth, in order:
 
-1. `catalog.json`: public story order and library membership.
+1. `catalog.json`: published, planning, and retired lifecycle membership plus public story order.
 2. `stories/<slug>/story.json` and locale metadata: each story’s publishing contract.
 3. `stories/<slug>/manuscript/story-bible.md`: premise, cast, power rules, continuity, prohibited shortcuts.
 4. `stories/<slug>/manuscript/outline.md`: causal chapter design and promised payoff.
@@ -16,6 +16,8 @@ Treat these as the accepted sources of truth, in order:
 8. `research/`: design evidence and history, not story canon.
 
 Never copy plans, change logs, prompt history, or editorial notes into publishable prose. Git stores history; the manuscript should contain only the book.
+
+Planning projects and retired stories may remain under `stories/<slug>/`, but only `catalog.json` → `stories` is publishable. Their primary metadata status must match their lifecycle bucket. Never use an incomplete draft as a public-catalog placeholder, and never delete a released predecessor merely to free its catalog position.
 
 ## 2. Reconstruct intent before drafting
 

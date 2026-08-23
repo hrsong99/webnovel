@@ -2,11 +2,11 @@
 
 **Slug:** `seven-regressors-fell`
 **Source language:** Korean
-**Current phase:** post-release reader and illustration enhancement
-**Branch:** `feat/focus-reader-illustration-pipeline`
+**Current phase:** retired and preserved
+**Branch:** historical release on `main`; archive `archive/seven-regressors-v1`
 **Last updated:** 2026-08-23
 
-The completed novel release remains at PR #7 plus the Chapter 3 wording fix in PR #8. This file records reusable gate outcomes and the current visual enhancement honestly.
+The completed novel release remains at PR #7 plus the Chapter 3 wording fix in PR #8. This file records the completed historical release. The story was retired on 2026-08-23 because its first-ever Day 31 was incorrectly treated as an event Ryu had rehearsed in earlier loops. Its files remain intact for history and selective adaptation. The canonical replacement planning package is `stories/seven-masters-returned/`; no predecessor prose or mechanics transfer automatically.
 
 ## Completed source and edition gates
 

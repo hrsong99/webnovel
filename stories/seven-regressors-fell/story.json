@@ -1,4 +1,9 @@
 {
+  "status": "retired",
+  "retired_at": "2026-08-23",
+  "replacement": "seven-masters-returned",
+  "archive_branch": "archive/seven-regressors-v1",
+  "retirement_reason": "The first-ever Day 31 was incorrectly treated as an event Ryu Dan had already rehearsed across prior loops. The replacement keeps the cast and strongest set pieces but uses one fifteen-year return with sequentially awakened future masters.",
   "slug": "seven-regressors-fell",
   "title": "회귀자 일곱이 죽고 점소이만 남았다",
   "subtitle": "9,431번의 실패가 전부 내 무공이 되었다",

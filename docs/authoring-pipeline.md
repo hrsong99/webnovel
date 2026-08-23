@@ -47,6 +47,16 @@ stories/<slug>/
 
 Only publishable prose belongs in `chapters/`. Planning, prompts, QA findings, and visual specifications stay beside it.
 
+### Story lifecycle
+
+`catalog.json` has three mutually exclusive buckets:
+
+- `stories`: `status: published`; fully validated and included in the public build;
+- `projects`: `status: planning`; concept, outline, or draft work that is never silently published;
+- `retired_stories`: `status: retired`; preserved source and release history excluded from new builds.
+
+Start every new story in `projects`. A planning package may omit chapters, translations, covers, and publishable metadata that its current phase has not earned. Promotion to `stories` is a release action, not the start of drafting. Before replacement or retirement, preserve the exact released baseline on a remote archive branch and record the replacement slug and reason in `story.json`.
+
 ## Phase 0 — Start cleanly
 
 ### Inputs
@@ -59,8 +69,9 @@ Only publishable prose belongs in `chapters/`. Planning, prompts, QA findings, a
 1. Pull the current default branch with fast-forward only.
 2. Read repository instructions and the three governing docs.
 3. Create a feature branch.
-4. Copy the production, continuity, and visual templates into the new story.
-5. Record known constraints and open questions before drafting.
+4. Register the slug in `catalog.json` → `projects` with `story.json` status `planning`.
+5. Copy the production, continuity, and visual templates into the new story.
+6. Record known constraints and open questions before drafting.
 
 ### Gate
 

@@ -29,10 +29,15 @@ class NovelPipelineTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def write_catalog(self, slugs, legacy="test-novel"):
+    def write_catalog(self, slugs, legacy="test-novel", projects=None, retired=None):
         if legacy not in slugs:
             legacy = slugs[0]
-        payload = {"legacy_alias_story": legacy, "stories": slugs}
+        payload = {
+            "legacy_alias_story": legacy,
+            "stories": slugs,
+            "projects": projects or [],
+            "retired_stories": retired or [],
+        }
         (self.root / "catalog.json").write_text(json.dumps(payload), encoding="utf-8")
 
     def make_story(self, slug, title="시험 소설", english=False):
@@ -297,10 +302,39 @@ class NovelPipelineTests(unittest.TestCase):
         parity = self.run_cli("validate")
         self.assertNotEqual(parity.returncode, 0); self.assertIn("must exactly match", parity.stderr)
 
-    def test_repository_catalog_lists_both_release_stories(self):
+    def test_planning_and_retired_story_lifecycles_are_valid_but_not_published(self):
+        planning = self.make_story("planning-story", "기획 이야기")
+        retired = self.make_story("retired-story", "은퇴 이야기")
+        for story, status in ((planning, "planning"), (retired, "retired")):
+            metadata_path = story / "story.json"
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+            metadata["status"] = status
+            metadata_path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        self.write_catalog(["test-novel"], projects=["planning-story"], retired=["retired-story"])
+
+        validation = self.run_cli("validate")
+        self.assertEqual(validation.returncode, 0, validation.stderr)
+        self.assertNotIn("planning-story", validation.stdout)
+        self.assertNotIn("retired-story", validation.stdout)
+        build = self.run_cli("build")
+        self.assertEqual(build.returncode, 0, build.stderr)
+        self.assertFalse((self.root / "dist" / "stories" / "planning-story").exists())
+        self.assertFalse((self.root / "dist" / "stories" / "retired-story").exists())
+
+        metadata_path = planning / "story.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["status"] = "published"
+        metadata_path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        mismatch = self.run_cli("validate")
+        self.assertNotEqual(mismatch.returncode, 0)
+        self.assertIn("status must be 'planning'", mismatch.stderr)
+
+    def test_repository_catalog_records_published_planning_and_retired_stories(self):
         production = json.loads((SCRIPT.parents[1] / "catalog.json").read_text(encoding="utf-8"))
         self.assertEqual(production["legacy_alias_story"], "murim-abolitionist")
-        self.assertEqual(production["stories"], ["murim-abolitionist", "seven-regressors-fell"])
+        self.assertEqual(production["stories"], ["murim-abolitionist"])
+        self.assertEqual(production["projects"], ["seven-masters-returned"])
+        self.assertEqual(production["retired_stories"], ["seven-regressors-fell"])
 
     def test_validation_failure_does_not_replace_existing_dist(self):
         dist = self.root / "dist"; dist.mkdir(); marker = dist / "keep.txt"; marker.write_text("old build", encoding="utf-8")
