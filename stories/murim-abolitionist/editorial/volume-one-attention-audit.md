@@ -1,6 +1,7 @@
 # Volume one attention and significance audit
 
-**Status:** completed in Korean and English; final literary QA and strict bilingual canon QA passed. See [`craft-revision-release.md`](craft-revision-release.md).  
+**Status:** completed in Korean and English; final literary QA and strict bilingual canon QA passed. See [`editorial/releases/craft-revision-release.md`](../../../editorial/releases/craft-revision-release.md).
+
 **Primary reader evidence:** the Korean opening feels unexpectedly strong, swift, and dryly funny; after the first stretch, momentum and felt importance decline.
 
 ## Resolution summary

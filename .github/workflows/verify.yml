@@ -17,10 +17,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Test, validate, and build reader
-        run: |
-          python3 -m unittest -v
-          python3 scripts/novel.py validate
-          python3 scripts/novel.py build
+      - name: Run the repository release gate
+        run: python3 scripts/release_check.py
       - name: Build production container
-        run: docker build -t murim-abolitionist:${{ github.sha }} .
+        run: docker build -t webnovel-catalog:${{ github.sha }} .

@@ -1,12 +1,14 @@
 # Reusable fiction-production pipeline
 
-**Purpose:** preserve the complete authoring, developmental editing, line editing, proofreading, localization, illustration, publication, and release process as a repository-owned operating system. It is deliberately model- and vendor-independent.
+**Purpose:** preserve the complete authoring, developmental editing, line editing, proofreading, localization, publication, and release process as a repository-owned operating system. It is deliberately model- and vendor-independent.
+
+The default deliverable is text. Illustration (Phase 9) is an **opt-in track** that runs only when the author explicitly asks for it; a story is complete and releasable without a single image.
 
 This document tells a future author or agent **what to do, in what order, what artifact to leave behind, and what must be true before advancing**. The craft principles live in [`fiction-craft-standard.md`](fiction-craft-standard.md); the technical details live in [`web-novel-production-playbook.md`](web-novel-production-playbook.md).
 
 ## The non-negotiable operating rules
 
-1. **Korean chapters are canon** unless a story explicitly declares a different source language.
+1. **Korean chapters are canon.** `scripts/novel.py` currently implements one source language: chapter headings must match `# 제N화. 제목`, length bounds are counted in Korean characters, and `en` is the only supported translation target. Another source language is a generator change, not a metadata choice — do not start a story assuming it is configurable.
 2. **One integrated editor owns prose changes at a time.** Independent reviewers are read-only and may work in parallel.
 3. **Revise macro to micro:** intent → causality → attention → agency → scene → language → continuity → proof.
 4. **Protect strengths before editing.** Record the lines, jokes, images, relationships, and surprises that must survive.
@@ -28,15 +30,15 @@ stories/<slug>/
   assets/
     cover.svg
     cover-en.svg                          # optional
-    scenes/                               # approved local illustrations
+    scenes/                               # only for illustrated stories
   manuscript/
     production-status.md                  # copied from docs/templates/
     story-bible.md                        # facts, limits, cast, continuity
     outline.md                            # causal chapter design
     craft-overlay.md                      # experience and genre-specific gate
     continuity-ledger.md                  # copied from docs/templates/
-    visual-bible.md                       # copied from docs/templates/
-    illustrations.json                   # approved placement/provenance manifest
+    visual-bible.md                       # only for illustrated stories
+    illustrations.json                    # only for illustrated stories
     chapters/
     translations/en/
       STYLE-GUIDE.md
@@ -47,6 +49,16 @@ stories/<slug>/
 
 Only publishable prose belongs in `chapters/`. Planning, prompts, QA findings, and visual specifications stay beside it.
 
+### What the validator enforces
+
+`python3 scripts/novel.py validate` requires every **published** story to own `story-bible.md`, `outline.md`, `craft-overlay.md`, and `continuity-ledger.md`, plus `visual-bible.md` whenever `illustrations.json` exists. A deliberate, reviewed gap is recorded in `story.json`:
+
+```json
+"artifact_exceptions": { "continuity-ledger.md": "why this story does not have one, and what holds the information instead" }
+```
+
+An exception without a reason fails, and an exception naming a file that exists fails. The point is that a missing artifact stays visible in metadata instead of being silently absent. Planning packages are exempt — they earn artifacts as their phases complete.
+
 ### Story lifecycle
 
 `catalog.json` has three mutually exclusive buckets:
@@ -55,7 +67,13 @@ Only publishable prose belongs in `chapters/`. Planning, prompts, QA findings, a
 - `projects`: `status: planning`; concept, outline, or draft work that is never silently published;
 - `retired_stories`: `status: retired`; preserved source and release history excluded from new builds.
 
-Start every new story in `projects`. A planning package may omit chapters, translations, covers, and publishable metadata that its current phase has not earned. Promotion to `stories` is a release action, not the start of drafting. Before replacement or retirement, preserve the exact released baseline on a remote archive branch and record the replacement slug and reason in `story.json`.
+Start every new story in `projects`. A planning package may omit chapters, translations, covers, and publishable metadata that its current phase has not earned. Promotion to `stories` is a release action, not the start of drafting. Check the gate before editing either file:
+
+```bash
+python3 scripts/novel.py promote-check --story <slug>
+```
+
+It reports every remaining blocker — missing artifacts, missing publishing metadata, incomplete manuscript — without changing anything. Promotion itself stays a deliberate edit to `story.json` and `catalog.json`. Before replacement or retirement, preserve the exact released baseline on a remote archive branch and record the replacement slug and reason in `story.json`.
 
 ## Phase 0 — Start cleanly
 
@@ -70,7 +88,7 @@ Start every new story in `projects`. A planning package may omit chapters, trans
 2. Read repository instructions and the three governing docs.
 3. Create a feature branch.
 4. Register the slug in `catalog.json` → `projects` with `story.json` status `planning`.
-5. Copy the production, continuity, and visual templates into the new story.
+5. Copy the production and continuity templates into the new story. Copy the visual template only if illustration has been requested.
 6. Record known constraints and open questions before drafting.
 
 ### Gate
@@ -225,7 +243,7 @@ Proof the actual website, mobile view, standalone HTML, TXT, Markdown, and EPUB:
 - clipping, overflow, contrast, and font fallback;
 - previous/next and language routes;
 - reviewer-note disclosure;
-- covers and illustrations;
+- covers, and illustrations only if the story has them;
 - focus mode and reduced-motion behavior.
 
 ### Gate
@@ -252,7 +270,11 @@ Required independent reviews:
 
 All three return PASS, or every blocker is fixed and a current delta audit returns PASS.
 
-## Phase 9 — Visual development and illustration
+## Phase 9 (optional) — Visual development and illustration
+
+**Skip this phase unless the author has explicitly asked for illustrations.** Text is the product. An unillustrated story passes every gate, builds, and releases normally; `visual-bible.md` and `illustrations.json` are required only once they exist. Do not propose, generate, or budget for images as a default step, and do not treat a missing image as an incomplete release.
+
+When illustration *is* requested:
 
 Images should deepen a moment, not summarize every action or interrupt every page.
 

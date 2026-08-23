@@ -45,6 +45,7 @@ class NovelPipelineTests(unittest.TestCase):
         (story / "manuscript" / "chapters").mkdir(parents=True)
         (story / "manuscript" / "reviewer-notes" / "ko").mkdir(parents=True)
         (story / "assets").mkdir()
+        self.write_artifacts(slug)
         (story / "assets" / "cover.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg"/>', encoding="utf-8")
         metadata = {
             "slug": slug, "title": title, "author": "테스트 작가", "language": "ko",
@@ -60,6 +61,12 @@ class NovelPipelineTests(unittest.TestCase):
         if english:
             self.add_english(slug)
         return story
+
+    def write_artifacts(self, slug, names=("story-bible.md", "outline.md", "craft-overlay.md", "continuity-ledger.md")):
+        manuscript = self.root / "stories" / slug / "manuscript"
+        manuscript.mkdir(parents=True, exist_ok=True)
+        for name in names:
+            (manuscript / name).write_text(f"# {name}\n\n검증용 기획 문서입니다.\n", encoding="utf-8")
 
     def add_english(self, slug):
         story = self.root / "stories" / slug
@@ -97,6 +104,7 @@ class NovelPipelineTests(unittest.TestCase):
             "provenance": {"provider": "test", "model": "fixture", "prompt_id": "scene-1", "generated_at": "2026-01-01"},
         }]}
         (story / "manuscript" / "illustrations.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        self.write_artifacts(slug, names=("visual-bible.md",))
 
     def metadata(self, slug="test-novel"):
         path = self.root / "stories" / slug / "story.json"
@@ -335,6 +343,62 @@ class NovelPipelineTests(unittest.TestCase):
         self.assertEqual(production["stories"], ["murim-abolitionist"])
         self.assertEqual(production["projects"], ["seven-masters-returned"])
         self.assertEqual(production["retired_stories"], ["seven-regressors-fell"])
+
+    def test_published_story_requires_planning_artifacts_or_a_recorded_exception(self):
+        ledger = self.root / "stories" / "test-novel" / "manuscript" / "continuity-ledger.md"
+        ledger.unlink()
+        missing = self.run_cli("validate")
+        self.assertNotEqual(missing.returncode, 0)
+        self.assertIn("missing manuscript/continuity-ledger.md", missing.stderr)
+
+        path, metadata = self.metadata()
+        metadata["artifact_exceptions"] = {"continuity-ledger.md": ""}
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        empty_reason = self.run_cli("validate")
+        self.assertNotEqual(empty_reason.returncode, 0)
+        self.assertIn("must give a non-empty reason", empty_reason.stderr)
+
+        metadata["artifact_exceptions"] = {"continuity-ledger.md": "Recorded gap: continuity lives in the story bible."}
+        path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        recorded = self.run_cli("validate")
+        self.assertEqual(recorded.returncode, 0, recorded.stderr)
+
+        ledger.write_text("# ledger\n", encoding="utf-8")
+        stale = self.run_cli("validate")
+        self.assertNotEqual(stale.returncode, 0)
+        self.assertIn("remove the exception", stale.stderr)
+
+    def test_visual_bible_is_required_only_when_illustrations_exist(self):
+        self.add_illustration()
+        (self.root / "stories" / "test-novel" / "manuscript" / "visual-bible.md").unlink()
+        result = self.run_cli("validate")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing manuscript/visual-bible.md", result.stderr)
+
+    def test_promote_check_reports_blockers_then_passes(self):
+        planning = self.make_story("planning-story", "기획 이야기")
+        for path in (planning / "manuscript" / "chapters").glob("*.md"):
+            path.unlink()
+        (planning / "manuscript" / "craft-overlay.md").unlink()
+        metadata_path = planning / "story.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["status"] = "planning"
+        metadata_path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
+        self.write_catalog(["test-novel"], projects=["planning-story"])
+
+        blocked = self.run_cli("promote-check", "--story", "planning-story")
+        self.assertNotEqual(blocked.returncode, 0)
+        self.assertIn("NOT PROMOTABLE planning-story (currently in projects)", blocked.stderr)
+        self.assertIn("missing manuscript/craft-overlay.md", blocked.stderr)
+        self.assertIn("no Markdown chapters found", blocked.stderr)
+
+        unknown = self.run_cli("promote-check", "--story", "absent-story")
+        self.assertNotEqual(unknown.returncode, 0)
+        self.assertIn("not listed in any catalog.json lifecycle bucket", unknown.stderr)
+
+        ready = self.run_cli("promote-check", "--story", "test-novel")
+        self.assertEqual(ready.returncode, 0, ready.stderr)
+        self.assertIn("PROMOTABLE test-novel (currently in stories)", ready.stdout)
 
     def test_validation_failure_does_not_replace_existing_dist(self):
         dist = self.root / "dist"; dist.mkdir(); marker = dist / "keep.txt"; marker.write_text("old build", encoding="utf-8")

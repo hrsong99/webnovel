@@ -30,44 +30,18 @@ When inheriting a fiction repository:
 
 A long design transcript is evidence, not canon.
 
-## 3. What makes a chapter work
+## 3. Genre rules belong to a story, not to this document
 
-Use [`fiction-craft-standard.md`](fiction-craft-standard.md) as the genre-independent gate. The list below is this serial's current chapter overlay, not a universal plot formula.
+[`fiction-craft-standard.md`](fiction-craft-standard.md) is the genre-independent gate. Everything narrower than that — the per-chapter contract, progression-fairness ceiling, supporting-cast rules, reward cadence, prohibited shortcuts — belongs in the story's own `manuscript/craft-overlay.md`, copied from [`story-craft-overlay-template.md`](story-craft-overlay-template.md).
 
-Every chapter should contain:
+One serial's successful habits are not universal craft. Keeping them in the story that earned them is what lets a second story disagree without arguing with a repository-wide document.
 
-- a concrete discovery;
-- a decision that closes another option;
-- a cost or changed relationship;
-- a reader payoff in the present chapter;
-- a forward turn that makes the next action unavoidable.
+Worked examples:
 
-If a chapter is too short, deepen causality, choices, aftermath, relationships, and physical action. Do not pad scenery or repeat the premise.
+- [`stories/murim-abolitionist/manuscript/craft-overlay.md`](../stories/murim-abolitionist/manuscript/craft-overlay.md) — institutional wuxia: chapter gate, progression fairness, supporting-cast leverage.
+- [`stories/seven-masters-returned/manuscript/craft-overlay.md`](../stories/seven-masters-returned/manuscript/craft-overlay.md) — reward-dense progression planning package.
 
-## 4. Progression-fantasy fairness
-
-Intelligence cannot erase declared differences in speed, body, internal energy, or realm.
-
-- State exactly what the protagonist can perceive and physically do at the current stage.
-- Keep future-stage abilities unavailable even at the climax.
-- Let preparation, terrain, allies, records, and opponent incentives matter.
-- Institutional antagonists need a rational reason to retreat: contract loss, exposed evidence, desertion, political cost, or material danger.
-- A victory is stronger when it proves the theme without breaking the power system.
-
-For this series, tools amplify training and observation; they do not replace 해기, 심안, or 이형신법.
-
-## 5. Supporting characters must have incompatible needs
-
-Do not reduce supporting characters to supplies, archives, muscle, prestige, or exposition.
-
-- Give each person something they protect that the protagonist might endanger.
-- Let partners impose enforceable limits, not merely offer advice.
-- Make disagreements change custody, access, money, shelter, records, or consent.
-- Villains should pursue loss avoidance according to their own position in the system.
-
-Yeonhwa works because she converts Jin Cheol’s anger into governance and can deny him resources. Preserve that level of agency.
-
-## 6. Separate mechanical validation from editing
+## 4. Separate mechanical validation from editing
 
 The build can reliably check:
 
@@ -81,7 +55,7 @@ The build can reliably check:
 
 It cannot score emotional truth, tension, dialogue, or prose quality. Do not invent a numerical literary-quality formula.
 
-## 7. Three editorial passes
+## 5. Three editorial passes
 
 ### Developmental and continuity
 
@@ -95,7 +69,7 @@ Check natural syntax, sentence rhythm, repeated subject starts, slogan dialogue,
 
 After revision, verify every earlier blocker against the current files. Reviewers’ quotations become stale after edits; the present manuscript wins. A release PASS means no blocking defect remains, not that optional improvements are impossible.
 
-## 8. Translation is a new edition
+## 6. Translation is a new edition
 
 - Translate scenes, intent, hierarchy, and rhythm—not Korean word order.
 - Maintain a project glossary and character-name policy.
@@ -106,7 +80,7 @@ After revision, verify every earlier blocker against the current files. Reviewer
 
 The Korean manuscript remains the source edition. English corrections that reveal a source contradiction should be fixed in Korean first.
 
-## 9. Reviewer summaries are not blurbs
+## 7. Reviewer summaries are not blurbs
 
 A reviewer overview should explain:
 
@@ -119,7 +93,7 @@ A reviewer overview should explain:
 
 It may discuss spoilers. Keep it collapsible and visually distinct so ordinary readers are not exposed accidentally.
 
-## 10. The repository is also the publication system
+## 8. The repository is also the publication system
 
 The deterministic build should generate from canonical files:
 
@@ -135,7 +109,7 @@ The deterministic build should generate from canonical files:
 
 Avoid external font/CDN dependencies. Escape manuscript content before putting it in HTML. No login is needed for a public first release.
 
-## 11. Reader-design principles
+## 9. Reader-design principles
 
 Successful long-form readers such as Kindle Cloud Reader, Royal Road, Medium, and Substack converge on a few useful patterns:
 
@@ -152,7 +126,11 @@ This reader also offers an optional focus mode. It is not auto-scroll: the reade
 
 Borrow patterns, not branding or ornamental clutter.
 
-## 11A. Illustration publishing contract
+The concrete values, sources, and accessibility checks actually adopted for this repository's reader are recorded in [`reader-design-notes.md`](reader-design-notes.md).
+
+## 10. Illustration publishing contract
+
+Illustration is an opt-in track. This contract governs stories that have requested images; it is not a checklist every story must satisfy.
 
 - Keep canonical prose free of provider-specific image syntax.
 - Define approved scenes in `manuscript/illustrations.json` with language-specific paragraph placement.
@@ -163,7 +141,7 @@ Borrow patterns, not branding or ornamental clutter.
 - Reject watermarks, fake writing, anatomy defects, character drift, illegal power effects, wrong injuries, and spoiler-heavy placement.
 - Prove the image remains legible at mobile width and does not create horizontal overflow.
 
-## 12. Docker and deployment
+## 11. Docker and deployment
 
 Use a multi-stage image:
 
@@ -176,14 +154,14 @@ Use a multi-stage image:
 
 Before release, genuinely build and run the container. Verify every internal link, health state, non-root user, headers, EPUB ZIP/XML, and rendered desktop/mobile screenshots.
 
-## 13. Safe release procedure
+## 12. Safe release procedure
 
 - Run tests, validation, build, link crawl, browser screenshots, Docker build/run, whitespace checks, and a secret scan.
 - Preserve an old default-branch story with a remote backup branch before replacing it.
 - Push a feature branch, let CI pass, merge, and verify the exact remote `main` SHA.
 - A configured deploy hook is not proof of deployment. Verify the public HTTPS site separately when its URL is available.
 
-## 14. Subagent discipline
+## 13. Subagent discipline
 
 - Concurrent reviewers may inspect the same manuscript, but only one integrated editor should revise it.
 - A timed-out writer may still have changed files; inspect the worktree rather than trusting its status summary.

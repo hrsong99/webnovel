@@ -18,7 +18,7 @@ The latest design conversation explicitly chose the third direction and required
 - “A dantian is a spiritual wound” connects the protagonist’s politics, the sect economy, child recruitment, medicine, cultivation, and eventual power in one rule.
 - The five-stage 해리심경 progression ties insight to actual energy and physical capability rather than letting intelligence ignore speed and strength.
 - The main-branch physician concept demonstrated two useful serial engines: a protagonist who solves fights through observation, and debts/records that turn individual encounters into a network.
-- The source conversation records valuable intent and is preserved verbatim under `research/source/`.
+- The source conversation records valuable intent and is preserved verbatim under `research/archive/`.
 
 ## Why the previous workflow failed
 

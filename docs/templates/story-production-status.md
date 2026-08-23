@@ -80,7 +80,9 @@ This file tracks gates, not transient chat progress. Check a box only after the 
 - [ ] Bilingual fact comparison complete
 - [ ] Reviewer summaries synchronized
 
-## 9. Illustration
+## 9. Illustration — optional
+
+Delete this section unless illustration was explicitly requested. An unillustrated story is complete without it.
 
 - [ ] Visual bible complete
 - [ ] Character, location, and prop references approved
