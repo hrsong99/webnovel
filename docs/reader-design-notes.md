@@ -1,5 +1,7 @@
 # Reader redesign notes
 
+This file records the decisions this repository's reader actually made. The general principles they implement are in [`web-novel-production-playbook.md`](web-novel-production-playbook.md) §9.
+
 ## Direction
 
 The second-pass reader uses the visual idea **“fractured iron, surviving record.”** It should feel like a small, carefully made edition of a novel rather than a publishing dashboard.

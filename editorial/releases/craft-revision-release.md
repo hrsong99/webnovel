@@ -8,7 +8,7 @@
 - `docs/fiction-craft-standard.md` — operational authoring, revision, localization, and release standard
 - `docs/story-craft-overlay-template.md` — genre/culture/audience/language overlay template
 - `research/fiction-craft/fundamentals.md` — cited research synthesis
-- `editorial/volume-one-attention-audit.md` — pre-revision diagnosis and protected strengths
+- `stories/murim-abolitionist/editorial/volume-one-attention-audit.md` — pre-revision diagnosis and protected strengths
 - Korean Chapters 2–6 — developmental revision; Chapter 1 protected
 - English Chapters 1–6 — effect-localized literary edition
 - synchronized story bible, outline, style guide, metadata, and bilingual reviewer overviews

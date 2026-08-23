@@ -27,6 +27,8 @@ IMAGE_MEDIA_TYPES = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image
 PLACEHOLDER_RE = re.compile(r"(?i)(?:\b(?:TODO|TBD|FIXME|XXX|PLACEHOLDER)\b|(?:작성|집필|내용)\s*(?:예정|필요|추가)|추후\s*(?:작성|보강)|여기에\s*작성|미완성\s*본문)")
 EDITORIAL_RE = re.compile(r"(?im)(?:^---\s*$|<!--|-->|^\s*(?:[-*]\s*)?\[[ xX]\]\s+|(?:편집\s*메모|작가\s*(?:노트|메모)|기획\s*(?:메모|의도)|장면\s*(?:목적|요약)|시놉시스|복선|POV|관점|등장인물|키워드)\s*[:：])")
 REQUIRED_TEXT_FIELDS = ("slug", "title", "author", "language", "description", "genre", "quote", "about", "completion_title", "completion_text")
+REQUIRED_ARTIFACTS = ("story-bible.md", "outline.md", "craft-overlay.md", "continuity-ledger.md")
+CONDITIONAL_ARTIFACTS = {"visual-bible.md": "illustrations.json"}
 
 
 class NovelError(Exception):
@@ -85,7 +87,7 @@ def read_json(path: Path, label: str) -> Any:
         raise NovelError(f"invalid {label}: {path}: line {exc.lineno}, column {exc.colno}: {exc.msg}") from exc
 
 
-def discover_catalog(root: Path) -> tuple[list[tuple[str, Path]], str]:
+def discover_catalog(root: Path) -> tuple[list[tuple[str, Path]], str, dict[str, list[str]]]:
     """Return publishable stories while validating every lifecycle bucket.
 
     `stories` is the public catalog. `projects` and `retired_stories` keep
@@ -170,7 +172,7 @@ def discover_catalog(root: Path) -> tuple[list[tuple[str, Path]], str]:
     if errors:
         raise NovelError("catalog validation failed:\n" + "\n".join(f"- {error}" for error in errors))
     assert isinstance(legacy_slug, str)
-    return discovered, legacy_slug
+    return discovered, legacy_slug, {key: [slug for slug in values if isinstance(slug, str)] for key, values in buckets.items()}
 
 
 def count_korean(text: str) -> int:
@@ -379,6 +381,34 @@ def load_illustrations(story_root: Path, languages: tuple[str, ...], chapter_num
     return {chapter: tuple(sorted(items, key=lambda item: (item.placement[languages[0]], item.identifier))) for chapter, items in records.items()}
 
 
+def required_artifact_errors(story_root: Path, metadata: Any) -> list[str]:
+    """Require the planning artifacts a published story is supposed to own.
+
+    `artifact_exceptions` records a deliberate, reviewed gap as {filename: reason}
+    so a missing artifact stays visible in metadata instead of silently absent.
+    """
+    manuscript = story_root / "manuscript"
+    exceptions = metadata.get("artifact_exceptions", {}) if isinstance(metadata, dict) else {}
+    errors: list[str] = []
+    if not isinstance(exceptions, dict):
+        return [f"{story_root.name}: 'artifact_exceptions' must be an object mapping filename to reason"]
+    required = list(REQUIRED_ARTIFACTS)
+    for artifact, trigger in CONDITIONAL_ARTIFACTS.items():
+        if (manuscript / trigger).is_file():
+            required.append(artifact)
+    for name, reason in exceptions.items():
+        if name not in required:
+            errors.append(f"{story_root.name}: artifact_exceptions names {name!r}, which is not a required artifact")
+        elif not isinstance(reason, str) or not reason.strip():
+            errors.append(f"{story_root.name}: artifact_exceptions[{name!r}] must give a non-empty reason")
+        elif (manuscript / name).is_file():
+            errors.append(f"{story_root.name}: artifact_exceptions names {name!r}, but manuscript/{name} exists; remove the exception")
+    for name in required:
+        if not (manuscript / name).is_file() and name not in exceptions:
+            errors.append(f"{story_root.name}: missing manuscript/{name}; create it or record a reason in story.json 'artifact_exceptions'")
+    return errors
+
+
 def load_story(slug: str, story_root: Path) -> Story:
     primary = read_manuscript(story_root, slug)
     english = read_translation(story_root, "en", slug)
@@ -391,6 +421,9 @@ def load_story(slug: str, story_root: Path) -> Story:
         if edition:
             for chapter in edition.chapters:
                 load_reviewer_note(story_root, edition.metadata["language"], chapter.number)
+    artifact_errors = required_artifact_errors(story_root, primary.metadata)
+    if artifact_errors:
+        raise NovelError("manuscript artifact validation failed:\n" + "\n".join(f"- {error}" for error in artifact_errors))
     assets = story_root / "assets"
     missing = [name for name in ("cover.svg",) if not (assets / name).is_file()]
     if english and not ((assets / "cover-en.svg").is_file() or (assets / "cover.svg").is_file()):
@@ -403,7 +436,7 @@ def load_story(slug: str, story_root: Path) -> Story:
 
 
 def load_catalog(root: Path, selected: str | None = None) -> tuple[list[Story], str]:
-    discovered, legacy_slug = discover_catalog(root)
+    discovered, legacy_slug, _ = discover_catalog(root)
     if selected and selected not in {slug for slug, _ in discovered}:
         raise NovelError(f"story {selected!r} is not listed in catalog.json")
     stories = [load_story(slug, path) for slug, path in discovered if not selected or slug == selected]
@@ -690,19 +723,49 @@ def build_all(root: Path, stories: list[Story], legacy_slug: str) -> list[Path]:
         raise
 
 
+def promotion_blockers(root: Path, slug: str) -> tuple[str, list[str]]:
+    """Report what still prevents `slug` from validating as a published story.
+
+    Read-only: promotion itself stays a deliberate edit to catalog.json and
+    story.json, but the gate can be checked before either file changes.
+    """
+    _, _, buckets = discover_catalog(root)
+    location = {name: key for key, values in buckets.items() for name in values}
+    if slug not in location:
+        raise NovelError(f"story {slug!r} is not listed in any catalog.json lifecycle bucket")
+    story_root = (root / "stories" / slug).resolve()
+    blockers = required_artifact_errors(story_root, read_json(story_root / "story.json", "story.json"))
+    try:
+        load_story(slug, story_root)
+    except NovelError as exc:
+        if not str(exc).startswith("manuscript artifact validation failed"):
+            blockers.append(str(exc))
+    return location[slug], blockers
+
+
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     default_root = Path(__file__).resolve().parents[1]
-    for name, help_text in (("validate", "validate catalog stories"), ("stats", "print catalog story statistics"), ("build", "build the complete catalog atomically")):
+    for name, help_text in (("validate", "validate catalog stories"), ("stats", "print catalog story statistics"), ("build", "build the complete catalog atomically"), ("promote-check", "report what blocks a story from being published")):
         sub = commands.add_parser(name, help=help_text); sub.add_argument("--root", type=Path, default=default_root, help=argparse.SUPPRESS)
-        if name != "build": sub.add_argument("--story", help="select one catalog slug")
+        if name == "promote-check": sub.add_argument("--story", required=True, help="story slug to check")
+        elif name != "build": sub.add_argument("--story", help="select one catalog slug")
     return parser
 
 
 def main(argv: Iterable[str] | None = None) -> int:
     args = make_parser().parse_args(argv)
     try:
+        if args.command == "promote-check":
+            bucket, blockers = promotion_blockers(args.root.resolve(), args.story)
+            if blockers:
+                print(f"NOT PROMOTABLE {args.story} (currently in {bucket}):", file=sys.stderr)
+                for blocker in blockers: print(f"- {blocker}", file=sys.stderr)
+                return 1
+            next_step = "already published; validates as a public catalog story" if bucket == "stories" else "set story.json status to 'published' and move the slug into catalog.json 'stories'"
+            print(f"PROMOTABLE {args.story} (currently in {bucket}): {next_step}")
+            return 0
         stories, legacy_slug = load_catalog(args.root, getattr(args, "story", None))
         if args.command == "validate":
             for story in stories:

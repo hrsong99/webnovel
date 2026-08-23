@@ -1,5 +1,8 @@
 {
   "status": "published",
+  "artifact_exceptions": {
+    "continuity-ledger.md": "제1권 연속성은 story-bible.md 「제1권 핵심 연속성」이 정본이다. 별도 장부는 제2권 집필을 승인할 때 그 절에서 분리해 만든다."
+  },
   "slug": "murim-abolitionist",
   "title": "무림철폐론자",
   "subtitle": "상처를 닫는 대장장이",
