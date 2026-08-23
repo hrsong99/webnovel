@@ -1,11 +1,10 @@
 {
   "legacy_alias_story": "murim-abolitionist",
   "stories": [
-    "murim-abolitionist"
-  ],
-  "projects": [
+    "murim-abolitionist",
     "seven-masters-returned"
   ],
+  "projects": [],
   "retired_stories": [
     "seven-regressors-fell"
   ]

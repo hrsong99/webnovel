@@ -1,18 +1,18 @@
-# Seven Masters Returned — planning package
+# Seven Masters Returned — published story package
 
-This folder is the canonical planning-stage replacement for `seven-regressors-fell`.
+This folder is the canonical published replacement for `seven-regressors-fell`.
 
 ## Lifecycle
 
-- Catalog bucket: `projects`
-- `story.json` status: `planning`
+- Catalog bucket: `stories`
+- `story.json` status: `published`
 - Source language: Korean
-- Working Korean title: **칠대고수가 죽고 점소이만 회귀했다**
-- Working English title: **Seven Masters Fell. The Inn Boy Returned.**
+- Korean title: **칠대고수가 죽고 점소이만 회귀했다**
+- English title: **Seven Masters Fell. The Inn Boy Returned.**
 - Replaces: `stories/seven-regressors-fell` (retained under `retired_stories`)
 - Released predecessor backup: remote branch `archive/seven-regressors-v1`
 
-Planning and retirement are deliberate publication states. This package must not appear in `dist/`, EPUBs, or the public library until it is promoted to `catalog.json` → `stories` and its metadata status becomes `published`.
+This package completed its planning, drafting, revision, localization, and promotion gates before entering the public catalog.
 
 ## Canon order inside this package
 
@@ -27,11 +27,11 @@ Planning and retirement are deliberate publication states. This package must not
 9. `manuscript/open-questions.md` — unresolved decisions only
 10. `manuscript/production-status.md` — phase gates and evidence
 
-The Korean chapters will become canon only after an approved outline and explicit draft start. No prose from the retired predecessor is automatically canon; scenes, jokes, characters, and assets may be adapted only after they pass the replacement story’s mechanics.
+The Korean chapters are canonical. No prose from the retired predecessor transferred automatically; adapted scenes, jokes, characters, and objects were revalidated under the replacement mechanics.
 
-## Authoring promotion gate
+## Authoring and promotion gate — completed
 
-Before creating `manuscript/chapters/01.md`:
+The following gates were completed before the source chapters were authored:
 
 1. Resolve every blocking item in `open-questions.md`.
 2. Lock the seven younger/future character pairs and awakening order.
@@ -40,4 +40,4 @@ Before creating `manuscript/chapters/01.md`:
 5. Record protected predecessor strengths worth adapting.
 6. Update `production-status.md` to authorize source drafting.
 
-Before publication, add complete locale metadata and translations, finish all editorial and QA gates, change status to `published`, and move the slug from `projects` into the public `stories` array.
+Publication additionally required complete locale metadata, English chapters, synchronized reviewer notes, independent Korean/English/bilingual audits, `promote-check`, and the repository release gate.

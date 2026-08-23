@@ -1,6 +1,6 @@
 # Continuity ledger — Seven Masters Returned
 
-**Status:** initialized before drafting. Update immediately when an accepted outline or chapter creates a fact.
+**Status:** Volume One pre-draft state locked. Update after every chapter and revision.
 
 ## Immutable mechanics
 
@@ -8,88 +8,117 @@
 |---|---|
 | Return count | One |
 | Return distance | Fifteen years |
-| Timeline model | New branch; future echoes retain fixed memories |
-| Ryu’s opening age | Twenty |
-| Future echoes | Seven, dormant sequentially, permanently active after awakening |
-| Younger masters | Seven living people with no future memory |
+| Timeline | New branch; fixed future echoes |
+| Ryu opening age/status | Twenty; Ma’s fostered senior inn worker, no ownership |
+| Future echoes | Seven; awaken sequentially and remain active |
+| Younger masters | Seven living people without future memory |
 | Permanent overwrite | Prohibited |
-| Second chance after death | None |
-| Macro threat | Heavenly Demon Divine Cult conquest at the failed future’s Year 15 |
-| Central mastermind requirement | None |
-| Public status | Planning; not built or published |
+| Safe borrowed channel | One core for four safe heartbeats; maximum seven; two cores share two safe heartbeats and a tearing third overdraw |
+| Death | Final |
+| Macro threat | Heavenly Demon Divine Cult conquest in failed Year 15 |
+| Volume One duration | Three days |
+
+## Opening character state
+
+| Character | Age | Position | Present knowledge | Leverage |
+|---|---:|---|---|---|
+| Ryu Dan | 20 | Return Inn senior worker/foster son | Failed future and awakened archives only | labor skill, future knowledge, later cores |
+| Ma Yeongsun | 43 | Sole inn owner | no return knowledge | property, money, keys, reputation, refusal |
+| Baek Mugyeol (echo) | 37 at death | future sword master | own future viewpoint | sword core and command memory |
+| Baek Mugyeol (living) | 22 | Azure Peak first-rank disciple | current sect facts only | rank, sword, expedition authority |
+| Tang Soryeong (echo) | 36 at death | future Poison Sovereign | own future viewpoint | poison/medicine core |
+| Tang Soryeong (living) | 21 | Tang eastern-clinic junior physician | current family medicine | sample custody and emergency protocol |
+| Nam Sogun | 24 | Azure Peak field examiner | current mission | road closure and junior command |
+| Oh Gak | 31 | Black Tooth collector and courier | forged lien, gang routes, and bell code | witness testimony; survival changes schedule |
 
 ## Awakening and core state
 
-| Order | Master | Echo state at opening | Younger state | Core state | Arc resolution |
-|---:|---|---|---|---|---|
-| 1 | Baek Mugyeol | First to awaken | Alive; exact position to lock | First active core | Not outlined |
-| 2 | Tang Soryeong | Dormant | Alive; exact position to lock | Dormant | Not outlined |
-| 3 | Gwi Sam | Dormant | Alive; exact position to lock | Dormant | Not outlined |
-| 4 | Maehwajin | Dormant | Alive; exact position to lock | Dormant | Not outlined |
-| 5 | Jang Cheolwoo | Dormant | Alive; exact position to lock | Dormant | Not outlined |
-| 6 | Yeom Gaha | Dormant | Alive; exact position to lock | Dormant | Not outlined |
-| 7 | Seol Muyeon | Dormant | Alive; exact position to lock | Dormant | Not outlined |
+| Chapter boundary | Baek echo/core | Tang echo/core | Other doors |
+|---|---|---|---|
+| Opening | wakes during return; unstable | dormant | five dormant |
+| After Ch1 | channel spent; right-hand tremor | dormant | dormant |
+| After Ch2 | awake; rest required | wakes; unstable | dormant |
+| After Ch3 | archive challenged by adaptive younger self | awake; not yet channeled | dormant |
+| After Ch4 | unstable | first legal channel available | dormant |
+| After Ch5 | third shared heartbeat overdraw causes tears | unstable but cooperating | relay line makes Myogak respond beneath Return Inn |
+| After Ch6 | foundation stabilized without another channel | foundation stabilized without another channel | Gwi Sam door leaks one sentence, not open |
 
-## Timeline anchors
+## Time and event ledger
 
-| Relative year | Failed future | New branch requirement |
-|---:|---|---|
-| 0 | Ryu’s return point | Opening; Return Inn intact; first echo active |
-| 0–3 | Original causes still mostly recognizable | Sequential awakenings and first coalition proof |
-| 3–7 | Faction failures harden | Change master turning points; all seven awake by movement end |
-| 7–11 | Fragmentation leaves strategic gaps | Build durable alliance institutions |
-| 11–14 | Cult prepares or advances | Changed world produces earlier/adaptive war |
-| 15 | Original conquest complete | Coalition faces genuinely new future |
+| Day | Events |
+|---:|---|
+| Failed Year 15 final night | Seven die at ruined Return Inn; Ryu returns |
+| New Day 1 | Ryu wakes; Black Tooth seizure prevented; Oh Gak returns poisoned; Tang wakes; Nam arrives at evening |
+| New Day 2 | younger Baek test and custody agreement; younger Tang arrives at evening |
+| New Day 3 | emergency protocol, warehouse raid, market response, ledger signed |
 
-## Knowledge ledger
+## Knowledge legality
 
-| Holder | May know | May not know |
+| Fact used | Legal source |
+|---|---|
+| Ma’s original knee injury | Ryu personally lived the failed opening week |
+| Collector’s Azure Peak-derived structure | future Baek’s witnessed technical memory |
+| Courier’s original death | Ryu’s failed-future memory |
+| Green Vein fundamentals | future Tang after Chapter 2 awakening |
+| altered binder/dosage | current testing only; absent from archives |
+| warehouse old layout | Ryu’s later personal reconstruction |
+| corridor sword trap | future Baek |
+| poison barrel handling | future Tang plus younger Tang’s current testing |
+| false market signals | current observation and Oh Gak’s bell knowledge |
+| original market death sites | Ryu’s personal body recovery and casualty ledger after the failed event; not exact new-branch positions |
+
+## Object custody
+
+| Object | Opening | End of volume |
 |---|---|---|
-| Ryu | His failed-future experiences and context-triggered awakened archives | Exact events absent from all seven archives; consequences created by divergence |
-| Future echoes | Their own viewpoints and later shared final-war conclusions | Objective truth outside their observation; the new branch’s outcome |
-| Younger masters | Their current lives and ordinary information | Future identity, unless Ryu or a legal resonance reveals a bounded fact |
-| Ma Yeongsun | Present evidence and Ryu’s changed behavior | Return mechanics at opening unless Ryu chooses disclosure |
-| Divine Cult actors | Their current plans and institutions | Failed-future outcome unless separately justified |
+| Black Tooth forged lien ledger | collector | Ma Yeongsun |
+| Azure Peak token | poisoned courier | returned to living Baek under signed receipt |
+| Green Vein sample | courier/body | Tang medical custody; sealed evidence at inn |
+| warehouse route slate | Black Tooth | Nam route command + Tang handling countersignature |
+| western supply mark | warehouse | copied in Common Antidote Ledger; original dual-sealed |
+| Common Antidote Ledger | nonexistent | Return Inn cabinet, Ma controls keys, Azure Peak/Tang seals |
 
-## Object and resource custody
+## Injuries and physical persistence
 
-No story objects are canonically placed yet. Each accepted outline beat must record owner, location, transfer, cost, and whether the item existed in the failed future.
+| Chapter | Character | State | Carry-forward consequence |
+|---:|---|---|---|
+| 1 | Ryu | right-hand tremor after seven heartbeats | cannot safely reuse Baek until rest |
+| 2 | Oh Gak | Green Vein poisoning, stabilized | weak through Ch4; witness not fighter |
+| 5 | Ryu | small meridian tears after two-core channel | cannot solve market response by repeated overdrive |
+| 6 | Ryu | injury remains; no borrowed channel available | uses his own Returning Dish Step; baseline cores stabilize only after cooperation succeeds |
 
-| Object/resource | Failed-future owner/location | New-branch custody | Transfer and cost |
-|---|---|---|---|
+## Relationship and institutional state
 
-## Injury and power persistence
+| Relationship | Opening | End of Volume One |
+|---|---|---|
+| Ryu / Ma | family through work; Ma owns and commands inn | Ma knows Ryu hides something but trusts his choices conditionally; authority preserved |
+| Ryu / future Baek | new vessel/commander assumption | adviser whose orders Ryu may reject |
+| Ryu / future Tang | skeptical intruder | respected mediator, still medically reckless in her view |
+| living Baek / living Tang | factional suspicion | bounded cooperation under signed roles |
+| future Baek / future Tang | blame each other for failed campaign | share inner table; disagreements remain active |
+| Return Inn / factions | irrelevant roadside business | neutral custodian of one shared emergency system |
 
-No chapter injuries exist yet. Ryu’s young body does not inherit future wounds or future internal energy. Echo memories may include pain but do not create physical injury by themselves.
+## Terminology
 
-| Character | Injury/power state | Acquired | Healed/changed | Consequence |
-|---|---|---|---|---|
-
-## Relationship and coalition state
-
-| Pair/factions | Opening state | Required changed behavior | Current proof |
-|---|---|---|---|
-| Ryu / Ma | Family-like working relationship; exact history to lock | Mutual disclosure and enforceable inn authority | Not outlined |
-| Seven future echoes | Trusted Ryu; failed to trust one another operationally | Learn cumulative cooperation inside inner inn | One unanimous return decision only |
-| Younger seven | Mostly unconnected or factionally opposed | Voluntary personal and institutional alliance | None |
-| Central Plains / unorthodox forces | Fragmented | Enforceable inclusion | None |
-| Coalition / Divine Cult territories | Future enemies with morally varied populations | Distinguish resistance from restoration of old abuses | None |
-
-## Naming and terminology
-
-| Concept | Korean working term | English working term | Lock state |
-|---|---|---|---|
-| Macro faction | 천마신교 | Heavenly Demon Divine Cult | English rendering open |
-| Inner mental space | 내면의 귀래객잔 | inner Return Inn | Working |
-| Inherited power units | 무학핵 | martial cores | Working |
-| Future remnant | 영혼 잔향 / 미래 잔향 | future echo / spiritual afterimage | Choose one Korean standard before draft |
-| Original synthesis | 제8의 길 / 제8무로 | eighth path | Working |
+| Korean | English |
+|---|---|
+| 귀래객잔 | Return Inn |
+| 창천문 | Azure Peak Sect |
+| 사천당가 / 당가 | Sichuan Tang Family / Tang Family |
+| 천마신교 | Heavenly Demon Divine Cult |
+| 일천일율 | One Heaven, One Measure |
+| 영혼 잔향 | future echo / spiritual afterimage |
+| 무학핵 | martial core |
+| 회반보 | Returning Dish Step |
+| 공제약첩 | Common Antidote Ledger |
 
 ## Contradiction watchlist
 
-- Do not import Day 31 or 9,431-loop facts from the retired story.
-- Distinguish a future echo’s belief from objective narration.
-- Track which archive is awake when Ryu uses a fact or technique.
-- Track divergence after every saved person, moved resource, or changed alliance.
-- Prevent living/future versions from exchanging unlimited memories without a declared event and cost.
-- Keep all awakened spirits present across later arcs even when not speaking.
+- Never import 9,431 loops or Day 31.
+- Mark which archive is awake for every future fact.
+- An echo’s memory is biased evidence, not narration’s objective truth.
+- The surviving courier changes all later schedules.
+- The two younger masters never receive full future memories in Volume One.
+- All awakened echoes remain present even when silent.
+- Ma cannot hear echoes in Volume One.
+- Ryu cannot channel repeatedly after Chapter 5 injury.

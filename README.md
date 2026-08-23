@@ -14,7 +14,8 @@ catalog.json                         # published / planning / retired 수명주�
 stories/<slug>/
   story.json                         # 수명주기와 한국어 정본·출판 메타데이터
   locales/en.json                    # 선택적 영어판 메타데이터
-  manuscript/                        # 바이블, 개요, 오버레이, 연속성 장부, 정본, 번역, 편집 개요
+  manuscript/                        # 정본, 번역, 편집 개요
+    outline.json                     # 선택적 회차별 인과 계약; 본문과 번호·제목 일치 검증
   reference/                         # 장기 세계관 자료(정본 아님)
   editorial/                         # 그 작품의 리뷰와 감사 기록
   assets/cover.svg                   # 필수 표지
