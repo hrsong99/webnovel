@@ -2,7 +2,7 @@
 
 **Slug:** `seven-masters-returned`
 **Source language:** Korean
-**Current phase:** 11 — verified release candidate
+**Current phase:** 12 — published and live
 **Branch:** `feat/author-seven-masters-returned`
 **Integrated editor:** Hermes Agent
 **Last updated:** 2026-08-23
@@ -100,9 +100,9 @@ Skipped by authoring policy. The author did not request illustration for this ed
 - [x] `promote-check` passed before deliberate catalog promotion
 - [x] Unit, catalog, build, references, EPUB, browser, and Docker gates pass
 - [x] Secret scan and complete diff-scope checks pass
-- [ ] PR CI, merge, and post-merge CI pass
-- [ ] Public deployment verified separately or recorded unavailable
+- [x] PR #12 CI, merge, and post-merge CI pass
+- [x] Public HTTPS deployment verified at `https://webnovel.134.185.109.169.sslip.io/`
 
 ## Current handoff
 
-The six Korean chapters are complete at 24,968 Hangul characters and pass the source parser. The integrated editor fixed the pre-draft age, core-reuse, knowledge-source, custody, Oh Gak, and awakening-threshold blockers. Three independent read-only Korean reviews are in progress; prose remains frozen until their findings are reconciled.
+Volume One is published in Korean and English, merged through PR #12, verified by post-merge CI, and live over HTTPS. Final generated counts are 25,141 Korean characters and 14,907 English words. New defects follow the repository errata route rather than silent manuscript edits.
