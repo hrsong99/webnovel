@@ -29,6 +29,10 @@ EDITORIAL_RE = re.compile(r"(?im)(?:^---\s*$|<!--|-->|^\s*(?:[-*]\s*)?\[[ xX]\]\
 REQUIRED_TEXT_FIELDS = ("slug", "title", "author", "language", "description", "genre", "quote", "about", "completion_title", "completion_text")
 REQUIRED_ARTIFACTS = ("story-bible.md", "outline.md", "craft-overlay.md", "continuity-ledger.md")
 CONDITIONAL_ARTIFACTS = {"visual-bible.md": "illustrations.json"}
+OUTLINE_CONTRACT_FIELDS = (
+    "near_promise", "want", "pressure", "choice", "delta",
+    "local_payoff", "persistence", "next_pressure",
+)
 
 
 class NovelError(Exception):
@@ -253,9 +257,56 @@ def read_manuscript(story_root: Path, expected_slug: str | None = None) -> Manus
             errors.append(f"{path.name}: suspicious repetition found: {repetitions[0][:80]!r}")
         chapters.append(Chapter(number, match.group(2).strip(), body, path, chars))
     _validate_sequence(chapters, metadata.get("expected_chapters"), errors, "")
+    errors.extend(outline_contract_errors(story_root, chapters))
     if errors:
         raise NovelError("manuscript validation failed:\n" + "\n".join(f"- {error}" for error in errors))
     return Manuscript(story_root, metadata, tuple(sorted(chapters, key=lambda chapter: chapter.number)))
+
+
+def outline_contract_errors(story_root: Path, chapters: list[Chapter]) -> list[str]:
+    """Validate optional machine-readable chapter contracts against source files."""
+    path = story_root / "manuscript" / "outline.json"
+    if not path.is_file():
+        return []
+    try:
+        raw = read_json(path, "outline.json")
+    except NovelError as exc:
+        return [str(exc)]
+    if not isinstance(raw, dict) or raw.get("version") != 1 or not isinstance(raw.get("chapters"), list):
+        return ["outline.json must be an object with version 1 and a 'chapters' array"]
+    errors: list[str] = []
+    contracts: dict[int, dict[str, Any]] = {}
+    for index, item in enumerate(raw["chapters"], 1):
+        label = f"outline.json item {index}"
+        if not isinstance(item, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        number = item.get("number")
+        if isinstance(number, bool) or not isinstance(number, int) or number < 1:
+            errors.append(f"{label} number must be a positive integer")
+        elif number in contracts:
+            errors.append(f"outline.json duplicate chapter number: {number}")
+        else:
+            contracts[number] = item
+        if not isinstance(item.get("title"), str) or not item["title"].strip():
+            errors.append(f"{label} title must be a non-empty string")
+        for field in OUTLINE_CONTRACT_FIELDS:
+            if not isinstance(item.get(field), str) or not item[field].strip():
+                errors.append(f"{label} {field} must be a non-empty string")
+    chapter_map = {chapter.number: chapter for chapter in chapters}
+    if sorted(contracts) != sorted(chapter_map):
+        errors.append(
+            "outline.json chapter numbers must exactly match Korean chapters; "
+            f"outline={sorted(contracts)}, chapters={sorted(chapter_map)}"
+        )
+    for number in sorted(set(contracts) & set(chapter_map)):
+        contract_title = contracts[number].get("title")
+        if isinstance(contract_title, str) and contract_title.strip() != chapter_map[number].title:
+            errors.append(
+                f"outline.json chapter {number} title {contract_title.strip()!r} "
+                f"does not match manuscript title {chapter_map[number].title!r}"
+            )
+    return errors
 
 
 def _validate_sequence(chapters: list[Chapter], expected: Any, errors: list[str], label: str) -> None:

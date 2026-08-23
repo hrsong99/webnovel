@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800" role="img" aria-labelledby="title desc">
+  <title id="title">Seven Masters Fell. The Inn Boy Returned. cover</title>
+  <desc id="desc">Return Inn before dawn, with two of its seven guest-room doors open</desc>
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101722"/><stop offset=".62" stop-color="#243140"/><stop offset="1" stop-color="#c9b89a"/></linearGradient>
+    <linearGradient id="dawn" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3d9a3"/><stop offset="1" stop-color="#b55a3c"/></linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="4" seed="17"/><feComponentTransfer><feFuncA type="table" tableValues="0 .09"/></feComponentTransfer></filter>
+  </defs>
+  <rect width="1200" height="1800" fill="url(#night)"/><rect width="1200" height="1800" filter="url(#grain)" opacity=".4"/>
+  <circle cx="900" cy="320" r="180" fill="#e8d7b3" opacity=".12"/>
+  <path d="M0 1150 L185 995 L315 1085 L505 885 L680 1050 L860 920 L1200 1125 V1440 H0 Z" fill="#18202a" opacity=".78"/>
+  <g transform="translate(105 940)">
+    <path d="M0 225 L495 20 L990 225 L930 286 L495 115 L60 286 Z" fill="#0b1017"/>
+    <path d="M105 270 H885 V690 H105 Z" fill="#171c22" stroke="#887862" stroke-width="8"/>
+    <path d="M130 300 H860" stroke="#c2ae8e" stroke-width="10" opacity=".45"/>
+    <g stroke="#8f7e66" stroke-width="7">
+      <rect x="145" y="360" width="82" height="230" fill="#080c11"/><rect x="247" y="360" width="82" height="230" fill="#080c11"/><rect x="349" y="360" width="82" height="230" fill="#080c11"/>
+      <rect x="451" y="360" width="82" height="230" fill="url(#dawn)"/><rect x="553" y="360" width="82" height="230" fill="url(#dawn)"/>
+      <rect x="655" y="360" width="82" height="230" fill="#080c11"/><rect x="757" y="360" width="82" height="230" fill="#080c11"/>
+    </g>
+    <path d="M451 360 L410 395 V590 L451 590 Z" fill="#33271e"/><path d="M635 360 L676 395 V590 L635 590 Z" fill="#33271e"/>
+  </g>
+  <g fill="#f1e7d1" font-family="Georgia,serif">
+    <text x="76" y="145" font-size="25" letter-spacing="8">NITTY GRITTY NOVEL LAB</text>
+    <text x="72" y="320" font-size="88" font-weight="700" letter-spacing="-3">SEVEN MASTERS FELL.</text>
+    <text x="72" y="422" font-size="88" font-weight="700" letter-spacing="-3">THE INN BOY RETURNED.</text>
+    <text x="78" y="505" font-size="28" letter-spacing="4" fill="#e1aa76">THE MASTERS FROM FIFTEEN YEARS AHEAD</text>
+    <text x="78" y="548" font-size="28" letter-spacing="4" fill="#e1aa76">ARE FIGHTING IN HIS HEAD</text>
+  </g>
+  <g transform="translate(945 1510) rotate(-5)"><rect x="-76" y="-76" width="152" height="152" fill="none" stroke="#d38a59" stroke-width="8"/><text x="0" y="-4" text-anchor="middle" font-family="Georgia,serif" font-size="21" font-weight="700" fill="#d38a59">VOLUME</text><text x="0" y="39" text-anchor="middle" font-family="Georgia,serif" font-size="35" font-weight="700" fill="#d38a59">ONE</text></g>
+  <text x="76" y="1702" fill="#463c33" font-family="Georgia,serif" font-size="20" letter-spacing="5">TWO OPEN GUEST ROOMS · ONE FINAL RETURN</text>
+</svg>

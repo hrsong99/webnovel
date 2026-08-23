@@ -142,6 +142,40 @@ class NovelPipelineTests(unittest.TestCase):
         path.write_text(json.dumps(metadata, ensure_ascii=False), encoding="utf-8")
         self.assertIn("Korean characters", self.run_cli("validate").stderr)
 
+    def test_optional_outline_contract_enforces_fields_and_chapter_parity(self):
+        path = self.root / "stories" / "test-novel" / "manuscript" / "outline.json"
+        fields = {
+            "near_promise": "즉시 약속", "want": "현재 욕망", "pressure": "압박",
+            "choice": "선택", "delta": "변화", "local_payoff": "현재 보상",
+            "persistence": "지속 결과", "next_pressure": "다음 압박",
+        }
+        payload = {"version": 1, "chapters": [
+            {"number": 1, "title": "시작", **fields},
+            {"number": 2, "title": "도착", **fields},
+        ]}
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        valid = self.run_cli("validate")
+        self.assertEqual(valid.returncode, 0, valid.stderr)
+
+        del payload["chapters"][0]["delta"]
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        missing = self.run_cli("validate")
+        self.assertNotEqual(missing.returncode, 0)
+        self.assertIn("delta must be a non-empty string", missing.stderr)
+
+        payload["chapters"][0]["delta"] = "변화"
+        payload["chapters"].pop()
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        parity = self.run_cli("validate")
+        self.assertNotEqual(parity.returncode, 0)
+        self.assertIn("chapter numbers must exactly match Korean chapters", parity.stderr)
+
+        payload["chapters"].append({"number": 2, "title": "잘못된 제목", **fields})
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        title_mismatch = self.run_cli("validate")
+        self.assertNotEqual(title_mismatch.returncode, 0)
+        self.assertIn("does not match manuscript title", title_mismatch.stderr)
+
     def test_rejects_suspicious_phrase_repetition(self):
         phrase = "검은 문 너머에서 낯선 목소리가 들려왔다"
         self.write_chapter("test-novel", 1, "반복", ". ".join([phrase] * 4) + ".")
@@ -340,8 +374,8 @@ class NovelPipelineTests(unittest.TestCase):
     def test_repository_catalog_records_published_planning_and_retired_stories(self):
         production = json.loads((SCRIPT.parents[1] / "catalog.json").read_text(encoding="utf-8"))
         self.assertEqual(production["legacy_alias_story"], "murim-abolitionist")
-        self.assertEqual(production["stories"], ["murim-abolitionist"])
-        self.assertEqual(production["projects"], ["seven-masters-returned"])
+        self.assertEqual(production["stories"], ["murim-abolitionist", "seven-masters-returned"])
+        self.assertEqual(production["projects"], [])
         self.assertEqual(production["retired_stories"], ["seven-regressors-fell"])
 
     def test_published_story_requires_planning_artifacts_or_a_recorded_exception(self):

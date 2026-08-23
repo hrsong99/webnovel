@@ -35,6 +35,7 @@ stories/<slug>/
     production-status.md                  # copied from docs/templates/
     story-bible.md                        # facts, limits, cast, continuity
     outline.md                            # causal chapter design
+    outline.json                          # optional machine-readable chapter contract
     craft-overlay.md                      # experience and genre-specific gate
     continuity-ledger.md                  # copied from docs/templates/
     visual-bible.md                       # only for illustrated stories
@@ -173,6 +174,8 @@ For each chapter, record:
 | Next pressure | What specific changed question opens? |
 
 Reverse-causality test every major beat: **because event happened and character chose action, new state is now true.**
+
+When a story owns `manuscript/outline.json`, use schema version 1 with one record per Korean chapter. Each record contains `number`, `title`, and `near_promise`, `want`, `pressure`, `choice`, `delta`, `local_payoff`, `persistence`, and `next_pressure`. The validator enforces non-empty fields and exact chapter number/title parity; it does not judge whether the contract is good.
 
 ### Gate
 

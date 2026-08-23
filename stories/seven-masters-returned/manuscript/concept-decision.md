@@ -1,6 +1,6 @@
 # Concept decision — one return, seven future masters
 
-**Decision state:** accepted premise; working title not locked
+**Decision state:** accepted premise and final title locked for Volume One
 **Replacement:** `seven-regressors-fell`
 **Decision date:** 2026-08-23
 
@@ -11,6 +11,9 @@ The predecessor’s central chronology declared Day 31 unprecedented and then tr
 The replacement preserves the strongest material—Ryu Dan, Ma Yeongsun, Return Inn, seven martial legacies, trays and chores becoming martial insight, hidden opportunities, younger masters, sect conflict, coalition failure, and an overpowered knowledge advantage—under a simpler causal model.
 
 ## Selected premise
+
+Final Korean title: **칠대고수가 죽고 점소이만 회귀했다**
+Final English title: **Seven Masters Fell. The Inn Boy Returned.**
 
 Fifteen years after the Heavenly Demon Divine Cult conquers the martial world, seven surviving grandmasters admit that their factions could have won together. Pride, secrecy, orthodoxy, grudges, leadership contests, and institutional fragmentation kept them apart.
 

@@ -2,73 +2,107 @@
 
 **Slug:** `seven-masters-returned`
 **Source language:** Korean
-**Current phase:** 3 — canon architecture before Volume One outline
-**Branch:** `chore/replace-seven-regressors-premise`
-**Integrated editor:** not assigned for prose
+**Current phase:** 11 — verified release candidate
+**Branch:** `feat/author-seven-masters-returned`
+**Integrated editor:** Hermes Agent
 **Last updated:** 2026-08-23
 
-This file tracks durable gates. No source chapter is authorized yet.
+This file tracks durable gates. Source drafting was authorized only after the current title, cast, return, core, timeline, custody, and six-chapter causal contracts were locked.
 
 ## 0. Baseline
 
-- [x] Repository production instructions read
+- [x] Repository instructions and updated architecture read
 - [x] Default branch synchronized safely
 - [x] Feature branch created
 - [x] Released predecessor preserved on `archive/seven-regressors-v1`
-- [x] Canon hierarchy recorded in story README
-- [x] Open questions separated from accepted decisions
-- [x] Predecessor retained as `retired`, not deleted
+- [x] Canon hierarchy recorded
+- [x] Predecessor remains retired and intact
 
 ## 1. Research and contract
 
-- [x] Intended reader experience written
-- [x] Genre promises and anti-promises written
-- [ ] Decision-relevant murim coalition and long-serial research saved
-- [x] Evidence boundary stated: premise choices are creative decisions, not empirical reader guarantees
+- [x] Intended reader experience and anti-promises written
+- [x] Existing repository craft research retained as evidence, not canon
+- [x] No new factual research was required to decide this fictional institutional design
+- [x] Subjective enjoyment is not presented as empirically guaranteed
 
 ## 2. Concept
 
-- [x] Multiple materially different premises compared
-- [x] Selected premise has repeatable engine and human center
-- [x] One-return, fifteen-year, seven-echo model accepted
-- [x] Sequential awakening with persistent ensemble accepted
-- [x] Institutional macro-antagonist and coalition objective accepted
-- [x] Advantage limits and historical divergence declared
-- [x] Climax proof named
+- [x] One-return, fifteen-year, seven-echo model selected
+- [x] Sequential awakening with persistent ensemble selected
+- [x] Institutional macro-antagonist and coalition objective selected
+- [x] Advantage limits, divergence, and climax proof declared
 
 ## 3. Canon
 
-- [x] Foundational story bible created
-- [x] Craft overlay created
-- [x] Continuity ledger initialized
-- [x] Timeline, return, echo, younger-self, power, and end-state rules testable
-- [ ] Working title approved or replaced
-- [ ] Blocking cast and opening-state questions resolved
-- [ ] Complete Volume One canon lock passed
+- [x] Final Korean and English titles locked
+- [x] Volume One cast ages, roles, desires, leverage, and relationships locked
+- [x] Failed-future return scene and branch mechanics locked
+- [x] Core awakening and seven-heartbeat limits locked
+- [x] Baek/Tang younger and future pairs locked
+- [x] Heavenly Demon Divine Cult institutional model locked
+- [x] Object, injury, knowledge, and custody continuity initialized
+- [x] Volume One canon gate passed
 
 ## 4. Outline
 
-- [x] Fifteen-year movement architecture created
-- [x] Seven awakening-arc engine created
-- [x] Provisional first-volume jobs recorded
-- [ ] Every Volume One chapter has want, pressure, choice, delta, payoff, persistence, and next pressure
-- [ ] Obstacles and divergence adapt causally
-- [ ] Volume One ending pays its declared promise
+- [x] Six chapters specify promise, want, pressure, legal memory, divergence, choice, payoff, delta, persistence, coalition progress, and next pressure
+- [x] Obstacles adapt after every intervention
+- [x] Volume ending pays a complete local promise through the Common Antidote Ledger
+- [x] Gwi Sam hook opens the next arc without withholding Volume One’s payoff
 
 ## 5. Source draft
 
-- [ ] Draft authorization recorded
-- [ ] Korean chapter files created
-- [ ] All source chapters drafted
-- [ ] Per-chapter checklist run
-- [ ] Mechanical validation passes after promotion into publishable metadata
-- [ ] Protected strengths recorded
-- [ ] Continuity ledger updated
+- [x] Draft authorization recorded
+- [x] Six Korean chapter files drafted
+- [x] Per-chapter promise, agency, payoff, and next-pressure checklist run
+- [x] Source parser, length, heading, repetition, and outline-contract validation passes
+- [x] Protected strengths recorded before revision
+- [x] Continuity ledger reconciled with draft
 
-## 6–12. Later gates
+## 6. Developmental revision
 
-Developmental revision, copyedit, localization, illustration, independent QA, release, and reader-feedback gates remain unopened. Use `docs/templates/story-production-status.md` when source drafting begins; do not infer completion from the retired predecessor.
+- [x] Reverse outline checked against the machine-readable causal contract
+- [x] Causality and attention integrated-editor pass complete
+- [x] Agency and consequence integrated-editor pass complete
+- [x] Scene and information integrated-editor pass complete
+- [x] Progression legality integrated-editor pass complete
+- [x] Language and rhythm pass complete
+- [x] Current-file Korean continuity and shared-core delta audits complete
+
+## 7. Copyedit and proof
+
+- [x] Korean source-file proof complete
+- [x] Rendered website/mobile/focus proof complete
+- [x] EPUB ZIP/XML proof complete
+
+## 8. Localization
+
+- [x] English style guide and glossary complete
+- [x] English chapters complete — 6 chapters / 14,907 words
+- [x] Native-English continuous read and exact copy delta complete
+- [x] Strict bilingual fact comparison and timing delta complete
+- [x] Korean and English reviewer notes synchronized
+
+## 9. Illustration
+
+Skipped by authoring policy. The author did not request illustration for this edition; no new images or manifest will be produced.
+
+## 10. Independent QA
+
+- [x] Reader-experience audit PASS against the correct story
+- [x] Source canon/continuity audit PASS
+- [x] English literary audit PASS after exact correction verification
+- [x] Strict bilingual audit PASS after timing correction
+- [x] Final shared-core and English delta audits PASS
+
+## 11. Release
+
+- [x] `promote-check` passed before deliberate catalog promotion
+- [x] Unit, catalog, build, references, EPUB, browser, and Docker gates pass
+- [x] Secret scan and complete diff-scope checks pass
+- [ ] PR CI, merge, and post-merge CI pass
+- [ ] Public deployment verified separately or recorded unavailable
 
 ## Current handoff
 
-The next task is requirement resolution and a causal Volume One outline. It is explicitly not prose drafting. Before Chapter 1 exists, close the blocking questions in `open-questions.md`, update the bible and ledger, and record draft authorization here.
+The six Korean chapters are complete at 24,968 Hangul characters and pass the source parser. The integrated editor fixed the pre-draft age, core-reuse, knowledge-source, custody, Oh Gak, and awakening-threshold blockers. Three independent read-only Korean reviews are in progress; prose remains frozen until their findings are reconciled.
