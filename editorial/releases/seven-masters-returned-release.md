@@ -4,11 +4,11 @@
 
 - Story/edition: 칠대고수가 죽고 점소이만 회귀했다 / *Seven Masters Fell. The Inn Boy Returned.*
 - Source branch: `feat/author-seven-masters-returned`
-- PR: recorded after push
-- Merge commit: recorded after merge
+- PR: https://github.com/hrsong99/webnovel/pull/12
+- Merge commit: `9da4d43e9eb07c429d7f9f9dda1c6563009d9dbd`
 - Release date: 2026-08-23
 - Rollback target: `c939db5b70b6c1997a6f3d938ba2b3a7b5861a54`; retired predecessor baseline also preserved at `archive/seven-regressors-v1`
-- Public URL: deployment occurs after merge at `https://webnovel.134.185.109.169.sslip.io/`; verify before finalizing this report
+- Public URL: https://webnovel.134.185.109.169.sslip.io/
 
 ## Editorial state
 
@@ -36,7 +36,8 @@ Replacement English: 6 chapters / 14,907 words
 - Generated HTML/reference graph: 48 HTML files / 648 local references / 0 missing
 - EPUB ZIP/XML: 6 EPUBs / 54 XML or XHTML documents parsed
 - Browser QA: desktop catalog, Korean Ch1, English Ch1, and 390px English Ch6 pass; focus mode activates; no console errors or horizontal overflow
-- Docker image: `sha256:7ee016d5674e830cf38c3a5d452272aad0de26a4bf89c94677f1919ed799f053`
+- Release-gate image: `sha256:7ee016d5674e830cf38c3a5d452272aad0de26a4bf89c94677f1919ed799f053`
+- Live merged image: `sha256:964de65d727ee0fd52a5263d45ca01aaf7312e2f50fb6a36bcaea9118af88430`
 - Runtime user and health: `running healthy user=101`; `/healthz` returns `ok`
 - Representative routes: catalog, legacy aliases, both published stories, both languages, final chapters
 - Secret/whitespace scan: PASS; zero secret-pattern findings and no diff whitespace errors
@@ -48,10 +49,10 @@ No generated illustration media was produced. `cover.svg` and `cover-en.svg` are
 
 ## Remote verification
 
-- PR CI: recorded after push
-- Post-merge CI: recorded after merge
-- Remote `main` SHA: recorded after merge
-- Deployment read-back: verify HTTPS catalog, Korean route, English route, and `/healthz` after deploying merged container
+- PR CI: https://github.com/hrsong99/webnovel/actions/runs/32636951963 — PASS
+- Post-merge CI: https://github.com/hrsong99/webnovel/actions/runs/32637008357 — PASS
+- Remote `main` SHA: `9da4d43e9eb07c429d7f9f9dda1c6563009d9dbd`
+- Deployment read-back: HTTPS 200 verified for `/`, `/healthz`, Korean Chapter 1, and English Chapter 1
 
 ## Errata and correction route
 
