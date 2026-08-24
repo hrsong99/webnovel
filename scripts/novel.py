@@ -68,6 +68,7 @@ class Story:
     primary: Manuscript
     english: Manuscript | None
     illustrations: dict[int, tuple["Illustration", ...]]
+    glossary: tuple["GlossaryEntry", ...]
 
 
 @dataclass(frozen=True)
@@ -78,6 +79,13 @@ class Illustration:
     asset: str
     alt: dict[str, str]
     caption: dict[str, str]
+
+
+@dataclass(frozen=True)
+class GlossaryEntry:
+    term: str
+    translation: str
+    note: str = ""
 
 
 def read_json(path: Path, label: str) -> Any:
@@ -432,6 +440,50 @@ def load_illustrations(story_root: Path, languages: tuple[str, ...], chapter_num
     return {chapter: tuple(sorted(items, key=lambda item: (item.placement[languages[0]], item.identifier))) for chapter, items in records.items()}
 
 
+def load_glossary(story_root: Path, chapters: tuple[Chapter, ...]) -> tuple[GlossaryEntry, ...]:
+    """Load an optional curated Korean-to-English reader glossary."""
+    path = story_root / "manuscript" / "glossary.en.json"
+    if not path.is_file():
+        return ()
+    raw = read_json(path, "glossary.en.json")
+    if not isinstance(raw, dict) or raw.get("version") != 1 or not isinstance(raw.get("entries"), list):
+        raise NovelError("glossary.en.json must be an object with version 1 and an 'entries' array")
+    errors: list[str] = []
+    entries: list[GlossaryEntry] = []
+    seen: set[str] = set()
+    corpus = "\n".join(chapter.body for chapter in chapters)
+    for index, item in enumerate(raw["entries"], 1):
+        label = f"glossary.en.json entry {index}"
+        if not isinstance(item, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        term, translation, note = item.get("term"), item.get("translation"), item.get("note", "")
+        if not isinstance(term, str) or not term.strip():
+            errors.append(f"{label} term must be a non-empty string")
+        elif term != term.strip():
+            errors.append(f"{label} term must not have leading or trailing whitespace")
+        elif not KOREAN_RE.search(term):
+            errors.append(f"{label} term must contain Korean text")
+        elif term in seen:
+            errors.append(f"duplicate glossary term: {term!r}")
+        elif term not in corpus:
+            errors.append(f"unused glossary term: {term!r}")
+        else:
+            seen.add(term)
+        if not isinstance(translation, str) or not translation.strip():
+            errors.append(f"{label} translation must be a non-empty string")
+        if not isinstance(note, str):
+            errors.append(f"{label} note must be a string when present")
+        if (
+            isinstance(term, str) and term.strip() and term == term.strip() and KOREAN_RE.search(term)
+            and term in seen and isinstance(translation, str) and translation.strip() and isinstance(note, str)
+        ):
+            entries.append(GlossaryEntry(term, translation.strip(), note.strip()))
+    if errors:
+        raise NovelError("glossary validation failed:\n" + "\n".join(f"- {error}" for error in errors))
+    return tuple(sorted(entries, key=lambda entry: (-len(entry.term), entry.term)))
+
+
 def required_artifact_errors(story_root: Path, metadata: Any) -> list[str]:
     """Require the planning artifacts a published story is supposed to own.
 
@@ -483,7 +535,8 @@ def load_story(slug: str, story_root: Path) -> Story:
         raise NovelError(f"missing story asset(s) for {slug}: " + ", ".join(missing))
     languages = ("ko", "en") if english else ("ko",)
     illustrations = load_illustrations(story_root, languages, {chapter.number for chapter in primary.chapters})
-    return Story(slug, story_root, primary, english, illustrations)
+    glossary = load_glossary(story_root, primary.chapters)
+    return Story(slug, story_root, primary, english, illustrations, glossary)
 
 
 def load_catalog(root: Path, selected: str | None = None) -> tuple[list[Story], str]:
@@ -621,17 +674,46 @@ def simple_markdown_html(text: str) -> str:
     return "".join(blocks)
 
 
-def chapter_prose_html(body: str, language: str, illustrations: tuple[Illustration, ...] = (), asset_base: str = "") -> str:
+def glossary_text_html(text: str, glossary: tuple[GlossaryEntry, ...], annotated: set[str] | None = None) -> str:
+    if not glossary:
+        return html.escape(text).replace(chr(10), "<br>")
+    by_term = {entry.term: entry for entry in glossary}
+    pattern = re.compile("|".join(re.escape(entry.term) for entry in glossary))
+    rendered: list[str] = []
+    cursor = 0
+    annotated = annotated if annotated is not None else set()
+    for match in pattern.finditer(text):
+        rendered.append(html.escape(text[cursor:match.start()]))
+        entry = by_term[match.group(0)]
+        if entry.term in annotated:
+            rendered.append(html.escape(entry.term))
+        else:
+            annotated.add(entry.term)
+            term = html.escape(entry.term)
+            rendered.append(
+                f'<button type="button" class="glossary-term" title="{html.escape(entry.translation, quote=True)}" '
+                f'data-term="{html.escape(entry.term, quote=True)}" '
+                f'data-translation="{html.escape(entry.translation, quote=True)}" '
+                f'data-note="{html.escape(entry.note, quote=True)}" aria-haspopup="dialog">{term}</button>'
+            )
+        cursor = match.end()
+    rendered.append(html.escape(text[cursor:]))
+    return "".join(rendered).replace(chr(10), "<br>")
+
+
+def chapter_prose_html(body: str, language: str, illustrations: tuple[Illustration, ...] = (), asset_base: str = "", glossary: tuple[GlossaryEntry, ...] = ()) -> str:
     rendered = []
     focus_index = 0
     placed: set[str] = set()
+    annotated: set[str] = set()
     for paragraph in re.split(r"\n\s*\n", body.strip()):
         if paragraph.strip() == "***":
             rendered.append('<hr class="scene-break">')
         else:
             focus_index += 1
             css = ' class="dialogue"' if paragraph.strip().startswith(("“", '"', "‘")) else ""
-            rendered.append(f'<p{css} data-focus-unit="{focus_index}">{html.escape(paragraph.strip()).replace(chr(10), "<br>")}</p>')
+            prose_html = glossary_text_html(paragraph.strip(), glossary if language == "ko" else (), annotated)
+            rendered.append(f'<p{css} data-focus-unit="{focus_index}">{prose_html}</p>')
             for illustration in illustrations:
                 if illustration.placement.get(language) != focus_index:
                     continue
@@ -683,8 +765,10 @@ def chapter_page_html(story: Story, manuscript: Manuscript, chapter: Chapter, ve
     minutes = max(5, round(chapter.word_count / 220 if language == "en" else chapter.korean_chars / 500))
     end = "" if following else f'<div class="end-card"><strong>{html.escape(meta["completion_title"])}</strong><p>{html.escape(meta["completion_text"])}</p></div>'
     illustrations = story.illustrations.get(chapter.number, ())
-    prose = chapter_prose_html(chapter.body, language, illustrations, f"/stories/{slug}/assets/")
-    return f'<!doctype html><html lang="{language}"><head>{head}{alternate}<script defer src="{asset_url("reader.js", versions)}"></script></head><body class="reader-page" data-story-slug="{slug}" data-chapter="{chapter.number}" data-language="{language}"><div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div><header class="reader-bar"><div class="reader-bar-inner"><a class="reader-home" href="{home}"><span class="brand-mark">冊</span><span>{html.escape(meta["title"])}</span></a><span class="reader-position">{chapter.number:02d} / {len(manuscript.chapters):02d}</span><div class="reader-tools">{language_link}<button class="tool-button focus-tool" data-action="focus" aria-pressed="false" aria-controls="chapter-prose" title="{ui["focus_title"]}"><span aria-hidden="true">◎</span><span class="focus-label">{ui["focus"]}</span></button><button class="tool-button" data-font-step="-1" aria-label="{ui["smaller"]}">A−</button><button class="tool-button" data-font-step="1" aria-label="{ui["larger"]}">A+</button><button class="tool-button" data-action="theme" aria-label="{ui["theme"]}">◐</button><details class="toc-toggle"><summary aria-label="{ui["chapters"]}">☰</summary><nav class="toc-panel">{toc}</nav></details></div></div></header><main class="reader-main"><header class="chapter-head"><p class="chapter-label">CHAPTER {chapter.number:02d}</p><h1>{html.escape(chapter.title)}</h1><p>{measure:,} {ui["unit"]} · {minutes} {ui["minutes"]}</p></header><details class="reviewer-overview"><summary><span><strong>{ui["overview"]}</strong><small>{ui["hint"]}</small></span></summary><div class="reviewer-body">{note}</div></details><article class="prose" id="chapter-prose">{prose}</article><nav class="chapter-nav">{prev}{nxt}</nav>{end}</main><div class="focus-guide" role="status" aria-live="polite" data-default="{html.escape(ui["focus_hint"], quote=True)}" data-end="{html.escape(ui["focus_end"], quote=True)}">{ui["focus_hint"]}</div></body></html>'
+    prose = chapter_prose_html(chapter.body, language, illustrations, f"/stories/{slug}/assets/", story.glossary)
+    glossary_dialog = '' if language != "ko" or not story.glossary else '<dialog class="glossary-dialog" aria-labelledby="glossary-heading"><div class="glossary-dialog-card"><div><p class="glossary-kicker">KOREAN → ENGLISH</p><h2 id="glossary-heading"></h2></div><button type="button" class="glossary-close" data-action="close-glossary" aria-label="Close translation">×</button><p class="glossary-translation"></p><p class="glossary-note"></p></div></dialog>'
+    glossary_hint = '' if language != "ko" or not story.glossary else '<p class="glossary-hint">점선 어휘를 누르면 영어 뜻을 볼 수 있습니다.</p>'
+    return f'<!doctype html><html lang="{language}"><head>{head}{alternate}<script defer src="{asset_url("reader.js", versions)}"></script></head><body class="reader-page" data-story-slug="{slug}" data-chapter="{chapter.number}" data-language="{language}"><div class="read-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div><header class="reader-bar"><div class="reader-bar-inner"><a class="reader-home" href="{home}"><span class="brand-mark">冊</span><span>{html.escape(meta["title"])}</span></a><span class="reader-position">{chapter.number:02d} / {len(manuscript.chapters):02d}</span><div class="reader-tools">{language_link}<button class="tool-button focus-tool" data-action="focus" aria-pressed="false" aria-controls="chapter-prose" title="{ui["focus_title"]}"><span aria-hidden="true">◎</span><span class="focus-label">{ui["focus"]}</span></button><button class="tool-button" data-font-step="-1" aria-label="{ui["smaller"]}">A−</button><button class="tool-button" data-font-step="1" aria-label="{ui["larger"]}">A+</button><button class="tool-button" data-action="theme" aria-label="{ui["theme"]}">◐</button><details class="toc-toggle"><summary aria-label="{ui["chapters"]}">☰</summary><nav class="toc-panel">{toc}</nav></details></div></div></header><main class="reader-main"><header class="chapter-head"><p class="chapter-label">CHAPTER {chapter.number:02d}</p><h1>{html.escape(chapter.title)}</h1><p>{measure:,} {ui["unit"]} · {minutes} {ui["minutes"]}</p>{glossary_hint}</header><details class="reviewer-overview"><summary><span><strong>{ui["overview"]}</strong><small>{ui["hint"]}</small></span></summary><div class="reviewer-body">{note}</div></details><article class="prose" id="chapter-prose">{prose}</article><nav class="chapter-nav">{prev}{nxt}</nav>{end}</main>{glossary_dialog}<div class="focus-guide" role="status" aria-live="polite" data-default="{html.escape(ui["focus_hint"], quote=True)}" data-end="{html.escape(ui["focus_end"], quote=True)}">{ui["focus_hint"]}</div></body></html>'
 
 
 def catalog_html(stories: list[Story], versions: dict[str, str]) -> str:

@@ -111,7 +111,8 @@ html[lang="ko"] .hero h1{font-size:clamp(3.6rem,7vw,6.5rem);word-break:keep-all}
 .reader-main{width:min(var(--reader-width),calc(100% - 2rem));margin:auto;padding:clamp(4.5rem,10vw,8rem) 0 7rem}
 .chapter-head{text-align:center;margin-bottom:clamp(2.5rem,7vw,4.5rem)}
 .chapter-head h1{margin:.75rem 0 1rem;font-family:var(--serif);font-size:clamp(2.2rem,7vw,4.35rem);font-weight:600;line-height:1.18;letter-spacing:-.055em}
-.chapter-head>p:last-child{margin:0;color:var(--muted);font-size:.7rem;letter-spacing:.04em}
+.chapter-head>p:not(.chapter-label):not(.glossary-hint){margin:0;color:var(--muted);font-size:.7rem;letter-spacing:.04em}
+.chapter-head .glossary-hint{width:max-content;max-width:100%;margin:1.15rem auto 0;padding:.45rem .75rem;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--muted);font-family:var(--sans);font-size:.65rem;letter-spacing:0}
 .reviewer-overview{margin:0 0 clamp(4rem,8vw,6rem);border:1px solid var(--line);border-radius:4px;background:var(--surface);overflow:hidden}
 .reviewer-overview summary{padding:1.15rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;list-style:none}
 .reviewer-overview summary::-webkit-details-marker{display:none}
@@ -123,6 +124,11 @@ html[lang="ko"] .hero h1{font-size:clamp(3.6rem,7vw,6.5rem);word-break:keep-all}
 .prose{font-family:var(--serif);font-size:var(--reader-size);line-height:2;letter-spacing:-.012em;word-break:keep-all;overflow-wrap:break-word}
 html[lang="en"] .prose{font-family:Georgia,"Maru Buri",serif;line-height:1.82;letter-spacing:0;word-break:normal}
 .prose p{position:relative;margin:0 0 1.18em;text-indent:0}.prose .dialogue{margin-top:1.35em}.scene-break{width:3.5rem;margin:4rem auto;border:0;border-top:1px solid var(--line)}
+.glossary-term{display:inline;padding:0;border:0;border-bottom:1px dotted color-mix(in srgb,var(--accent) 72%,transparent);background:transparent;color:inherit;font:inherit;line-height:inherit;letter-spacing:inherit;cursor:help;text-align:inherit}.glossary-term:hover,.glossary-term:focus-visible{border-bottom-style:solid;color:var(--accent);outline:none}.glossary-term:focus-visible{box-shadow:0 2px 0 var(--accent)}
+.glossary-dialog{width:min(28rem,calc(100% - 2rem));margin:auto auto 1rem;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--surface-solid);color:var(--ink);box-shadow:var(--shadow)}
+.glossary-dialog::backdrop{background:rgba(16,13,10,.46);backdrop-filter:blur(2px)}
+.glossary-dialog-card{position:relative;padding:1.35rem 3.4rem 1.4rem 1.4rem;font-family:var(--sans)}
+.glossary-kicker{margin:0 0 .35rem;color:var(--accent);font-size:.6rem;font-weight:800;letter-spacing:.17em}.glossary-dialog h2{margin:0;font-family:var(--serif);font-size:1.5rem}.glossary-translation{margin:.85rem 0 0;font-family:Georgia,var(--serif);font-size:1.08rem;font-weight:600;line-height:1.45}.glossary-note{margin:.55rem 0 0;color:var(--muted);font-size:.78rem;line-height:1.6}.glossary-close{position:absolute;top:.75rem;right:.75rem;width:2.35rem;height:2.35rem;border:1px solid transparent;border-radius:50%;background:transparent;color:var(--muted);font-size:1.45rem;line-height:1;cursor:pointer}.glossary-close:hover,.glossary-close:focus-visible{border-color:var(--line);background:var(--paper-2);color:var(--ink);outline:none}
 .story-illustration{position:relative;width:min(52rem,calc(100vw - 2rem));margin:clamp(3rem,8vw,5.5rem) 0;left:50%;transform:translateX(-50%);font-family:var(--sans)}
 .story-illustration img{display:block;width:100%;height:auto;max-height:72vh;object-fit:cover;border:1px solid var(--line);border-radius:3px;box-shadow:var(--shadow);background:var(--paper-2)}
 .story-illustration figcaption{max-width:38rem;margin:.85rem auto 0;color:var(--muted);font-size:.68rem;line-height:1.65;text-align:center}
@@ -153,4 +159,5 @@ body.focus-reading .prose [data-focus-unit].is-focus-active::before{content:"";p
   .focus-guide{bottom:.65rem;font-size:.62rem}
 }
 @media(max-width:420px){.header-links{gap:.5rem}.language-link{font-size:.72rem}.chapter-state>span:last-child{display:none}.reader-main{width:calc(100% - 1.25rem)}}
+@media(min-width:700px){.glossary-dialog{margin:auto}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}

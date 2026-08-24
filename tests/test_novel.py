@@ -106,6 +106,17 @@ class NovelPipelineTests(unittest.TestCase):
         (story / "manuscript" / "illustrations.json").write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
         self.write_artifacts(slug, names=("visual-bible.md",))
 
+    def add_glossary(self, slug="test-novel"):
+        story = self.root / "stories" / slug
+        payload = {"version": 1, "entries": [
+            {"term": "이야기가", "translation": "the story", "note": "A longer matching phrase."},
+            {"term": "이야기", "translation": "story"},
+            {"term": "인물", "translation": "character", "note": "A person in a narrative."},
+        ]}
+        path = story / "manuscript" / "glossary.en.json"
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        return path
+
     def metadata(self, slug="test-novel"):
         path = self.root / "stories" / slug / "story.json"
         return path, json.loads(path.read_text(encoding="utf-8"))
@@ -230,6 +241,37 @@ class NovelPipelineTests(unittest.TestCase):
             self.assertIn("OEBPS/images/scenes/chapter-one.svg", archive.namelist())
             self.assertIn(b"images/scenes/chapter-one.svg", archive.read("OEBPS/chapter-001.xhtml"))
             ElementTree.fromstring(archive.read("OEBPS/chapter-001.xhtml"))
+
+    def test_optional_glossary_is_validated_and_only_annotates_korean_reader_pages(self):
+        self.add_english("test-novel")
+        self.add_glossary()
+        result = self.run_cli("build")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        ko_chapter = (self.root / "dist" / "stories" / "test-novel" / "chapters" / "01.html").read_text(encoding="utf-8")
+        en_chapter = (self.root / "dist" / "stories" / "test-novel" / "en" / "chapters" / "01.html").read_text(encoding="utf-8")
+        standalone = (self.root / "dist" / "stories" / "test-novel" / "test-novel.html").read_text(encoding="utf-8")
+        self.assertIn('class="glossary-term"', ko_chapter)
+        self.assertIn('data-term="이야기가"', ko_chapter)
+        self.assertNotIn('data-term="이야기"', ko_chapter)
+        self.assertEqual(ko_chapter.count('data-term="이야기가"'), 1)
+        self.assertIn('class="glossary-dialog"', ko_chapter)
+        self.assertNotIn('class="glossary-term"', en_chapter)
+        self.assertNotIn('class="glossary-dialog"', en_chapter)
+        self.assertNotIn('class="glossary-term"', standalone)
+
+    def test_glossary_rejects_duplicates_empty_translations_and_unused_terms(self):
+        path = self.add_glossary()
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["entries"] += [
+            {"term": "인물", "translation": "duplicate"},
+            {"term": "마교", "translation": ""},
+        ]
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        result = self.run_cli("validate")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate glossary term", result.stderr)
+        self.assertIn("translation must be a non-empty string", result.stderr)
+        self.assertIn("unused glossary term", result.stderr)
 
     def test_illustration_manifest_rejects_missing_or_unsafe_assets(self):
         self.add_illustration()

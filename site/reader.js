@@ -67,6 +67,10 @@
   }
 
   const prose = document.querySelector('.prose');
+  const glossaryDialog = document.querySelector('.glossary-dialog');
+  const glossaryHeading = glossaryDialog?.querySelector('#glossary-heading');
+  const glossaryTranslation = glossaryDialog?.querySelector('.glossary-translation');
+  const glossaryNote = glossaryDialog?.querySelector('.glossary-note');
   const focusButton = document.querySelector('[data-action="focus"]');
   const focusGuide = document.querySelector('.focus-guide');
   const focusUnits = [...document.querySelectorAll('[data-focus-unit]')];
@@ -77,6 +81,23 @@
   let focusSyncTimer = 0;
   let pointerStart = null;
   let suppressNextClick = false;
+
+  prose?.addEventListener('click', (event) => {
+    const term = event.target.closest('.glossary-term');
+    if (!term || !glossaryDialog) return;
+    event.preventDefault();
+    event.stopPropagation();
+    glossaryHeading.textContent = term.dataset.term || term.textContent;
+    glossaryTranslation.textContent = term.dataset.translation || '';
+    glossaryNote.textContent = term.dataset.note || '';
+    glossaryNote.hidden = !glossaryNote.textContent;
+    glossaryDialog.showModal();
+  });
+
+  glossaryDialog?.querySelector('[data-action="close-glossary"]')?.addEventListener('click', () => glossaryDialog.close());
+  glossaryDialog?.addEventListener('click', (event) => {
+    if (event.target === glossaryDialog) glossaryDialog.close();
+  });
 
   function nearestFocusIndex() {
     const center = window.innerHeight * 0.5;
@@ -184,6 +205,7 @@
   });
 
   prose?.addEventListener('click', (event) => {
+    if (event.target.closest('.glossary-term')) return;
     if (!focusActive) return;
     if (suppressNextClick) { suppressNextClick = false; return; }
     const selection = window.getSelection();

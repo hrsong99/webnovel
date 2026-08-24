@@ -1,0 +1,359 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "term": "객잔",
+      "translation": "inn",
+      "note": "A Chinese-style inn or tavern common in wuxia settings."
+    },
+    {
+      "term": "점소이",
+      "translation": "inn boy; server",
+      "note": "A traditional term for a young male worker who serves guests at an inn."
+    },
+    {
+      "term": "객방",
+      "translation": "guest room",
+      "note": "A private room for lodging guests at an inn."
+    },
+    {
+      "term": "문파",
+      "translation": "martial sect",
+      "note": "An organized school or lineage within the martial world."
+    },
+    {
+      "term": "고수",
+      "translation": "master; elite martial artist",
+      "note": "Someone of exceptionally high skill, especially in martial arts."
+    },
+    {
+      "term": "검성",
+      "translation": "Sword Saint",
+      "note": "An exalted title for a supreme swordsman."
+    },
+    {
+      "term": "독왕",
+      "translation": "Poison Sovereign",
+      "note": "A title for a peerless master of poisons and poison arts."
+    },
+    {
+      "term": "귀환진",
+      "translation": "Returning Formation",
+      "note": "A mystical formation designed to send someone back into the past."
+    },
+    {
+      "term": "잔향",
+      "translation": "lingering echo; future echo",
+      "note": "Here, the residual persona and memories of a master who died in the failed future."
+    },
+    {
+      "term": "단전",
+      "translation": "dantian",
+      "note": "The energy center in the lower abdomen where internal energy is stored and cultivated."
+    },
+    {
+      "term": "내공",
+      "translation": "internal energy",
+      "note": "Cultivated inner power used to perform martial techniques."
+    },
+    {
+      "term": "경맥",
+      "translation": "meridians",
+      "note": "The channels through which internal energy circulates in the body."
+    },
+    {
+      "term": "외문",
+      "translation": "outer school",
+      "note": "The outer, generally lower-ranking division of a martial sect."
+    },
+    {
+      "term": "삼재검",
+      "translation": "Three Powers Sword",
+      "note": "A foundational sword art whose name invokes heaven, earth, and humanity."
+    },
+    {
+      "term": "검법",
+      "translation": "sword art",
+      "note": "A system or style of sword techniques."
+    },
+    {
+      "term": "밀서",
+      "translation": "secret letter",
+      "note": "A confidential or sealed message, often used between factions."
+    },
+    {
+      "term": "저당권",
+      "translation": "lien; mortgage right",
+      "note": "A legal claim over property used to secure a debt."
+    },
+    {
+      "term": "원채권자",
+      "translation": "original creditor",
+      "note": "The person who initially held the debt before it was transferred."
+    },
+    {
+      "term": "수결",
+      "translation": "handwritten signature mark",
+      "note": "A personal written mark used to authenticate a document."
+    },
+    {
+      "term": "관아",
+      "translation": "magistrate’s office",
+      "note": "A premodern local government office and its authorities."
+    },
+    {
+      "term": "냥",
+      "translation": "tael",
+      "note": "A traditional unit of money; its value depends on the historical setting."
+    },
+    {
+      "term": "서까래",
+      "translation": "rafter"
+    },
+    {
+      "term": "현판",
+      "translation": "signboard; inscribed plaque",
+      "note": "A board bearing the name of a building or institution."
+    },
+    {
+      "term": "장독방",
+      "translation": "crock room",
+      "note": "A room used to store large fermentation jars and earthenware crocks."
+    },
+    {
+      "term": "관할권",
+      "translation": "jurisdiction",
+      "note": "The recognized authority to control or investigate a particular matter."
+    },
+    {
+      "term": "내문 제자",
+      "translation": "inner disciple",
+      "note": "A trusted, higher-status disciple admitted to a sect’s inner school."
+    },
+    {
+      "term": "신패",
+      "translation": "identification token",
+      "note": "An official tablet or badge proving identity and sect affiliation."
+    },
+    {
+      "term": "식경",
+      "translation": "the time it takes to eat a meal",
+      "note": "A traditional, approximate short span of time rather than a precise modern unit."
+    },
+    {
+      "term": "독기",
+      "translation": "poisonous vapor; toxic energy",
+      "note": "Can denote either physical poison in the air or the harmful force of a poison."
+    },
+    {
+      "term": "독침",
+      "translation": "poison needle",
+      "note": "A concealed needle coated with or used to inject poison."
+    },
+    {
+      "term": "독공",
+      "translation": "poison arts",
+      "note": "Martial or medical techniques centered on creating, controlling, or countering poison."
+    },
+    {
+      "term": "녹맥독",
+      "translation": "Green Vein Poison",
+      "note": "The poison responsible for the victim’s branching green-blue veins."
+    },
+    {
+      "term": "결합제",
+      "translation": "binding agent",
+      "note": "An additive that binds the poison to another substance or slows its absorption."
+    },
+    {
+      "term": "지장",
+      "translation": "thumbprint",
+      "note": "A fingerprint impressed on a document as identification or authorization."
+    },
+    {
+      "term": "무인",
+      "translation": "martial artist",
+      "note": "A person trained in combat and martial disciplines."
+    },
+    {
+      "term": "무공",
+      "translation": "martial arts; martial skill",
+      "note": "The broader body of supernatural or cultivated fighting techniques in wuxia."
+    },
+    {
+      "term": "절취",
+      "translation": "theft; unlawful appropriation",
+      "note": "A formal term used here in the allegations of stealing a token and martial arts."
+    },
+    {
+      "term": "산문",
+      "translation": "sect headquarters; mountain gate",
+      "note": "Literally a mountain gate; by extension, a martial sect’s home compound."
+    },
+    {
+      "term": "사제",
+      "translation": "junior brother",
+      "note": "A younger or later-entering male disciple of the same martial lineage, not a biological brother."
+    },
+    {
+      "term": "사형",
+      "translation": "senior brother",
+      "note": "An older or earlier-entering male disciple of the same martial lineage, not a biological brother."
+    },
+    {
+      "term": "파검식",
+      "translation": "sword-breaking technique",
+      "note": "A form specifically designed to counter or disrupt a sword technique."
+    },
+    {
+      "term": "세 합",
+      "translation": "three exchanges",
+      "note": "Three discrete exchanges of attacks and counters in a martial bout."
+    },
+    {
+      "term": "검로",
+      "translation": "sword path",
+      "note": "The trajectory or intended line followed by a sword technique."
+    },
+    {
+      "term": "허초",
+      "translation": "feint; empty move",
+      "note": "A deceptive technique that appears to be the true attack but is not."
+    },
+    {
+      "term": "보법",
+      "translation": "footwork",
+      "note": "A trained system of steps and body movement used in martial arts."
+    },
+    {
+      "term": "소협",
+      "translation": "Young Hero",
+      "note": "A respectful wuxia form of address for a young male martial artist."
+    },
+    {
+      "term": "대협",
+      "translation": "Hero; Great Hero",
+      "note": "An honorific for a respected martial artist, often used with a surname."
+    },
+    {
+      "term": "포권",
+      "translation": "cupped-fist salute",
+      "note": "A traditional martial greeting made by enclosing one fist with the other hand."
+    },
+    {
+      "term": "위임",
+      "translation": "delegation of authority",
+      "note": "Entrusting a task and the power to make decisions to someone else."
+    },
+    {
+      "term": "객주",
+      "translation": "innkeeper; inn proprietor",
+      "note": "The owner or manager of an inn."
+    },
+    {
+      "term": "은침",
+      "translation": "silver needle",
+      "note": "A fine needle used for examination, treatment, or as a concealed weapon."
+    },
+    {
+      "term": "세 돈",
+      "translation": "three mace",
+      "note": "Here, 돈 is a traditional unit of medicinal weight rather than money."
+    },
+    {
+      "term": "반 푼",
+      "translation": "half a candareen",
+      "note": "Here, 푼 is a small traditional unit of medicinal weight."
+    },
+    {
+      "term": "비방",
+      "translation": "secret formula",
+      "note": "In this context, a closely guarded medical prescription—not ‘slander.’"
+    },
+    {
+      "term": "검보",
+      "translation": "sword manual",
+      "note": "A written record of sword techniques or sword-art teachings."
+    },
+    {
+      "term": "해독방",
+      "translation": "antidote formula",
+      "note": "A prescribed combination and method for neutralizing poison."
+    },
+    {
+      "term": "시진",
+      "translation": "two-hour period",
+      "note": "A traditional time unit equal to roughly two modern hours; 반 시진 is about one hour."
+    },
+    {
+      "term": "봉서",
+      "translation": "sealed letter",
+      "note": "A formally sealed written message, often carrying an order."
+    },
+    {
+      "term": "가주",
+      "translation": "family head; clan head",
+      "note": "The recognized leader of a powerful family or martial clan."
+    },
+    {
+      "term": "낙검진",
+      "translation": "Falling Sword Formation",
+      "note": "A trap formation that drops blades when triggered."
+    },
+    {
+      "term": "검기",
+      "translation": "sword qi",
+      "note": "Internal energy expressed through or as the cutting force of a sword."
+    },
+    {
+      "term": "내력",
+      "translation": "inner force",
+      "note": "Cultivated internal power; often used more broadly than 내공 in describing an active energy current."
+    },
+    {
+      "term": "혼합진",
+      "translation": "composite formation",
+      "note": "A formation powered by or constructed from multiple martial-energy traditions."
+    },
+    {
+      "term": "진법",
+      "translation": "formation art",
+      "note": "The principles and techniques used to construct qi-powered arrays, traps, or ritual mechanisms."
+    },
+    {
+      "term": "검광",
+      "translation": "sword light",
+      "note": "The visible flash or luminous path produced by a swift sword strike."
+    },
+    {
+      "term": "검풍",
+      "translation": "sword wind",
+      "note": "The cutting gust or pressure generated by a sword technique."
+    },
+    {
+      "term": "일천일율",
+      "translation": "One Heaven, One Measure",
+      "note": "A slogan expressing the imposition of one universal standard."
+    },
+    {
+      "term": "천마신교",
+      "translation": "Heavenly Demon Divine Cult",
+      "note": "A powerful centralized faction within the martial world."
+    },
+    {
+      "term": "회반보",
+      "translation": "Returning Dish Step",
+      "note": "Ryu Dan’s original footwork for redirecting received force through the next step."
+    },
+    {
+      "term": "목판",
+      "translation": "woodblock",
+      "note": "A carved wooden block used to print repeated text onto paper."
+    },
+    {
+      "term": "공제약첩",
+      "translation": "Common Antidote Ledger",
+      "note": "The jointly sealed ledger defining access to emergency procedures, medicine, routes, and responsibilities."
+    }
+  ]
+}
